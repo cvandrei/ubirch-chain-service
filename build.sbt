@@ -10,6 +10,7 @@ val akkaV = "2.4.8"
 val scalaTestV = "2.2.6"
 val json4sV = "3.4.0"
 val configV = "1.3.0"
+val sprayV = "1.3.3"
 
 libraryDependencies := Seq(
 
@@ -25,6 +26,7 @@ libraryDependencies := Seq(
 
   //testing
   "org.scalatest" %% "scalatest" % scalaTestV,
+  "io.spray"      %% "spray-testkit" % sprayV  % "test",
 
   //json4s
   "org.json4s" %% "json4s-core" % json4sV,
@@ -40,5 +42,11 @@ libraryDependencies := Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
   "ch.qos.logback" % "logback-classic" % "1.1.3",
   "ch.qos.logback" % "logback-core" % "1.1.3",
-  "org.slf4j" % "slf4j-api" % "1.7.12"
+  "org.slf4j" % "slf4j-api" % "1.7.12",
+
+  // Spray
+  "io.spray" %% "spray-can"     % sprayV,
+  "io.spray" %% "spray-routing" % sprayV,
+  "io.spray" %% "spray-client"  % sprayV
+
 )
