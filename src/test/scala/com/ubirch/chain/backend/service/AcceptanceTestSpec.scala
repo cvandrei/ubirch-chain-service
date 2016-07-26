@@ -1,6 +1,5 @@
 package com.ubirch.chain.backend.service
 
-import com.typesafe.scalalogging.LazyLogging
 import org.scalatest.FeatureSpec
 
 /**
@@ -8,10 +7,10 @@ import org.scalatest.FeatureSpec
   * since: 2016-07-26
   */
 class AcceptanceTestSpec extends FeatureSpec
-//  with Matchers // TODO enable when needed
-//  with GivenWhenThen // TODO enable when needed
-//  with ScalaFutures // TODO enable when needed
-  with LazyLogging {
+  /*  with Matchers // TODO enable when needed*/
+  /*  with GivenWhenThen // TODO enable when needed*/
+  /*  with ScalaFutures // TODO enable when needed*/
+  /*  with LazyLogging // TODO enable when needed */ {
 
   feature("notify chainService about a new transaction") {
 
