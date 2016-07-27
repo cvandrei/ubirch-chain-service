@@ -26,7 +26,6 @@ libraryDependencies := Seq(
 
   //testing
   "org.scalatest" %% "scalatest" % scalaTestV,
-  "io.spray"      %% "spray-testkit" % sprayV  % "test",
 
   //json4s
   "org.json4s" %% "json4s-core" % json4sV,
@@ -34,6 +33,7 @@ libraryDependencies := Seq(
   "org.json4s" %% "json4s-ast" % json4sV,
   "org.json4s" %% "json4s-core" % json4sV,
   "org.json4s" %% "json4s-jackson" % json4sV,
+  "org.json4s" %% "json4s-ext" % json4sV,
 
   // app config
   "com.typesafe" % "config" % configV,
@@ -42,11 +42,6 @@ libraryDependencies := Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
   "ch.qos.logback" % "logback-classic" % "1.1.3",
   "ch.qos.logback" % "logback-core" % "1.1.3",
-  "org.slf4j" % "slf4j-api" % "1.7.12",
-
-  // Spray
-  "io.spray" %% "spray-can"     % sprayV,
-  "io.spray" %% "spray-routing" % sprayV,
-  "io.spray" %% "spray-client"  % sprayV
+  "org.slf4j" % "slf4j-api" % "1.7.12"
 
 )

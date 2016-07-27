@@ -2,14 +2,16 @@ package com.ubirch.chain.backend
 
 import java.util.concurrent.TimeUnit
 
-import akka.actor.{Props, ActorSystem}
-import akka.io.IO
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.Http.ServerBinding
+import akka.stream.ActorMaterializer
 import akka.util.Timeout
-import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.chain.backend.config.AppConst
-import com.ubirch.chain.backend.service.ChainServiceActor
-import spray.can.Http
+import com.ubirch.chain.backend.config.Config
+import com.ubirch.chain.backend.route.MainRoute
+
+import scala.concurrent.Future
 
 /**
   * author: cvandrei
@@ -17,22 +19,28 @@ import spray.can.Http
   */
 object Boot extends App with LazyLogging {
 
-  logger.info("cdbeidService started")
-  val system = start()
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
+  implicit val executionContext = system.dispatcher
+  logger.info("ubirchChainService started")
 
-  def start(): ActorSystem = {
+  val bindingFuture = start()
 
-    val config = ConfigFactory.load
-    val interface = config.getString(AppConst.INTERFACE)
-    val port = config.getInt(AppConst.PORT)
+  Runtime.getRuntime.addShutdownHook(new Thread() {
+    override def run() = {
+      bindingFuture
+        .flatMap(_.unbind())
+        .onComplete(_ => system.terminate())
+    }
+  })
 
-    implicit val system = ActorSystem("on-spray-can")
-    val service = system.actorOf(Props[ChainServiceActor], "ubirchChainService")
+  def start(): Future[ServerBinding] = {
 
+    val interface = Config.interface
+    val port = Config.port
     implicit val timeout = Timeout(5, TimeUnit.SECONDS)
-    IO(Http) ! Http.Bind(service, interface = interface, port = port)
 
-    system
+    Http().bindAndHandle((new MainRoute).myRoute, interface, port)
 
   }
 
