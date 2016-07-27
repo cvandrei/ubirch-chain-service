@@ -6,6 +6,8 @@ package com.ubirch.chain.backend.util
   */
 object ChainConstants {
 
-  val pathVersion = "v1"
+  val api = "api"
+  val v1 = "v1"
+  val chainService = "chainService"
 
 }
