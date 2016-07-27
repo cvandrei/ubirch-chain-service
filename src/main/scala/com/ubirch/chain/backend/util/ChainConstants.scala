@@ -9,5 +9,6 @@ object ChainConstants {
   val api = "api"
   val v1 = "v1"
   val chainService = "chainService"
+  val hash = "hash"
 
 }
