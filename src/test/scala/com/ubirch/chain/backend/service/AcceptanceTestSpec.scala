@@ -36,8 +36,8 @@ class AcceptanceTestSpec extends FeatureSpec
 
   feature("query health") {
 
-    ignore("GET /api/v1/chainService/health") {
-
+    ignore("GET /") {
+      info("responds with: {\"version\":\"1.0\",\"status\":\"OK\",\"message\":\"Welcome to the ubirchChainServer\"}")
     }
   }
 

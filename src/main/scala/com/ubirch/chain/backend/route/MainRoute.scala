@@ -10,19 +10,11 @@ import akka.http.scaladsl.server.Route
   */
 class MainRoute {
 
-  //  override def actorRefFactory = context
+  //  val transaction = new TransactionRoute {}
 
-  //  val transaction = new TransactionRoute {
-  //    override implicit def actorRefFactory = context
-  //  }
+  //  val chainExplorer = new ChainExplorerRoute {}
 
-  //  val chainExplorer = new ChainExplorerRoute {
-  //    override implicit def actorRefFactory = context
-  //  }
-
-  val welcome = new WelcomeRoute
-  //    override implicit def actorRefFactory = context
-  //  }
+  val welcome = new WelcomeRoute {}
 
   val myRoute: Route = {
 

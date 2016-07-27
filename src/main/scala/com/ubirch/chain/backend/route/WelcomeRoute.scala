@@ -11,7 +11,7 @@ import org.json4s.jackson.Serialization.{write => _}
   * author: cvandrei
   * since: 2016-07-27
   */
-class WelcomeRoute extends MyJsonProtocol {
+trait WelcomeRoute extends MyJsonProtocol {
 
   val route: Route = {
 
