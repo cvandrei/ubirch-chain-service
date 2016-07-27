@@ -11,6 +11,8 @@ val scalaTestV = "2.2.6"
 val json4sV = "3.4.0"
 val configV = "1.3.0"
 
+resolvers += Resolver.bintrayRepo("hseeberger", "maven")
+
 libraryDependencies := Seq(
 
   //scala
@@ -33,6 +35,7 @@ libraryDependencies := Seq(
   "org.json4s" %% "json4s-core" % json4sV,
   "org.json4s" %% "json4s-jackson" % json4sV,
   "org.json4s" %% "json4s-ext" % json4sV,
+  "de.heikoseeberger" %% "akka-http-json4s" % "1.8.0",
 
   // app config
   "com.typesafe" % "config" % configV,

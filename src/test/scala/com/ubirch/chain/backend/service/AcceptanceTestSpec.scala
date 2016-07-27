@@ -35,7 +35,10 @@ class AcceptanceTestSpec extends FeatureSpec
   }
 
   feature("query health") {
-    ignore("GET /api/v1/chainService/health")
+
+    ignore("GET /api/v1/chainService/health") {
+
+    }
   }
 
 }
