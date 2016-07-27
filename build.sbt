@@ -10,14 +10,13 @@ val akkaV = "2.4.8"
 val scalaTestV = "2.2.6"
 val json4sV = "3.4.0"
 val configV = "1.3.0"
-val sprayV = "1.3.3"
 
 libraryDependencies := Seq(
 
   //scala
+  "org.scala-lang.modules" %% "scala-xml" % "1.0.5",
   "org.scala-lang" % "scala-reflect" % "2.11.8",
   "org.scala-lang" % "scala-library" % "2.11.8",
-  "org.scala-lang.modules" %% "scala-xml" % "1.0.5",
 
   //akka
   "com.typesafe.akka" %% "akka-actor" % akkaV,

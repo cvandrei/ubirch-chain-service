@@ -1,18 +1,16 @@
 package com.ubirch.chain.backend.route
 
+import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.ubirch.chain.json.WelcomeMessage
+
 import org.json4s.ext.JavaTypesSerializers
-import org.json4s.{DefaultFormats, Formats}
+import org.json4s.JsonDSL._
 import org.json4s.JsonAST._
 import org.json4s._
-import org.json4s.JsonDSL._
 import org.json4s.native.Serialization
-import org.json4s.native.Serialization._
 import org.json4s.native.Serialization.{read, write}
-import org.json4s.JsonDSL._
-import org.json4s._
 import org.json4s.native.JsonMethods._
 import org.json4s.native.Serialization._
 import org.json4s.native._
@@ -23,9 +21,10 @@ import org.json4s.native._
   */
 class WelcomeRoute {
 
-//  import Json4sSupport._
+  //  import Json4sSupport._
 
-  implicit val serialization = jackson.Serialization // or native.Serialization
+  implicit val serialization = jackson.Serialization
+  // or native.Serialization
   implicit val formats = DefaultFormats
 
   implicit def json4sJacksonFormats: Formats = DefaultFormats ++ JavaTypesSerializers.all
@@ -33,8 +32,9 @@ class WelcomeRoute {
   val route: Route = {
     get {
       complete {
-        WelcomeMessage(message = "Welcome to the ubirchChainServer")
-//        parse(WelcomeMessage(message = "Welcome to the ubirchChainServer"))
+        //StatusCodes.OK
+        //        WelcomeMessage(message = "Welcome to the ubirchChainServer")
+        write(WelcomeMessage(message = "Welcome to the ubirchChainServer"))
       }
     }
   }
