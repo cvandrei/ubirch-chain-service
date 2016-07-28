@@ -12,9 +12,9 @@
 
 ### Chain Explorer
 
-    curl localhost:8080/api/v1/chainService/explorer/hash/2342-data-hash-2342
+    curl localhost:8080/api/v1/chainService/explorer/hash/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
     
-    curl localhost:8080/api/v1/chainService/explorer/block/2342-block-hash-2342
+    curl localhost:8080/api/v1/chainService/explorer/block/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
 
 ## Configuration
 
