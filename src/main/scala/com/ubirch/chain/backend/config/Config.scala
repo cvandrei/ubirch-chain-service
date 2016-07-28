@@ -12,4 +12,6 @@ object Config {
 
   def port: Int = ConfigFactory.load.getInt(AppConst.PORT)
 
+  def hashAlgorithm: String = ConfigFactory.load.getString(AppConst.HASH_ALGORITHM).toLowerCase
+
 }

@@ -9,4 +9,6 @@ object AppConst {
   final val INTERFACE = "ubirchChainService.interface"
   final val PORT = "ubirchChainService.port"
 
+  final val HASH_ALGORITHM = "ubirchChainService.hash.algorithm"
+
 }
