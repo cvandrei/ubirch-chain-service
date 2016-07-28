@@ -14,8 +14,9 @@ class AcceptanceTestSpec extends FeatureSpec
 
   feature("notify chainService about a new transaction") {
 
-    ignore("POST /api/v1/chainService/hash -- data: envelope(dataString, externalId)") {
-      info("chainService responds with: (sha256(data), timestamp, externalId)")
+    ignore("POST /api/v1/chainService/hash -- data: envelope(dataString)") {
+      info("chainService responds with: (sha256(data), timestamp)")
+      // TODO replace with actual test
     }
 
   }
@@ -24,15 +25,11 @@ class AcceptanceTestSpec extends FeatureSpec
 
     info("here we need the txHash result from notifying chainService about a new transaction")
 
-    ignore("GET /api/v1/chainService/explore/hash/:hash") {
-      info("chainService responds with: (txInfo(hash, externalId, timeCreated), blockInfo(blockId, blockHash, timeCreated))")
+    ignore("GET /api/v1/chainService/explorer/hash/:hash") {
+      info("chainService responds with: (txInfo(hash, timeCreated), blockInfo(blockId, blockHash, timeCreated))")
     }
 
-    ignore("GET /api/v1/chainService/explore/externalId/:externalId") {
-      info("chainService responds with: (txInfo(hash, externalId, timeCreated), blockInfo(blockId, blockHash, timeCreated))")
-    }
-
-    ignore("GET /api/v1/chainService/explore/block/:hash") {
+    ignore("GET /api/v1/chainService/explorer/block/:hash") {
       info("chainService responds with: block tree from notes")
     }
 
@@ -42,6 +39,7 @@ class AcceptanceTestSpec extends FeatureSpec
 
     ignore("GET /") {
       info("responds with: {\"version\":\"1.0\",\"status\":\"OK\",\"message\":\"Welcome to the ubirchChainServer\"}")
+      // TODO replace with actual test
     }
   }
 

@@ -6,9 +6,15 @@
 
     curl localhost:8080/
 
-### Add Hash
+### Hash
 
-    curl -XPOST localhost:8080/api/v1/chainService/hash -H "Content-Type: application/json" -d '{"externalId": "asdf-1234", "data": "foo"}'
+    curl -XPOST localhost:8080/api/v1/chainService/hash -H "Content-Type: application/json" -d '{"data": "ubirch-chain-test-2342"}'
+
+### Chain Explorer
+
+    curl localhost:8080/api/v1/chainService/explorer/hash/2342-data-hash-2342
+    
+    curl localhost:8080/api/v1/chainService/explorer/block/2342-block-hash-2342
 
 ## Configuration
 

@@ -12,7 +12,7 @@ class MainRoute {
 
   val hash = new HashRoute {}
 
-  //  val chainExplorer = new ChainExplorerRoute {}
+  val chainExplorer = new ChainExplorerRoute {}
 
   val welcome = new WelcomeRoute {}
 
@@ -21,8 +21,10 @@ class MainRoute {
     pathPrefix(api) {
       pathPrefix(v1) {
         pathPrefix(chainService) {
-          hash.route
-          //            chainExplorer.route
+
+          hash.route ~
+            chainExplorer.route
+
         }
       }
     } ~

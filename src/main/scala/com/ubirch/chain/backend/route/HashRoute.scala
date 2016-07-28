@@ -22,7 +22,7 @@ trait HashRoute extends MyJsonProtocol {
           complete {
 
             val hash = Hash.hexString(input.data)
-            HashResponse(hash, DateTime.now, input.externalId)
+            HashResponse(hash, DateTime.now)
 
             // TODO notify storage
 

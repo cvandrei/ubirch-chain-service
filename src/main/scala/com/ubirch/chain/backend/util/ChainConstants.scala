@@ -10,5 +10,7 @@ object ChainConstants {
   val v1 = "v1"
   val chainService = "chainService"
   val hash = "hash"
+  val explorer = "explorer"
+  val block = "block"
 
 }
