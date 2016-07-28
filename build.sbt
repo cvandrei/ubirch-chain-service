@@ -12,6 +12,7 @@ val json4sV = "3.4.0"
 val configV = "1.3.0"
 
 resolvers += Resolver.bintrayRepo("hseeberger", "maven")
+resolvers ++= Seq("RoundEights" at "http://maven.spikemark.net/roundeights")
 
 libraryDependencies := Seq(
 
@@ -44,6 +45,9 @@ libraryDependencies := Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
   "ch.qos.logback" % "logback-classic" % "1.1.3",
   "ch.qos.logback" % "logback-core" % "1.1.3",
-  "org.slf4j" % "slf4j-api" % "1.7.12"
+  "org.slf4j" % "slf4j-api" % "1.7.12",
+
+  // hashing
+  "com.roundeights" %% "hasher" % "1.2.0"
 
 )

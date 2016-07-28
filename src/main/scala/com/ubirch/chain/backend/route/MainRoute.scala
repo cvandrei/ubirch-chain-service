@@ -1,6 +1,5 @@
 package com.ubirch.chain.backend.route
 
-import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.ubirch.chain.backend.util.ChainConstants._
@@ -11,7 +10,7 @@ import com.ubirch.chain.backend.util.ChainConstants._
   */
 class MainRoute {
 
-  //  val transaction = new TransactionRoute {}
+  val hash = new HashRoute {}
 
   //  val chainExplorer = new ChainExplorerRoute {}
 
@@ -19,13 +18,10 @@ class MainRoute {
 
   val myRoute: Route = {
 
-    path(api) {
+    pathPrefix(api) {
       pathPrefix(v1) {
         pathPrefix(chainService) {
-          get {
-            complete(StatusCodes.OK)
-          }
-          //          transaction.route ~
+          hash.route
           //            chainExplorer.route
         }
       }
