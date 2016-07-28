@@ -16,6 +16,8 @@
     
     curl localhost:8080/api/v1/chainService/explorer/block/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
 
+    curl localhost:8080/api/v1/chainService/explorer/fullBlock/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
+
 ## Configuration
 
 ### akka.http

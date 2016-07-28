@@ -12,5 +12,6 @@ object ChainConstants {
   val hash = "hash"
   val explorer = "explorer"
   val block = "block"
+  val fullBlock = "fullBlock"
 
 }

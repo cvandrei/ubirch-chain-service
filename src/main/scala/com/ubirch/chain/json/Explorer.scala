@@ -1,4 +1,4 @@
-package com.ubirch.chain.json.hash
+package com.ubirch.chain.json
 
 import com.ubirch.chain.backend.util.ChainConstants
 import org.joda.time.DateTime
@@ -14,10 +14,11 @@ case class HashInfo(hash: String,
                    )
 
 case class BlockInfo(hash: String,
-                     previousBlockHash: String,
                      created: DateTime = DateTime.now,
                      version: String = ChainConstants.v1,
-                     anchors: Seq[Anchor] = Seq.empty
+                     previousBlockHash: String,
+                     anchors: Seq[Anchor] = Seq.empty,
+                     hashes: Option[Seq[String]] = None
                     )
 
 case class Anchor(anchorTo: String,
@@ -25,11 +26,3 @@ case class Anchor(anchorTo: String,
                   created: DateTime = DateTime.now,
                   version: String = ChainConstants.v1
                  )
-
-object AnchorType {
-
-  val ubirch = "ubirchBlockChain"
-
-  val bitcoin = "Bitcoin"
-
-}

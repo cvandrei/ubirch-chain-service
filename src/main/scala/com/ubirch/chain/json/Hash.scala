@@ -1,4 +1,4 @@
-package com.ubirch.chain.json.hash
+package com.ubirch.chain.json
 
 import org.joda.time.DateTime
 
