@@ -18,6 +18,7 @@ class WelcomeRouteSpec extends FeatureSpec
   with MyJsonProtocol {
 
   val routes = (new MainRoute).myRoute
+
   feature("call health/welcome page") {
 
     scenario("GET /") {

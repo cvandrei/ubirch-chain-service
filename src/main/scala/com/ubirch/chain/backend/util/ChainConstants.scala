@@ -14,4 +14,6 @@ object ChainConstants {
   val block = "block"
   val fullBlock = "fullBlock"
 
+  val urlHash = s"/$api/$v1/$chainService/$hash"
+
 }

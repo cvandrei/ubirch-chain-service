@@ -6,20 +6,7 @@ import org.scalatest.FeatureSpec
   * author: cvandrei
   * since: 2016-07-26
   */
-class AcceptanceTestSpec extends FeatureSpec
-  /*  with Matchers // TODO enable when needed*/
-  /*  with GivenWhenThen // TODO enable when needed*/
-  /*  with ScalaFutures // TODO enable when needed*/
-  /*  with LazyLogging // TODO enable when needed */ {
-
-  feature("notify chainService about a new transaction") {
-
-    ignore("POST /api/v1/chainService/hash -- data: envelope(dataString)") {
-      info("chainService responds with: (sha256(data), timestamp)")
-      // TODO replace with actual test
-    }
-
-  }
+class AcceptanceTestSpec extends FeatureSpec {
 
   feature("chain explorer") {
 
