@@ -23,11 +23,12 @@ libraryDependencies := Seq(
 
   //akka
   "com.typesafe.akka" %% "akka-actor" % akkaV,
-  "com.typesafe.akka" %% "akka-testkit" % akkaV,
   "com.typesafe.akka" %% "akka-http-experimental" % akkaV,
 
   //testing
-  "org.scalatest" %% "scalatest" % scalaTestV,
+  "org.scalatest"     %% "scalatest"         % scalaTestV % "test",
+  "com.typesafe.akka" %% "akka-testkit"      % akkaV      % "test",
+  "com.typesafe.akka" %% "akka-http-testkit" % akkaV      % "test",
 
   //json4s
   "org.json4s" %% "json4s-core" % json4sV,
