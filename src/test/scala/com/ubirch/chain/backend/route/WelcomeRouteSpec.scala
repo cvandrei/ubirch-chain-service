@@ -23,14 +23,14 @@ class WelcomeRouteSpec extends FeatureSpec
 
     scenario("GET /") {
       Get() ~> routes ~> check {
-        status === OK
+        status shouldEqual OK
         responseAs[Welcome] shouldEqual Welcome(message = "Welcome to the ubirchChainServer")
       }
     }
 
     scenario("POST /") {
       Post() ~> Route.seal(routes) ~> check {
-        status === MethodNotAllowed
+        status shouldEqual MethodNotAllowed
       }
     }
 

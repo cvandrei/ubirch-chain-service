@@ -19,20 +19,38 @@ class HashRouteSpec extends FeatureSpec
 
   val routes = (new MainRoute).myRoute
 
-  feature("call hash method") {
+  feature("call hash method: ${ChainConstants.urlHash}") {
 
-    scenario(s"GET ${ChainConstants.urlHash}") {
+    scenario(s"GET (not allowed)") {
       Get(ChainConstants.urlHash) ~> Route.seal(routes) ~> check {
-        status === MethodNotAllowed
+        status shouldEqual MethodNotAllowed
       }
     }
 
-    scenario(s"POST ${ChainConstants.urlHash}") {
+    scenario(s"POST with valid input") {
 
       val data = Envelope("ubirch-test")
       Post(ChainConstants.urlHash, data) ~> routes ~> check {
-        status === OK
+        status shouldEqual OK
         responseAs[HashResponse].hash shouldEqual HashUtil.hexString(data.data)
+      }
+    }
+
+    scenario(s"POST without input") {
+
+      Post(ChainConstants.urlHash) ~> Route.seal(routes) ~> check {
+
+        status shouldEqual BadRequest
+        response.entity.toString should include("The request content was malformed")
+
+      }
+    }
+
+    scenario(s"POST without invalid input (data is empty string)") {
+
+      val data = Envelope("")
+      Post(ChainConstants.urlHash, data) ~> routes ~> check {
+        status shouldEqual OK
       }
     }
 
