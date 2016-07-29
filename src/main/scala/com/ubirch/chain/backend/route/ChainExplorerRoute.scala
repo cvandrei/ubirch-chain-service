@@ -2,7 +2,7 @@ package com.ubirch.chain.backend.route
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import com.ubirch.chain.backend.util.{Hash, ChainConstants, MyJsonProtocol}
+import com.ubirch.chain.backend.util.{HashUtil, ChainConstants, MyJsonProtocol}
 import com.ubirch.chain.json.{Anchor, AnchorType, BlockInfo, HashInfo}
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
@@ -30,12 +30,12 @@ trait ChainExplorerRoute extends MyJsonProtocol {
         get {
           complete {
 
-            val hashOfHash = Hash.hexString(hash)
+            val hashOfHash = HashUtil.hexString(hash)
 
             BlockInfo(
               hash,
               previousBlockHash = hash,
-              anchors = Seq(Anchor(AnchorType.bitcoin, hash), Anchor(AnchorType.ubirch, hash))
+              anchors = Seq(Anchor(AnchorType.bitcoin, hashOfHash), Anchor(AnchorType.ubirch, hashOfHash))
             )
             // TODO ask storage
           }

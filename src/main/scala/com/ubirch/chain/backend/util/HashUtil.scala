@@ -7,7 +7,7 @@ import com.ubirch.chain.backend.config.Config
   * author: cvandrei
   * since: 2016-07-28
   */
-object Hash {
+object HashUtil {
 
   def digest(data: String): Digest = {
 

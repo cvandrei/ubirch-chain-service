@@ -2,7 +2,7 @@ package com.ubirch.chain.backend.route
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import com.ubirch.chain.backend.util.{MyJsonProtocol, ChainConstants, Hash}
+import com.ubirch.chain.backend.util.{MyJsonProtocol, ChainConstants, HashUtil}
 import com.ubirch.chain.json.{HashResponse, Envelope}
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 import org.joda.time.DateTime
@@ -20,7 +20,7 @@ trait HashRoute extends MyJsonProtocol {
         entity(as[Envelope]) { input =>
           complete {
 
-            val hash = Hash.hexString(input.data)
+            val hash = HashUtil.hexString(input.data)
             HashResponse(hash, DateTime.now)
 
             // TODO tell storage
