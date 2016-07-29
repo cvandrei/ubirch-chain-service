@@ -29,7 +29,7 @@ Configures the Akka-Http Server.
     ubirchChainService {
       interface
       port
-      hashAlgorithm
+      hash.algorithm
     }
 | Key            | Description |
 | -------------  | ----------- |
