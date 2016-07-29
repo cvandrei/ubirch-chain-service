@@ -19,7 +19,7 @@ class HashRouteSpec extends FeatureSpec
 
   val routes = (new MainRoute).myRoute
 
-  feature("call hash method: ${ChainConstants.urlHash}") {
+  feature(s"call hash method: ${ChainConstants.urlHash}") {
 
     scenario(s"GET (not allowed)") {
       Get(ChainConstants.urlHash) ~> Route.seal(routes) ~> check {
@@ -50,7 +50,7 @@ class HashRouteSpec extends FeatureSpec
 
       val data = Envelope("")
       Post(ChainConstants.urlHash, data) ~> routes ~> check {
-        status shouldEqual OK
+        status shouldEqual BadRequest
       }
     }
 
