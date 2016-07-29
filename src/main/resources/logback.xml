@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+            <pattern>%X{akkaTimestamp} %-5level[%thread] %logger{0} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender class="ch.qos.logback.core.FileAppender">
+        <file>ubirchChainService.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>ubirchChainService-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>500MB</maxFileSize>
+            <maxHistory>20</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <!--<encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">-->
+            <!--<providers>-->
+                <!--<timestamp/>-->
+                <!--<version/>-->
+                <!--<loggerName>-->
+                    <!--<fieldName>logger</fieldName>-->
+                <!--</loggerName>-->
+                <!--<logLevel/>-->
+                <!--<logLevelValue/>-->
+                <!--<threadName/>-->
+                <!--<message>-->
+                    <!--<fieldName>log</fieldName>-->
+                <!--</message>-->
+                <!--<callerData>-->
+                    <!--<classFieldName/>-->
+                    <!--<methodFieldName/>-->
+                <!--</callerData>-->
+                <!--<stackTrace/>-->
+                <!--<context/>-->
+                <!--<logstashMarkers/>-->
+                <!--<tags/>-->
+                <!--<pattern>-->
+                    <!--<pattern>-->
+                        <!--{-->
+                        <!--"tags":["ubirch-chain-service"],-->
+                        <!--"app":"ubirch-chain-service",-->
+                        <!--"env":"ubirch-chain-service-test"-->
+                        <!--}-->
+                    <!--</pattern>-->
+                <!--</pattern>-->
+            <!--</providers>-->
+            <!--<includeCallerData>true</includeCallerData>-->
+            <!--<includeContext>true</includeContext>-->
+        <!--</encoder>-->
+    </appender>
+
+    <logger name="akka" level="ERROR"/>
+    <logger name="kafka" level="ERROR"/>
+    <logger name="kamon-akka" level="ERROR"/>
+    <logger name="default-akka" level="ERROR"/>
+
+    <logger name="com.jimjh" level="ERROR"/>
+    <logger name="com.ubirch" level="DEBUG"/>
+
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="LOGSTASHFILEASYNC"/>
+    </root>
+
+</configuration>
