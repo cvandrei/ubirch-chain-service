@@ -97,10 +97,8 @@ class MerkleTreeSpec extends FeatureSpec
         Seq[Byte](95, 94, 93)
       )
 
-      val expected = Seq[Byte](0, 0, 0, 0, -67, -71, 93, 84)
-
       val tree = MerkleTree(data, crc32)
-      tree.hash should be(expected)
+      tree.hashHex should be("00000000bdb95d54")
 
     }
 

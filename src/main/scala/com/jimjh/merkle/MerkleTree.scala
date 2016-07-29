@@ -2,6 +2,8 @@ package com.jimjh.merkle
 
 import java.util.Base64
 
+import com.ubirch.chain.backend.util.HashUtil
+
 /** Hash of hashes, using a binary tree.
   *
   * The hash at each node is calculated using
@@ -20,6 +22,8 @@ class MerkleTree(val hash: Block,
 
   def this(hash: Block, left: MerkleTree, right: MerkleTree) =
     this(hash, Option(left), Option(right))
+
+  def hashHex = HashUtil.toHex(hash.toArray)
 
   override def toString =
     s"MerkleTree(hash=${Base64.getEncoder.encodeToString(hash.toArray)}"
