@@ -18,7 +18,7 @@ case class BlockInfo(hash: String,
                      version: String = ChainConstants.v1,
                      previousBlockHash: String,
                      anchors: Seq[Anchor] = Seq.empty,
-                     hashes: Option[Seq[String]] = None
+                     hashes: Option[Seq[String]] = None // only set if you requested a full block
                     )
 
 case class Anchor(anchorTo: String,
