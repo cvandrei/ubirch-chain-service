@@ -5,7 +5,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.ubirch.chain.backend.ChainStorage
 import com.ubirch.chain.backend.util.{ChainConstants, HashUtil, MyJsonProtocol}
-import com.ubirch.chain.json.Envelope
+import com.ubirch.chain.json.{Hash, Data}
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
 /**
@@ -20,7 +20,7 @@ trait HashRoute extends MyJsonProtocol with ChainStorage {
 
     path(ChainConstants.hash) {
       post {
-        entity(as[Envelope]) { input =>
+        entity(as[Data]) { input =>
           complete {
 
             invalidData.contains(input.data) match {
@@ -30,6 +30,7 @@ trait HashRoute extends MyJsonProtocol with ChainStorage {
               case false =>
                 val hash = HashUtil.hexString(input.data)
                 storeHash(hash)
+                Hash(hash)
 
             }
 

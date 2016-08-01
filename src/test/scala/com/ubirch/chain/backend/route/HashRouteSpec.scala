@@ -4,7 +4,7 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.ubirch.chain.backend.util.{ChainConstants, HashUtil, MyJsonProtocol}
-import com.ubirch.chain.json.{Envelope, HashResponse}
+import com.ubirch.chain.json.{Data, Hash}
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 import org.scalatest.{FeatureSpec, Matchers}
 
@@ -29,10 +29,10 @@ class HashRouteSpec extends FeatureSpec
 
     scenario(s"POST with valid input") {
 
-      val data = Envelope("ubirch-test")
+      val data = Data("ubirch-test")
       Post(ChainConstants.urlHash, data) ~> routes ~> check {
         status shouldEqual OK
-        responseAs[HashResponse].hash shouldEqual HashUtil.hexString(data.data)
+        responseAs[Hash].hash shouldEqual HashUtil.hexString(data.data)
       }
     }
 
@@ -48,7 +48,7 @@ class HashRouteSpec extends FeatureSpec
 
     scenario(s"POST without invalid input (data is empty string)") {
 
-      val data = Envelope("")
+      val data = Data("")
       Post(ChainConstants.urlHash, data) ~> routes ~> check {
         status shouldEqual BadRequest
       }

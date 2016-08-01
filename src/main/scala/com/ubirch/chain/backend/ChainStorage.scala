@@ -2,8 +2,7 @@ package com.ubirch.chain.backend
 
 import com.ubirch.chain.backend.util.HashUtil
 import com.ubirch.chain.json.AnchorType._
-import com.ubirch.chain.json.{Anchor, BlockInfo, HashInfo, HashResponse}
-import org.joda.time.DateTime
+import com.ubirch.chain.json.{Anchor, BlockInfo, UnminedHashes}
 
 /**
   * author: cvandrei
@@ -11,51 +10,134 @@ import org.joda.time.DateTime
   */
 trait ChainStorage {
 
-  def storeHash(hash: String): HashResponse = {
-    // TODO implementation instead of the current dummy
-    HashResponse(hash, DateTime.now)
-  }
+  /**
+    * Adds a hash to the list of unmined hashes.
+    *
+    * @param hash the hash to store
+    */
+  def storeHash(hash: String): Unit = ???
 
-  def getHash(hash: String): HashInfo = {
-    // TODO implementation instead of the current dummy
-    HashInfo(hash = hash)
-  }
-
-  def getBlock(hash: String): BlockInfo = {
-
-    // TODO implementation instead of the current dummy
-    val previousHash = HashUtil.hexString(s"previous block hash - $hash")
-    val bitcoinAnchorHash = HashUtil.hexString(s"bitcoin anchor - $hash")
-    val ubirchAnchorHash = HashUtil.hexString(s"ubirch anchor - $hash")
-
-    BlockInfo(
-      hash,
-      previousBlockHash = previousHash,
-      anchors = Seq(
-        Anchor(bitcoin, bitcoinAnchorHash),
-        Anchor(ubirch, ubirchAnchorHash)
-      )
-    )
-
-  }
-
-  def getBlockWithHashes(hash: String): BlockInfo = {
+  /**
+    * Gives us the block that the input hash is included in.
+    *
+    * @param hash hash based on which we look for the related block
+    * @return block matching the input hash
+    */
+  def getHash(hash: String): Option[BlockInfo] = {
 
     // TODO implementation instead of the current dummy
-    val previousHash = HashUtil.hexString(s"previous block hash - $hash")
-    val bitcoinAnchorHash = HashUtil.hexString(s"bitcoin anchor - $hash")
-    val ubirchAnchorHash = HashUtil.hexString(s"ubirch anchor - $hash")
+    hash match {
 
-    BlockInfo(
-      hash,
-      previousBlockHash = previousHash,
-      anchors = Seq(
-        Anchor(bitcoin, bitcoinAnchorHash),
-        Anchor(ubirch, ubirchAnchorHash)
-      ),
-      hashes = Some(Seq("123", "456", "789"))
-    )
+      case "404" => None
+
+      case _ =>
+
+        val blockHash = HashUtil.hexString(s"block hash - $hash")
+        val previousBlock = HashUtil.hexString(s"previous block hash - $hash")
+        val bitcoinAnchorHash = HashUtil.hexString(s"bitcoin anchor - $hash")
+        val ubirchAnchorHash = HashUtil.hexString(s"ubirch anchor - $hash")
+
+        Some(
+          BlockInfo(
+            blockHash,
+            previousBlockHash = previousBlock,
+            anchors = Seq(
+              Anchor(bitcoin, bitcoinAnchorHash),
+              Anchor(ubirch, ubirchAnchorHash)
+            )
+          )
+        )
+
+    }
 
   }
+
+  /**
+    * Gives us basic information about a block (without all it's hashes).
+    *
+    * @param hash hash of the requested block
+    * @return block matching the input hash
+    */
+  def getBlock(hash: String): Option[BlockInfo] = {
+
+    // TODO implementation instead of the current dummy
+    hash match {
+
+      case "404" => None
+
+      case _ =>
+
+        val previousBlock = HashUtil.hexString(s"previous block hash - $hash")
+        val bitcoinAnchorHash = HashUtil.hexString(s"bitcoin anchor - $hash")
+        val ubirchAnchorHash = HashUtil.hexString(s"ubirch anchor - $hash")
+
+        Some(
+          BlockInfo(
+            hash,
+            previousBlockHash = previousBlock,
+            anchors = Seq(
+              Anchor(bitcoin, bitcoinAnchorHash),
+              Anchor(ubirch, ubirchAnchorHash)
+            )
+          )
+        )
+
+    }
+
+  }
+
+  /**
+    * Gives us a block including all it's hashes.
+    *
+    * @param hash hash of the requested block
+    * @return block matching the input hash
+    */
+  def getBlockWithHashes(hash: String): Option[BlockInfo] = {
+
+    // TODO implementation instead of the current dummy
+    hash match {
+
+      case "404" => None
+
+      case _ =>
+
+        val previousBlock = HashUtil.hexString(s"previous block hash - $hash")
+        val bitcoinAnchorHash = HashUtil.hexString(s"bitcoin anchor - $hash")
+        val ubirchAnchorHash = HashUtil.hexString(s"ubirch anchor - $hash")
+
+        Some(
+          BlockInfo(
+            hash,
+            previousBlockHash = previousBlock,
+            anchors = Seq(
+              Anchor(bitcoin, bitcoinAnchorHash),
+              Anchor(ubirch, ubirchAnchorHash)
+            ),
+            hashes = Some(Seq("123", "456", "789"))
+          )
+        )
+
+    }
+
+  }
+
+  /**
+    * Gives us a list of hashes that haven't been mined yet.
+    *
+    * @return list of unmined hashes
+    */
+  def unminedHashes(): UnminedHashes = {
+
+    // TODO implementation instead of the current dummy
+    UnminedHashes(Seq("123", "234", "345", "456", "567", "678", "789"))
+
+  }
+
+  /**
+    * Saves a newly mined block.
+    *
+    * @param block block info to store
+    */
+  def saveMinedBlock(block: BlockInfo): Unit = ???
 
 }
