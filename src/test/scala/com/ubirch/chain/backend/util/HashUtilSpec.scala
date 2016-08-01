@@ -1,6 +1,9 @@
 package com.ubirch.chain.backend.util
 
+import org.joda.time.DateTime
 import org.scalatest.{Matchers, FeatureSpec}
+
+import scala.util.Random
 
 /**
   * author: cvandrei
@@ -56,6 +59,53 @@ class HashUtilSpec extends FeatureSpec
       actual should be(expected)
 
     }
+
+  }
+
+  feature("hashing performance") {
+
+    scenario("1,000 hashes") {
+      measureHashingPerformance(1000)
+    }
+
+    scenario("10,000 hashes") {
+      measureHashingPerformance(10000)
+    }
+
+    scenario("25,000 hashes") {
+      measureHashingPerformance(25000)
+    }
+
+    scenario("50,000 hashes") {
+      measureHashingPerformance(50000)
+    }
+
+    scenario("75,000 hashes") {
+      measureHashingPerformance(75000)
+    }
+
+    scenario("100,000 hashes") {
+      measureHashingPerformance(100000)
+    }
+
+    scenario("1,000,000 hashes") {
+      measureHashingPerformance(1000000)
+    }
+
+  }
+
+  def measureHashingPerformance(count: Int): Unit = {
+
+    println(s"starting to generate random list with $count elements")
+    val randomSeq: Seq[String] = for (i <- 1 to count) yield Random.nextLong.toString
+    println(s"finished generating random list with $count elements")
+    println(s"starting to calculate $count hashes")
+    val before = DateTime.now
+    randomSeq.map(HashUtil.hexString)
+    val after = DateTime.now
+
+    val duration = after.getMillis - before.getMillis
+    println(s"hashing $count hashes took $duration ms")
 
   }
 
