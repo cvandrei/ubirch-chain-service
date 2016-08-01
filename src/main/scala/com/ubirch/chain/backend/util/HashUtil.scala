@@ -35,8 +35,8 @@ object HashUtil {
 
   def byteArray(data: String): Array[Byte] = digest(data).bytes
 
-  def stringToBytes(buf: String): Array[Byte] = Hash(buf).bytes
+  def convertToBytes(buf: String): Array[Byte] = Hash(buf).bytes
 
-  def bytesToHex(buf: Array[Byte]): String = Hash(buf).hex
+  def convertToHex(buf: Array[Byte]): String = Hash(buf).hex
 
 }

@@ -26,11 +26,32 @@ class HashUtilSpec extends FeatureSpec
       println(s"expected: $expected")
 
       // test part 1: stringToBytes
-      val expectedBytes = HashUtil.stringToBytes(expected)
+      val expectedBytes = HashUtil.convertToBytes(expected)
       expectedBytes.length should be(32)
 
       // test part 2: bytesToHex
-      val actual = HashUtil.bytesToHex(expectedBytes)
+      val actual = HashUtil.convertToHex(expectedBytes)
+      println(s"actual: $actual")
+      actual should be(expected)
+
+    }
+
+  }
+
+  feature("HashUtil.bytesToHex && HashUtil.byteArray") {
+
+    scenario("calculate hash as byte array and convert back to hexString") {
+
+      val input = "ubirchChainService"
+      val expected = HashUtil.hexString(input)
+      println(s"expected: $expected")
+
+      // test part 1: byteArray
+      val expectedBytes = HashUtil.byteArray(input)
+      expectedBytes.length should be(32)
+
+      // test part 2: bytesToHex
+      val actual = HashUtil.convertToHex(expectedBytes)
       println(s"actual: $actual")
       actual should be(expected)
 

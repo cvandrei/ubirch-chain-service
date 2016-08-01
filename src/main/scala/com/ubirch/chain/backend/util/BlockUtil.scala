@@ -13,7 +13,7 @@ object BlockUtil {
     * @param hashes hashes to sum up for total size
     * @return total size in byte
     */
-  def size(hashes: Seq[String]): Long = hashes.map(stringToBytes(_).length.toLong).sum
+  def size(hashes: Seq[String]): Long = hashes.map(convertToBytes(_).length.toLong).sum
 
   /**
     * Calculates a block hash.

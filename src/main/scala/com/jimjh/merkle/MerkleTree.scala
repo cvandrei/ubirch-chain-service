@@ -23,7 +23,7 @@ class MerkleTree(val hash: Block,
   def this(hash: Block, left: MerkleTree, right: MerkleTree) =
     this(hash, Option(left), Option(right))
 
-  def hashHex: String = HashUtil.bytesToHex(hash.toArray)
+  def hashHex: String = HashUtil.convertToHex(hash.toArray)
 
   override def toString =
     s"MerkleTree(hash=${Base64.getEncoder.encodeToString(hash.toArray)}"
