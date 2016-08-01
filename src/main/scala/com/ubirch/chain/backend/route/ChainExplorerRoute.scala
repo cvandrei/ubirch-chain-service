@@ -2,15 +2,15 @@ package com.ubirch.chain.backend.route
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import com.ubirch.chain.backend.util.{HashUtil, ChainConstants, MyJsonProtocol}
-import com.ubirch.chain.json.{Anchor, AnchorType, BlockInfo, HashInfo}
+import com.ubirch.chain.backend.ChainStorage
+import com.ubirch.chain.backend.util.{ChainConstants, MyJsonProtocol}
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
 /**
   * author: cvandrei
   * since: 2016-07-28
   */
-trait ChainExplorerRoute extends MyJsonProtocol {
+trait ChainExplorerRoute extends MyJsonProtocol with ChainStorage {
 
   val route: Route = {
 
@@ -20,8 +20,7 @@ trait ChainExplorerRoute extends MyJsonProtocol {
 
         get {
           complete {
-            HashInfo(hash = hash)
-            // TODO ask storage
+            getHash(hash)
           }
         }
 
@@ -29,15 +28,7 @@ trait ChainExplorerRoute extends MyJsonProtocol {
 
         get {
           complete {
-
-            val hashOfHash = HashUtil.hexString(hash)
-
-            BlockInfo(
-              hash,
-              previousBlockHash = hash,
-              anchors = Seq(Anchor(AnchorType.bitcoin, hashOfHash), Anchor(AnchorType.ubirch, hashOfHash))
-            )
-            // TODO ask storage
+            getBlock(hash)
           }
         }
 
@@ -45,13 +36,7 @@ trait ChainExplorerRoute extends MyJsonProtocol {
 
         get {
           complete {
-            BlockInfo(
-              hash,
-              previousBlockHash = hash,
-              anchors = Seq(Anchor(AnchorType.bitcoin, hash), Anchor(AnchorType.ubirch, hash)),
-              hashes = Some(Seq("123", "456", "789"))
-            )
-            // TODO ask storage
+            getFullBlock(hash)
           }
         }
 
