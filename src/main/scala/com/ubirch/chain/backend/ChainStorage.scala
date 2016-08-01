@@ -39,7 +39,7 @@ trait ChainStorage {
 
   }
 
-  def getFullBlock(hash: String): BlockInfo = {
+  def getBlockWithHashes(hash: String): BlockInfo = {
 
     // TODO implementation instead of the current dummy
     val previousHash = HashUtil.hexString(s"previous block hash - $hash")

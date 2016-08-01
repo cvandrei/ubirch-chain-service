@@ -36,7 +36,7 @@ trait ChainExplorerRoute extends MyJsonProtocol with ChainStorage {
 
         get {
           complete {
-            getFullBlock(hash)
+            getBlockWithHashes(hash)
           }
         }
 
