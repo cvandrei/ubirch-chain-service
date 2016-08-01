@@ -1,7 +1,8 @@
 package com.ubirch.chain.backend.util
 
 import com.jimjh.merkle.Block
-import com.roundeights.hasher.{Digest, Hash, Hasher}
+import com.roundeights.hasher.Implicits._
+import com.roundeights.hasher.{Digest, Hash}
 import com.ubirch.chain.backend.config.Config
 
 /**
@@ -12,16 +13,15 @@ object HashUtil {
 
   def digest(data: Array[Byte]): Digest = {
 
-    val hasher = Hasher(data)
     Config.hashAlgorithm match {
 
-      case "md5" => hasher.md5
-      case "sha1" => hasher.sha1
-      case "sha256" => hasher.sha256
-      case "sha384" => hasher.sha384
-      case "sha512" => hasher.sha512
-      case "bcrypt" => hasher.bcrypt
-      case "crc32" => hasher.crc32
+      case "md5" => data.md5
+      case "sha1" => data.sha1
+      case "sha256" => data.sha256
+      case "sha384" => data.sha384
+      case "sha512" => data.sha512
+      case "bcrypt" => data.bcrypt
+      case "crc32" => data.crc32
 
     }
 
@@ -35,6 +35,8 @@ object HashUtil {
 
   def byteArray(data: String): Array[Byte] = digest(data).bytes
 
-  def toHex(buf: Array[Byte]): String = Hash(buf).hex
+  def stringToBytes(buf: String): Array[Byte] = Hash(buf).bytes
+
+  def bytesToHex(buf: Array[Byte]): String = Hash(buf).hex
 
 }

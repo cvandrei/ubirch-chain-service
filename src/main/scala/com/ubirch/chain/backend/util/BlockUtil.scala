@@ -1,7 +1,7 @@
 package com.ubirch.chain.backend.util
 
 import com.jimjh.merkle.{Block, MerkleTree}
-import com.roundeights.hasher.Hash
+import HashUtil._
 
 /**
   * author: cvandrei
@@ -13,7 +13,7 @@ object BlockUtil {
     * @param hashes hashes to sum up for total size
     * @return total size in byte
     */
-  def size(hashes: Seq[String]): Long = hashes.map(Hash(_).bytes.length.toLong).sum
+  def size(hashes: Seq[String]): Long = hashes.map(stringToBytes(_).length.toLong).sum
 
   /**
     * Calculates a block hash.
