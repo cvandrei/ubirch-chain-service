@@ -3,8 +3,9 @@ package com.ubirch.chain.backend.route
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import com.ubirch.chain.backend.ChainStorage
-import com.ubirch.chain.backend.util.{ChainConstants, MyJsonProtocol}
+import com.ubirch.chain.backend.util.RouteConstants
+import com.ubirch.chain.json.util.MyJsonProtocol
+import com.ubirch.chain.storage.ChainStorage
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
 /**
@@ -17,9 +18,9 @@ trait ChainExplorerRoute extends MyJsonProtocol with ChainStorage {
 
   val route: Route = {
 
-    pathPrefix(ChainConstants.explorer) {
+    pathPrefix(RouteConstants.explorer) {
 
-      pathPrefix(ChainConstants.hash / Segment) { hash =>
+      pathPrefix(RouteConstants.hash / Segment) { hash =>
 
         get {
           complete {
@@ -30,7 +31,7 @@ trait ChainExplorerRoute extends MyJsonProtocol with ChainStorage {
           }
         }
 
-      } ~ path(ChainConstants.block / Segment) { hash =>
+      } ~ path(RouteConstants.block / Segment) { hash =>
 
         get {
           complete {
@@ -42,7 +43,7 @@ trait ChainExplorerRoute extends MyJsonProtocol with ChainStorage {
 
         }
 
-      } ~ path(ChainConstants.fullBlock / Segment) { hash =>
+      } ~ path(RouteConstants.fullBlock / Segment) { hash =>
 
         get {
           complete {

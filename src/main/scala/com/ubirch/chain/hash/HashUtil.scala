@@ -1,4 +1,4 @@
-package com.ubirch.chain.backend.util
+package com.ubirch.chain.hash
 
 import com.roundeights.hasher.Implicits._
 import com.roundeights.hasher.{Digest, Hash}

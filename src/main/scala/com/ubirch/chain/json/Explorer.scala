@@ -1,6 +1,6 @@
 package com.ubirch.chain.json
 
-import com.ubirch.chain.backend.util.ChainConstants
+import com.ubirch.chain.backend.util.RouteConstants
 import org.joda.time.DateTime
 
 /**
@@ -26,7 +26,7 @@ case class HashInfo(hash: String,
   */
 case class BlockInfo(hash: String,
                      created: DateTime = DateTime.now,
-                     version: String = ChainConstants.v1,
+                     version: String = RouteConstants.v1,
                      previousBlockHash: String,
                      anchors: Seq[Anchor] = Seq.empty,
                      hashes: Option[Seq[String]] = None // only set if you requested a full block
@@ -46,5 +46,5 @@ case class UnminedHashes(hashes: Seq[String] = Seq.empty)
 case class Anchor(anchorTo: String,
                   hash: String,
                   created: DateTime = DateTime.now,
-                  version: String = ChainConstants.v1
+                  version: String = RouteConstants.v1
                  )

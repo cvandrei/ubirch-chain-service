@@ -1,6 +1,6 @@
-package com.ubirch.chain.backend
+package com.ubirch.chain.storage
 
-import com.ubirch.chain.backend.util.HashUtil
+import com.ubirch.chain.hash.HashUtil
 import com.ubirch.chain.json.AnchorType._
 import com.ubirch.chain.json.{Anchor, BlockInfo, UnminedHashes}
 

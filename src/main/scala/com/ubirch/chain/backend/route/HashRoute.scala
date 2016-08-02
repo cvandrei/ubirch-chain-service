@@ -3,9 +3,11 @@ package com.ubirch.chain.backend.route
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import com.ubirch.chain.backend.ChainStorage
-import com.ubirch.chain.backend.util.{ChainConstants, HashUtil, MyJsonProtocol}
+import com.ubirch.chain.backend.util.RouteConstants
+import com.ubirch.chain.hash.HashUtil
+import com.ubirch.chain.json.util.MyJsonProtocol
 import com.ubirch.chain.json.{Hash, Data}
+import com.ubirch.chain.storage.ChainStorage
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
 /**
@@ -18,7 +20,7 @@ trait HashRoute extends MyJsonProtocol with ChainStorage {
 
   val route: Route = {
 
-    path(ChainConstants.hash) {
+    path(RouteConstants.hash) {
       post {
         entity(as[Data]) { input =>
           complete {

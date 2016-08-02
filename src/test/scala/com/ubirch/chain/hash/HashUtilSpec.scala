@@ -1,7 +1,7 @@
-package com.ubirch.chain.backend.util
+package com.ubirch.chain.hash
 
 import org.joda.time.DateTime
-import org.scalatest.{Matchers, FeatureSpec}
+import org.scalatest.{FeatureSpec, Matchers}
 
 import scala.util.Random
 

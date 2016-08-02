@@ -1,9 +1,9 @@
-package com.ubirch.chain.backend.util
+package com.ubirch.chain.merkle
 
 import java.util.NoSuchElementException
 
 import com.roundeights.hasher.Hasher
-import com.ubirch.chain.backend.merkle.Branch
+import com.ubirch.chain.hash.HashUtil
 import org.scalatest.{FeatureSpec, Matchers}
 
 /**

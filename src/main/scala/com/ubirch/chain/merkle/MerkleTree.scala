@@ -1,4 +1,6 @@
-package com.ubirch.chain.backend.merkle
+package com.ubirch.chain.merkle
+
+import com.ubirch.chain.hash.HashUtil
 
 /**
   * Based on: https://github.com/ErikBjare/merkle
@@ -6,8 +8,6 @@ package com.ubirch.chain.backend.merkle
   * author: cvandrei
   * since: 2016-08-02
   */
-
-import com.ubirch.chain.backend.util.HashUtil
 
 class MerkleTree(var root: Node)
 

@@ -1,7 +1,6 @@
-package com.ubirch.chain.backend.util
+package com.ubirch.chain.merkle
 
-import com.ubirch.chain.backend.merkle.Branch
-import com.ubirch.chain.backend.util.HashUtil._
+import com.ubirch.chain.hash.HashUtil._
 
 /**
   * author: cvandrei
