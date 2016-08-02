@@ -29,11 +29,11 @@ class HashUtilSpec extends FeatureSpec
       println(s"expected: $expected")
 
       // test part 1: stringToBytes
-      val expectedBytes = HashUtil.convertToBytes(expected)
+      val expectedBytes = HashUtil.hashAsBytes(expected)
       expectedBytes.length should be(32)
 
       // test part 2: bytesToHex
-      val actual = HashUtil.convertToHex(expectedBytes)
+      val actual = HashUtil.hashAsHex(expectedBytes)
       println(s"actual: $actual")
       actual should be(expected)
 
@@ -54,7 +54,7 @@ class HashUtilSpec extends FeatureSpec
       expectedBytes.length should be(32)
 
       // test part 2: bytesToHex
-      val actual = HashUtil.convertToHex(expectedBytes)
+      val actual = HashUtil.hashAsHex(expectedBytes)
       println(s"actual: $actual")
       actual should be(expected)
 
@@ -62,7 +62,7 @@ class HashUtilSpec extends FeatureSpec
 
   }
 
-  feature("hashing performance") {
+  ignore("hashing performance") {
 
     scenario("1,000 hashes") {
       measureHashingPerformance(1000)
@@ -88,8 +88,8 @@ class HashUtilSpec extends FeatureSpec
       measureHashingPerformance(100000)
     }
 
-    scenario("1,000,000 hashes") {
-      measureHashingPerformance(1000000)
+    scenario("500,000 hashes") {
+      measureHashingPerformance(500000)
     }
 
   }

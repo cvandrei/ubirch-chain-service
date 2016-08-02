@@ -2,8 +2,8 @@ package com.ubirch.chain.backend.util
 
 import java.util.NoSuchElementException
 
-import com.jimjh.merkle.MerkleTree
 import com.roundeights.hasher.Hasher
+import com.ubirch.chain.backend.merkle.Branch
 import org.scalatest.{FeatureSpec, Matchers}
 
 /**
@@ -43,10 +43,10 @@ class BlockUtilSpec extends FeatureSpec
 
   }
 
-  feature("BlockUtil.calculateBlockHash") {
+  feature("BlockUtil.blockHash") {
 
     scenario("empty sequence results in exception") {
-      an [NoSuchElementException] should be thrownBy BlockUtil.blockHash(Seq.empty)
+      an[NoSuchElementException] should be thrownBy BlockUtil.blockHash(Seq.empty)
     }
 
     scenario("sequence of five hashes results in block hash") {
@@ -58,9 +58,7 @@ class BlockUtilSpec extends FeatureSpec
         HashUtil.hexString("4567"),
         HashUtil.hexString("5678")
       )
-
-      val blockSeq = hashes.map(_.getBytes.toSeq)
-      val expected = MerkleTree(blockSeq, HashUtil.digest).hashHex
+      val expected = Branch.createFromHashes(hashes).hash()
 
       BlockUtil.blockHash(hashes) should be(expected)
 

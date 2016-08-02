@@ -1,7 +1,7 @@
 package com.ubirch.chain.backend.util
 
-import com.jimjh.merkle.{Block, MerkleTree}
-import HashUtil._
+import com.ubirch.chain.backend.merkle.Branch
+import com.ubirch.chain.backend.util.HashUtil._
 
 /**
   * author: cvandrei
@@ -13,20 +13,22 @@ object BlockUtil {
     * @param hashes hashes to sum up for total size
     * @return total size in byte
     */
-  def size(hashes: Seq[String]): Long = hashes.map(convertToBytes(_).length.toLong).sum
+  def size(hashes: Seq[String]): Long = hashes.map(hashAsBytes(_).length.toLong).sum
 
   /**
-    * Calculates a block hash.
+    * Converts a list of strings into a Merkle Tree (represented by a [Branch] instance).
+    *
+    * @param hashes list of strings to convert to Merkle Tree
+    * @return Merkle Tree created based on input
+    */
+  def toMerkleTree(hashes: Seq[String]): Branch = Branch.createFromHashes(hashes)
+
+  /**
+    * Calculates a block hash based on a list of hashes.
     *
     * @param hashes hashes to calculate block hash from
     * @return hash as hex string
     */
-  def blockHash(hashes: Seq[String]): String = {
-
-    val blockSeq: Seq[Block] = hashes.map(_.getBytes.toSeq)
-    val tree = MerkleTree(blockSeq, HashUtil.digest)
-    tree.hashHex
-
-  }
+  def blockHash(hashes: Seq[String]): String = toMerkleTree(hashes).hash()
 
 }
