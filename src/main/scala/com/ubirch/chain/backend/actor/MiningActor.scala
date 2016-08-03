@@ -24,13 +24,13 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
       val sizeKb = size / 1000
       val maxBlockSizeBytes = Config.blockMaxSize * 1000
 
-      size < maxBlockSizeBytes match {
+      size >= maxBlockSizeBytes match {
 
-        case true => logger.debug(s"block does not need to be mined yet (size: $sizeKb kb; ${hashes.size} hashes)")
-
-        case false =>
+        case true =>
           logger.info(s"start mining a new block (triggered by size check; blockSize: $sizeKb kb; ${hashes.size} hashes)")
-          // TODO implementation
+          // TODO mine block
+
+        case false => logger.debug(s"block does not need to be mined yet (size: $sizeKb kb; ${hashes.size} hashes)")
 
       }
 
@@ -44,7 +44,7 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
 
       // TODO persist new block
 
-      // TODO anchor (if activated)
+      // TODO anchor (depending on config)
 
   }
 
