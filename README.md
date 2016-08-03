@@ -29,13 +29,23 @@ Configures the Akka-Http Server.
     ubirchChainService {
       interface
       port
-      hash.algorithm
+      hash {
+        algorithm
+      }
+      block {
+        maxBlockSize
+        sizeCheckInterval
+        blockInterval
+      }
     }
-| Key            | Description |
-| -------------  | ----------- |
-| interface      | network interface the service is connected to |
-| port           | port on which service listens |
-| hash.algorithm | algorithm used to calculate hashes on data inputs or when calculating blocks. |
+| Key                     | Description |
+| ----------------------- | ----------- |
+| interface               | network interface the service is connected to |
+| port                    | port on which service listens |
+| hash.algorithm          | algorithm used to calculate hashes on data inputs or when calculating blocks. |
+| block.maxSize           | maximum block size in kilobyte |
+| block.sizeCheckInterval | milliseconds between checks if the maxBlockSize has been reached |
+| block.interval          | number of seconds after which a block will definitely be generated |
 
 ### Valid Values: `hash.algorithm`
 

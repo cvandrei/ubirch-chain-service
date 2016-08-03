@@ -8,10 +8,46 @@ import com.typesafe.config.ConfigFactory
   */
 object Config {
 
+  /**
+    * The interface the server runs on.
+    *
+    * @return interface
+    */
   def interface: String = ConfigFactory.load.getString(AppConst.INTERFACE)
 
+  /**
+    * Port the server listens on.
+    *
+    * @return port number
+    */
   def port: Int = ConfigFactory.load.getInt(AppConst.PORT)
 
+  /**
+    * The function to use whenever we hash something.
+    *
+    * @return name of hash function
+    */
   def hashAlgorithm: String = ConfigFactory.load.getString(AppConst.HASH_ALGORITHM).toLowerCase
+
+  /**
+    * Maximum size of blocks in kilobytes.
+    *
+    * @return max block size in kilobytes
+    */
+  def blockMaxSize: Int = ConfigFactory.load.getInt(AppConst.BLOCK_MAX_SIZE)
+
+  /**
+    * The interval (in seconds) in which we check if the maximum block size has been reached.
+    *
+    * @return number of seconds between block size checks
+    */
+  def blockSizeCheckInterval: Int = ConfigFactory.load.getInt(AppConst.BLOCK_SIZE_CHECK_INTERVAL)
+
+  /**
+    * The maximum interval (in seconds) after which we "mine" a new block no matter how small it might be.
+    *
+    * @return block interval in seconds
+    */
+  def blockInterval: Int = ConfigFactory.load.getInt(AppConst.BLOCK_INTERVAL)
 
 }
