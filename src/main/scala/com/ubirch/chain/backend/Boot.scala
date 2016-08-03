@@ -32,7 +32,7 @@ object Boot extends App with LazyLogging {
 
   logger.info("ubirchChainService started")
 
-  //  implicit val timeout = Timeout(5 seconds)
+  implicit val timeout = Timeout(15 seconds)
   (genesisActor ? GenesisCheck) map {
 
     case Success(result) => logger.info(s"genesis block check successful")
