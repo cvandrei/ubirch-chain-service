@@ -16,21 +16,37 @@ case class HashInfo(hash: String,
                     blockHash: Option[String] = None
                    )
 
+trait BaseBlock {
+  /** hash of the block **/
+  val hash: String
+  /** when the block was created **/
+  val created: DateTime = DateTime.now
+  /** in which version of ubirchChainService was this block created **/
+  val version: String = RouteConstants.v1
+  /** list of hashes included in the block (only set if you requested the full block) **/
+  val hashes: Option[Seq[String]] = None // only set if you requested a full block
+}
+
+case class GenesisBlock(hash: String,
+                        override val hashes: Option[Seq[String]] = None
+                       ) extends BaseBlock
+
+trait PreviousBlockReference {
+  /** hash of the previous block **/
+  val previousBlockHash: String
+}
+
 /**
   * @param hash              hash of the block
-  * @param created           when the block was created
-  * @param version           in which version of ubirchChainService was this block created
   * @param previousBlockHash hash of the previous block
   * @param anchors           optional list of anchors to other chains
   * @param hashes            list of hashes included in the block (only set if you requested the full block)
   */
 case class BlockInfo(hash: String,
-                     created: DateTime = DateTime.now,
-                     version: String = RouteConstants.v1,
                      previousBlockHash: String,
                      anchors: Seq[Anchor] = Seq.empty,
-                     hashes: Option[Seq[String]] = None // only set if you requested a full block
-                    )
+                     override val hashes: Option[Seq[String]] = None
+                    ) extends BaseBlock with PreviousBlockReference
 
 /**
   * @param hashes list of unmined hashes

@@ -55,7 +55,7 @@ object BlockUtil extends LazyLogging {
   def newBlock(previousBlockHash: String, hashes: Seq[String]): BlockInfo = {
 
     val hash = blockHash(hashes, previousBlockHash)
-    BlockInfo(hash, previousBlockHash = previousBlockHash, hashes = Some(hashes))
+    BlockInfo(hash, previousBlockHash, hashes = Some(hashes))
 
   }
 
