@@ -46,7 +46,7 @@ class BlockUtilSpec extends FeatureSpec
   feature("BlockUtil.blockHash") {
 
     scenario("empty sequence results in exception") {
-      an[NoSuchElementException] should be thrownBy BlockUtil.blockHash(Seq.empty)
+      an[NoSuchElementException] should be thrownBy BlockUtil.blockHash(Seq.empty, "")
     }
 
     scenario("sequence of five hashes results in block hash") {
@@ -58,9 +58,11 @@ class BlockUtilSpec extends FeatureSpec
         HashUtil.hexString("4567"),
         HashUtil.hexString("5678")
       )
-      val expected = Branch.createFromHashes(hashes).hash()
+      val treeHash = Branch.createFromHashes(hashes).hash()
+      val previousBlockHash = HashUtil.hexString("previousBlockHash")
+      val expected = HashUtil.hexString(treeHash ++ previousBlockHash)
 
-      BlockUtil.blockHash(hashes) should be(expected)
+      BlockUtil.blockHash(hashes, previousBlockHash) should be(expected)
 
     }
 

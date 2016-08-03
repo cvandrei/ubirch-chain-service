@@ -2,6 +2,7 @@ package com.ubirch.chain.merkle
 
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.hash.HashUtil._
+import com.ubirch.chain.json.BlockInfo
 import org.joda.time.DateTime
 
 /**
@@ -39,14 +40,22 @@ object BlockUtil extends LazyLogging {
     * @param hashes hashes to calculate block hash from
     * @return hash as hex string
     */
-  def blockHash(hashes: Seq[String]): String = {
+  def blockHash(hashes: Seq[String], previousBlockHash: String): String = {
 
     val before = DateTime.now
-    val blockHash = toMerkleTree(hashes).hash()
+    val treeHash = toMerkleTree(hashes).hash()
+    val blockHash = hexString(treeHash ++ previousBlockHash)
     val after = DateTime.now
     logger.debug(s"calculated block hash in ${after.getMillis - before.getMillis} ms")
 
     blockHash
+
+  }
+
+  def newBlock(previousBlockHash: String, hashes: Seq[String]): BlockInfo = {
+
+    val hash = blockHash(hashes, previousBlockHash)
+    BlockInfo(hash, previousBlockHash = previousBlockHash, hashes = Some(hashes))
 
   }
 

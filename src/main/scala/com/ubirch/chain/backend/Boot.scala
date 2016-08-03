@@ -5,15 +5,17 @@ import java.util.concurrent.TimeUnit
 import akka.actor.{ActorSystem, Props}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
+import akka.pattern.ask
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.chain.backend.actor.{Mine, MiningActor, SizeCheck}
+import com.ubirch.chain.backend.actor.{GenesisActor, GenesisCheck, Mine, MiningActor, SizeCheck}
 import com.ubirch.chain.backend.config.Config
 import com.ubirch.chain.backend.route.MainRoute
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.util.{Failure, Success}
 
 /**
   * author: cvandrei
@@ -24,7 +26,22 @@ object Boot extends App with LazyLogging {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
+
+  private val miningActor = system.actorOf(Props[MiningActor])
+  private val genesisActor = system.actorOf(Props[GenesisActor])
+
   logger.info("ubirchChainService started")
+
+  //  implicit val timeout = Timeout(5 seconds)
+  (genesisActor ? GenesisCheck) map {
+
+    case Success(result) => logger.info(s"genesis block check successful")
+
+    case Failure(failure) =>
+      logger.error("failed to check if genesis block exists or create one if not")
+      throw failure
+
+  }
 
   val bindingFuture = start()
   scheduleMiningRelatedJobs()
@@ -48,8 +65,6 @@ object Boot extends App with LazyLogging {
   }
 
   private def scheduleMiningRelatedJobs(): Unit = {
-
-    val miningActor = system.actorOf(Props(new MiningActor))
 
     val blockInterval = Config.blockInterval
     system.scheduler.schedule(blockInterval seconds, blockInterval seconds, miningActor, new Mine())
