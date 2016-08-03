@@ -4,6 +4,8 @@ import com.ubirch.chain.hash.HashUtil
 import com.ubirch.chain.json.AnchorType._
 import com.ubirch.chain.json.{Anchor, BlockInfo, UnminedHashes}
 
+import scala.util.Random
+
 /**
   * author: cvandrei
   * since: 2016-08-01
@@ -129,7 +131,7 @@ trait ChainStorage {
   def unminedHashes(): UnminedHashes = {
 
     // TODO implementation instead of the current dummy
-    UnminedHashes(Seq("123", "234", "345", "456", "567", "678", "789"))
+    UnminedHashes(randomHashes)
 
   }
 
@@ -139,5 +141,14 @@ trait ChainStorage {
     * @param block block info to store
     */
   def saveMinedBlock(block: BlockInfo): Unit = ???
+
+  private def randomHashes: Seq[String] = {
+
+    val count = Random.nextInt(30000)
+    val randomSeq: Seq[String] = for (i <- 1 to count) yield Random.nextLong.toString
+
+    randomSeq.map(HashUtil.hexString)
+
+  }
 
 }
