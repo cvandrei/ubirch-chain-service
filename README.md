@@ -34,6 +34,10 @@ Configures the Akka-Http Server.
         sizeCheckInterval
         blockInterval
       }
+      anchoring {
+        enabled
+        url
+      }
     }
 | Key                     | Description |
 | ----------------------- | ----------- |
@@ -42,3 +46,5 @@ Configures the Akka-Http Server.
 | block.maxSize           | maximum block size in kilobyte |
 | block.sizeCheckInterval | milliseconds between checks if the maxBlockSize has been reached |
 | block.interval          | number of seconds after which a block will definitely be generated |
+| anchor.enabled          | true if blocks may be anchored into another blockchain |
+| anchor.url              | url of Notary Service to send notifications to when anchroing is enabled |

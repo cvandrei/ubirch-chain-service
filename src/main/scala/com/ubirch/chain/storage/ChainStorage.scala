@@ -141,21 +141,22 @@ trait ChainStorage extends LazyLogging {
   }
 
   /**
-    * Saves a newly mined block.
+    * Saves or updates a block.
     *
     * @param block block info to store
     */
-  def saveMinedBlock(block: BlockInfo): Unit = {
+  def upsertBlock(block: BlockInfo): Unit = {
 
     // TODO implementation instead of the current dummy
-    logger.info(s"saving block: blockHash=${block.hash}, previousBlockHash=${block.previousBlockHash}")
+    logger.info(s"upsert block: blockHash=${block.hash}, previousBlockHash=${block.previousBlockHash}")
+    logger.debug(s"upsertblock: $block")
 
   }
 
   /**
     * @return the most recent block
     */
-  def mostRecentBlock: BlockInfo = {
+  def mostRecentBlock(): BlockInfo = {
 
     // TODO implementation instead of the current dummy
     val hash = HashUtil.hexString(Random.nextInt().toString)

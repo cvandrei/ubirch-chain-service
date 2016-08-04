@@ -3,7 +3,9 @@ package com.ubirch.chain.backend.actor
 import akka.actor.Actor
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.backend.config.{AppConst, Config}
+import com.ubirch.chain.json.{Anchor, BlockInfo}
 import com.ubirch.chain.merkle.BlockUtil
+import com.ubirch.chain.notary.NotaryClient
 import com.ubirch.chain.storage.ChainStorage
 
 /**
@@ -37,15 +39,49 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
     case m: Mine =>
 
       logger.info("start mining a new block")
+      val block = mine()
 
-      val previousBlockHash = mostRecentBlock.hash
-      val hashes = unminedHashes().hashes
-      val block = BlockUtil.newBlock(previousBlockHash, hashes)
-      logger.debug(s"new block hash: ${block.hash} (blockSize=${BlockUtil.size(hashes) / 1000} kb; ${hashes.size} hashes)")
+      anchor(block.hash) match {
 
-      saveMinedBlock(block)
+        case None => // do nothing
 
-      // TODO anchor (depending on config)
+        case Some(anchor) =>
+          block.anchors :+ anchor
+          upsertBlock(block)
+
+      }
+
+  }
+
+  private def mine(): BlockInfo = {
+
+    val previousBlockHash = mostRecentBlock().hash
+    val hashes = unminedHashes().hashes
+    val block = BlockUtil.newBlock(previousBlockHash, hashes)
+    val blockHash = block.hash
+    logger.debug(s"new block hash: $blockHash (blockSize=${BlockUtil.size(hashes) / 1000} kb; ${hashes.size} hashes)")
+
+    upsertBlock(block)
+
+    block
+
+  }
+
+  private def anchor(blockHash: String): Option[Anchor] = {
+
+    Config.anchorEnabled match {
+
+      case false =>
+        logger.info(s"anchoring is disabled (most recent blockHash: $blockHash)")
+        None
+
+      case true =>
+        logger.info(s"anchoring most recent blockHash: $blockHash")
+        val anchor = NotaryClient.notarize(blockHash)
+        logger.info(s"anchoring was successful: blockHash=$blockHash, anchor=$anchor")
+        Some(anchor)
+
+    }
 
   }
 

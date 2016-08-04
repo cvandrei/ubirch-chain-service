@@ -43,4 +43,14 @@ object Config {
     */
   def blockInterval: Int = ConfigFactory.load.getInt(AppConst.BLOCK_INTERVAL)
 
+  /**
+    * @return true if anchoring is enabled (which chains depends on Notary Service)
+    */
+  def anchorEnabled: Boolean = ConfigFactory.load.getBoolean(AppConst.ANCHOR_ENABLED)
+
+  /**
+    * @return url to send notarize notifications to
+    */
+  def anchorUrl: String = ConfigFactory.load.getString(AppConst.ANCHOR_URL)
+
 }
