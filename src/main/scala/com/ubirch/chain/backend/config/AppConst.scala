@@ -9,8 +9,6 @@ object AppConst {
   final val INTERFACE = "ubirchChainService.interface"
   final val PORT = "ubirchChainService.port"
 
-  final val HASH_ALGORITHM = "ubirchChainService.hash.algorithm"
-
   final val BLOCK_MAX_SIZE = "ubirchChainService.block.maxSize"
   final val BLOCK_SIZE_CHECK_INTERVAL = "ubirchChainService.block.sizeCheckInterval"
   final val BLOCK_INTERVAL = "ubirchChainService.block.interval"

@@ -23,13 +23,6 @@ object Config {
   def port: Int = ConfigFactory.load.getInt(AppConst.PORT)
 
   /**
-    * The function to use whenever we hash something.
-    *
-    * @return name of hash function
-    */
-  def hashAlgorithm: String = ConfigFactory.load.getString(AppConst.HASH_ALGORITHM).toLowerCase
-
-  /**
     * Maximum size of blocks in kilobytes.
     *
     * @return max block size in kilobytes
