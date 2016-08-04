@@ -152,6 +152,9 @@ trait ChainStorage extends LazyLogging {
 
   }
 
+  /**
+    * @return the most recent block
+    */
   def mostRecentBlock: BlockInfo = {
 
     // TODO implementation instead of the current dummy
@@ -171,11 +174,19 @@ trait ChainStorage extends LazyLogging {
 
   }
 
+  /**
+    * Stores the genesis block unless we already have one.
+    *
+    * @param genesis the new genesis block
+    */
   def saveGenesisBlock(genesis: GenesisBlock): Unit = {
     // TODO implementation instead of the current dummy
     logger.info(s"saved genesis block: hash=${genesis.hash}")
   }
 
+  /**
+    * @return the genesis block; None if none exists
+    */
   def getGenesisBlock: Option[GenesisBlock] = {
 
     // TODO implementation instead of the current dummy
