@@ -3,7 +3,6 @@ package com.ubirch.chain.backend.actor
 import akka.actor.Actor
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.backend.config.{AppConst, Config}
-import com.ubirch.chain.hash.HashUtil
 import com.ubirch.chain.merkle.BlockUtil
 import com.ubirch.chain.storage.ChainStorage
 
@@ -29,7 +28,7 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
 
         case true =>
           logger.info(s"trigger mining of a new block (triggered by size check; blockSize: $sizeKb kb; ${hashes.size} hashes)")
-          self ! Mine
+          self ! Mine // TODO trigger does not seem to work --> FIX ME !!!
 
         case false => logger.debug(s"block does not need to be mined yet (size: $sizeKb kb; ${hashes.size} hashes)")
 
@@ -39,7 +38,7 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
 
       logger.info("start mining a new block")
 
-      val previousBlockHash = HashUtil.hexString("previousBlock") // TODO load previous block hash
+      val previousBlockHash = mostRecentBlock.hash
       val hashes = unminedHashes().hashes
       val block = BlockUtil.newBlock(previousBlockHash, hashes)
       logger.debug(s"new block hash: ${block.hash} (blockSize=${BlockUtil.size(hashes) / 1000} kb; ${hashes.size} hashes)")

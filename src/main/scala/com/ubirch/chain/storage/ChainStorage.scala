@@ -1,5 +1,6 @@
 package com.ubirch.chain.storage
 
+import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.hash.HashUtil
 import com.ubirch.chain.json.AnchorType._
 import com.ubirch.chain.json.{Anchor, BlockInfo, UnminedHashes}
@@ -10,14 +11,17 @@ import scala.util.Random
   * author: cvandrei
   * since: 2016-08-01
   */
-trait ChainStorage {
+trait ChainStorage extends LazyLogging {
 
   /**
     * Adds a hash to the list of unmined hashes.
     *
     * @param hash the hash to store
     */
-  def storeHash(hash: String): Unit = ???
+  def storeHash(hash: String): Unit = {
+    // TODO implementation instead of the current dummy
+    logger.info(s"storing hash: $hash")
+  }
 
   /**
     * Gives us the block that the input hash is included in.
@@ -140,7 +144,31 @@ trait ChainStorage {
     *
     * @param block block info to store
     */
-  def saveMinedBlock(block: BlockInfo): Unit = ???
+  def saveMinedBlock(block: BlockInfo): Unit = {
+
+    // TODO implementation instead of the current dummy
+    logger.info(s"saving block: blockHash=${block.hash}, previousBlockHash=${block.previousBlockHash}")
+
+  }
+
+  def mostRecentBlock: BlockInfo = {
+
+    // TODO implementation instead of the current dummy
+    val hash = HashUtil.hexString(Random.nextInt().toString)
+    val previousBlock = HashUtil.hexString(s"most recent's previous block hash - $hash")
+    val bitcoinAnchorHash = HashUtil.hexString(s"bitcoin anchor - $hash")
+    val ubirchAnchorHash = HashUtil.hexString(s"ubirch anchor - $hash")
+
+    BlockInfo(
+      hash,
+      previousBlockHash = previousBlock,
+      anchors = Seq(
+        Anchor(bitcoin, bitcoinAnchorHash),
+        Anchor(ubirch, ubirchAnchorHash)
+      )
+    )
+
+  }
 
   private def randomHashes: Seq[String] = {
 
