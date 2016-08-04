@@ -1,8 +1,9 @@
 package com.ubirch.chain.merkle
 
 import com.typesafe.scalalogging.LazyLogging
+import com.ubirch.chain.hash.HashUtil
 import com.ubirch.chain.hash.HashUtil._
-import com.ubirch.chain.json.BlockInfo
+import com.ubirch.chain.json.{BlockInfo, GenesisBlock}
 import org.joda.time.DateTime
 
 /**
@@ -52,10 +53,27 @@ object BlockUtil extends LazyLogging {
 
   }
 
+  /**
+    * Creates a new BlockInfo for us.
+    *
+    * @param previousBlockHash hash of the previous block
+    * @param hashes            hashes included in this block
+    * @return new block object
+    */
   def newBlock(previousBlockHash: String, hashes: Seq[String]): BlockInfo = {
 
     val hash = blockHash(hashes, previousBlockHash)
     BlockInfo(hash, previousBlockHash, hashes = Some(hashes))
+
+  }
+
+  def genesisBlock(): GenesisBlock = {
+
+    val now = DateTime.now
+    val hashes = HashUtil.randomHashes(500) :+ (now.getMillis + "ubirchChainService")
+    val hash = BlockUtil.toMerkleTree(hashes).hash()
+
+    GenesisBlock(hash, Some(hashes), now)
 
   }
 

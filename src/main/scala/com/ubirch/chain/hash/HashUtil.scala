@@ -3,6 +3,8 @@ package com.ubirch.chain.hash
 import com.roundeights.hasher.Implicits._
 import com.roundeights.hasher.{Digest, Hash}
 
+import scala.util.Random
+
 /**
   * author: cvandrei
   * since: 2016-07-28
@@ -18,5 +20,13 @@ object HashUtil {
   def hashAsBytes(buf: String): Array[Byte] = Hash(buf).bytes
 
   def hashAsHex(buf: Array[Byte]): String = Hash(buf).hex
+
+  def randomHashes(count: Int = Random.nextInt(30000)): Seq[String] = {
+
+    val randomSeq: Seq[String] = for (i <- 1 to count) yield Random.nextLong.toString
+
+    randomSeq.map(HashUtil.hexString)
+
+  }
 
 }

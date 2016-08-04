@@ -28,7 +28,8 @@ trait BaseBlock {
 }
 
 case class GenesisBlock(hash: String,
-                        override val hashes: Option[Seq[String]] = None
+                        override val hashes: Option[Seq[String]] = None,
+                        override val created: DateTime
                        ) extends BaseBlock
 
 trait PreviousBlockReference {

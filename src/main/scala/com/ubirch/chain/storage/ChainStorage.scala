@@ -3,7 +3,8 @@ package com.ubirch.chain.storage
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.hash.HashUtil
 import com.ubirch.chain.json.AnchorType._
-import com.ubirch.chain.json.{Anchor, BlockInfo, UnminedHashes}
+import com.ubirch.chain.json.{Anchor, BlockInfo, GenesisBlock, UnminedHashes}
+import com.ubirch.chain.merkle.BlockUtil
 
 import scala.util.Random
 
@@ -135,7 +136,7 @@ trait ChainStorage extends LazyLogging {
   def unminedHashes(): UnminedHashes = {
 
     // TODO implementation instead of the current dummy
-    UnminedHashes(randomHashes)
+    UnminedHashes(HashUtil.randomHashes())
 
   }
 
@@ -170,12 +171,18 @@ trait ChainStorage extends LazyLogging {
 
   }
 
-  private def randomHashes: Seq[String] = {
+  def saveGenesisBlock(genesis: GenesisBlock): Unit = {
+    // TODO implementation instead of the current dummy
+    logger.info(s"saved genesis block: hash=${genesis.hash}")
+  }
 
-    val count = Random.nextInt(30000)
-    val randomSeq: Seq[String] = for (i <- 1 to count) yield Random.nextLong.toString
+  def getGenesisBlock: Option[GenesisBlock] = {
 
-    randomSeq.map(HashUtil.hexString)
+    // TODO implementation instead of the current dummy
+    Random.nextBoolean() match {
+      case true => Some(BlockUtil.genesisBlock())
+      case false => None
+    }
 
   }
 
