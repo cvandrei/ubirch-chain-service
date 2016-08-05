@@ -12,6 +12,7 @@ val json4sV = "3.4.0"
 val configV = "1.3.0"
 
 resolvers += Resolver.bintrayRepo("hseeberger", "maven")
+resolvers += Resolver.bintrayRepo("rick-beton", "maven")
 resolvers ++= Seq("RoundEights" at "http://maven.spikemark.net/roundeights")
 
 libraryDependencies := Seq(
@@ -49,6 +50,9 @@ libraryDependencies := Seq(
   "org.slf4j" % "slf4j-api" % "1.7.12",
 
   // hashing
-  "com.roundeights" %% "hasher" % "1.2.0"
+  "com.roundeights" %% "hasher" % "1.2.0",
+
+  // misc
+  "uk.co.bigbeeconsultants" %% "bee-client" % "0.29.1"
 
 )

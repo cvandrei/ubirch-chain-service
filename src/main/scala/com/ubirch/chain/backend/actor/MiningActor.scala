@@ -1,11 +1,12 @@
 package com.ubirch.chain.backend.actor
 
 import akka.actor.Actor
+import akka.stream.{ActorMaterializer, ActorMaterializerSettings}
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.backend.config.{AppConst, Config}
 import com.ubirch.chain.json.{Anchor, BlockInfo}
 import com.ubirch.chain.merkle.BlockUtil
-import com.ubirch.chain.notary.NotaryClient
+import com.ubirch.chain.notary.client.NotaryClient
 import com.ubirch.chain.storage.ChainStorage
 
 /**
@@ -13,6 +14,8 @@ import com.ubirch.chain.storage.ChainStorage
   * since: 2016-08-03
   */
 class MiningActor extends Actor with ChainStorage with LazyLogging {
+
+  final implicit val materializer: ActorMaterializer = ActorMaterializer(ActorMaterializerSettings(context.system))
 
   override def receive: Receive = {
 
@@ -43,11 +46,11 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
 
       anchor(block.hash) match {
 
-        case None => // do nothing
-
         case Some(anchor) =>
           block.anchors :+ anchor
           upsertBlock(block)
+
+        case _ => // do nothing
 
       }
 
@@ -76,10 +79,17 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
         None
 
       case true =>
+
         logger.info(s"anchoring most recent blockHash: $blockHash")
-        val anchor = NotaryClient.notarize(blockHash)
-        logger.info(s"anchoring was successful: blockHash=$blockHash, anchor=$anchor")
-        Some(anchor)
+
+        val res = NotaryClient.notarize(blockHash)
+        // TODO convert response to Option[Anchor]
+        //    val notarizeResponse = response.asInstanceOf[NotarizeResponse]
+        //    val anchorHash = notarizeResponse.hash
+        //    val anchorType = AnchorType.bitcoin
+        //    logger.info(s"anchoring was successful: blockHash=$blockHash, anchorType=$anchorType, anchorHash=$anchorHash")
+        //    Anchor(anchorType, anchorHash)
+        None
 
     }
 
