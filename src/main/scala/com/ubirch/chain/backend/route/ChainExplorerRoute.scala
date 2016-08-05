@@ -18,39 +18,29 @@ trait ChainExplorerRoute extends MyJsonProtocol with ChainStorage {
 
   val route: Route = {
 
-    pathPrefix(RouteConstants.explorer) {
+    (get & pathPrefix(RouteConstants.explorer)) {
 
       pathPrefix(RouteConstants.hash / Segment) { hash =>
-
-        get {
-          complete {
-            getHash(hash) match {
-              case None => empty404
-              case Some(blockInfo) => blockInfo
-            }
+        complete {
+          getHash(hash) match {
+            case None => empty404
+            case Some(blockInfo) => blockInfo
           }
         }
 
       } ~ path(RouteConstants.block / Segment) { hash =>
-
-        get {
-          complete {
-            getBlock(hash) match {
-              case None => empty404
-              case Some(blockInfo) => blockInfo
-            }
+        complete {
+          getBlock(hash) match {
+            case None => empty404
+            case Some(blockInfo) => blockInfo
           }
-
         }
 
       } ~ path(RouteConstants.fullBlock / Segment) { hash =>
-
-        get {
-          complete {
-            getBlockWithHashes(hash) match {
-              case None => empty404
-              case Some(blockInfo) => blockInfo
-            }
+        complete {
+          getBlockWithHashes(hash) match {
+            case None => empty404
+            case Some(blockInfo) => blockInfo
           }
         }
 
