@@ -9,7 +9,7 @@ import akka.pattern.ask
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.chain.backend.actor.{AnchorActor, AnchorNow, GenesisActor, GenesisCheck, Mine, MiningActor, SizeCheck}
+import com.ubirch.chain.backend.actor.{AnchorActor, AnchorNow, GenesisActor, GenesisCheck, BlockInterval, MiningActor, SizeCheck}
 import com.ubirch.chain.backend.config.Config
 import com.ubirch.chain.backend.route.MainRoute
 
@@ -69,7 +69,7 @@ object Boot extends App with LazyLogging {
 
     val scheduler = system.scheduler
     val blockInterval = Config.blockInterval
-    scheduler.schedule(blockInterval seconds, blockInterval seconds, miningActor, new Mine())
+    scheduler.schedule(blockInterval seconds, blockInterval seconds, miningActor, new BlockInterval())
 
     val sizeCheckInterval = Config.blockSizeCheckInterval
     scheduler.schedule(0 seconds, sizeCheckInterval millis, miningActor, new SizeCheck())

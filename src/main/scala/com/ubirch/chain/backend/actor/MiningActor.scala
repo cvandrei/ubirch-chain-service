@@ -18,31 +18,35 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
 
   override def receive: Receive = {
 
-    case sc: SizeCheck =>
+    case sc: SizeCheck => sizeCheck()
 
-      val blockMaxSizeKb = Config.blockMaxSize
-      logger.debug(s"checking size of unmined hashes: ${AppConst.BLOCK_MAX_SIZE} = $blockMaxSizeKb kb")
-
-      val hashes = unminedHashes().hashes
-      val size = BlockUtil.size(hashes)
-      val sizeKb = size / 1000
-      val maxBlockSizeBytes = Config.blockMaxSize * 1000
-
-      size >= maxBlockSizeBytes match {
-
-        case true =>
-          logger.info(s"trigger mining of a new block (triggered by size check; blockSize: $sizeKb kb; ${hashes.size} hashes)")
-          mine()
-
-        case false => logger.debug(s"block does not need to be mined yet (size: $sizeKb kb; ${hashes.size} hashes)")
-
-      }
-
-    case m: Mine =>
+    case m: BlockInterval =>
 
       // TODO check mostRecentBlock().created for time based trigger --> reduce SizeCheck and Mine to just one case class
       logger.info("start mining a new block")
       mine()
+
+  }
+
+  private def sizeCheck(): Unit = {
+
+    val blockMaxSizeKb = Config.blockMaxSize
+    logger.debug(s"checking size of unmined hashes: ${AppConst.BLOCK_MAX_SIZE} = $blockMaxSizeKb kb")
+
+    val hashes = unminedHashes().hashes
+    val size = BlockUtil.size(hashes)
+    val sizeKb = size / 1000
+    val maxBlockSizeBytes = Config.blockMaxSize * 1000
+
+    size >= maxBlockSizeBytes match {
+
+      case true =>
+        logger.info(s"trigger mining of a new block (triggered by size check; blockSize: $sizeKb kb; ${hashes.size} hashes)")
+        mine()
+
+      case false => logger.debug(s"block does not need to be mined yet (size: $sizeKb kb; ${hashes.size} hashes)")
+
+    }
 
   }
 
@@ -64,4 +68,4 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
 
 case class SizeCheck()
 
-case class Mine()
+case class BlockInterval()
