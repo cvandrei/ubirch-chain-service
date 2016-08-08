@@ -9,7 +9,7 @@ import akka.pattern.ask
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.chain.backend.actor.{GenesisActor, GenesisCheck, Mine, MiningActor, SizeCheck}
+import com.ubirch.chain.backend.actor.{AnchorActor, AnchorNow, GenesisActor, GenesisCheck, Mine, MiningActor, SizeCheck}
 import com.ubirch.chain.backend.config.Config
 import com.ubirch.chain.backend.route.MainRoute
 
@@ -28,6 +28,7 @@ object Boot extends App with LazyLogging {
   implicit val executionContext = system.dispatcher
 
   private val miningActor = system.actorOf(Props[MiningActor])
+  private val anchorActor = system.actorOf(Props[AnchorActor])
   private val genesisActor = system.actorOf(Props[GenesisActor])
 
   logger.info("ubirchChainService started")
@@ -66,11 +67,15 @@ object Boot extends App with LazyLogging {
 
   private def scheduleMiningRelatedJobs(): Unit = {
 
+    val scheduler = system.scheduler
     val blockInterval = Config.blockInterval
-    system.scheduler.schedule(blockInterval seconds, blockInterval seconds, miningActor, new Mine())
+    scheduler.schedule(blockInterval seconds, blockInterval seconds, miningActor, new Mine())
 
     val sizeCheckInterval = Config.blockSizeCheckInterval
-    system.scheduler.schedule(0 seconds, sizeCheckInterval millis, miningActor, new SizeCheck())
+    scheduler.schedule(0 seconds, sizeCheckInterval millis, miningActor, new SizeCheck())
+
+    val anchorInterval = Config.anchorInterval
+    scheduler.schedule(10 seconds, anchorInterval seconds, anchorActor, new AnchorNow())
 
   }
 

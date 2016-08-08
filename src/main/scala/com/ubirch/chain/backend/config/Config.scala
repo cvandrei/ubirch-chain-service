@@ -53,4 +53,9 @@ object Config {
     */
   def anchorUrl: String = ConfigFactory.load.getString(AppConst.ANCHOR_URL)
 
+  /**
+    * @return interval (in seconds) between two anchors
+    */
+  def anchorInterval: Int = ConfigFactory.load.getInt(AppConst.ANCHOR_INTERVAL)
+
 }

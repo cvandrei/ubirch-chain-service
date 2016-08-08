@@ -4,9 +4,8 @@ import akka.actor.Actor
 import akka.stream.{ActorMaterializer, ActorMaterializerSettings}
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.backend.config.{AppConst, Config}
-import com.ubirch.chain.json.{Anchor, BlockInfo}
+import com.ubirch.chain.json.BlockInfo
 import com.ubirch.chain.merkle.BlockUtil
-import com.ubirch.chain.notary.client.NotaryClient
 import com.ubirch.chain.storage.ChainStorage
 
 /**
@@ -41,19 +40,9 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
 
     case m: Mine =>
 
+      // TODO check mostRecentBlock().created for time based trigger --> reduce SizeCheck and Mine to just one case class
       logger.info("start mining a new block")
-      val block = mine()
-
-      // TODO extract anchoring into a separate job
-      anchor(block.hash) match {
-
-        case Some(anchor) =>
-          block.anchors :+ anchor
-          upsertBlock(block)
-
-        case _ => // do nothing
-
-      }
+      mine()
 
   }
 
@@ -68,31 +57,6 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
     upsertBlock(block)
 
     block
-
-  }
-
-  private def anchor(blockHash: String): Option[Anchor] = {
-
-    Config.anchorEnabled match {
-
-      case false =>
-        logger.info(s"anchoring is disabled (most recent blockHash: $blockHash)")
-        None
-
-      case true =>
-
-        logger.info(s"anchoring most recent blockHash: $blockHash")
-
-        val res = NotaryClient.notarize(blockHash)
-        // TODO convert response to Option[Anchor]
-        //    val notarizeResponse = response.asInstanceOf[NotarizeResponse]
-        //    val anchorHash = notarizeResponse.hash
-        //    val anchorType = AnchorType.bitcoin
-        //    logger.info(s"anchoring was successful: blockHash=$blockHash, anchorType=$anchorType, anchorHash=$anchorHash")
-        //    Anchor(anchorType, anchorHash)
-        None
-
-    }
 
   }
 

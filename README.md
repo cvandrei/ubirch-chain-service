@@ -48,3 +48,4 @@ Configures the Akka-Http Server.
 | block.interval          | number of seconds after which a block will definitely be generated |
 | anchor.enabled          | true if blocks may be anchored into another blockchain |
 | anchor.url              | url of Notary Service to send notifications to when anchroing is enabled |
+| anchor.interval         | interval (in seconds) in which blocks are anchored |

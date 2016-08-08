@@ -17,5 +17,6 @@ object AppConst {
 
   final val ANCHOR_ENABLED = s"$prefix.anchor.enabled"
   final val ANCHOR_URL = s"$prefix.anchor.url"
+  final val ANCHOR_INTERVAL = s"$prefix.anchor.interval"
 
 }
