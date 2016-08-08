@@ -149,7 +149,6 @@ trait ChainStorage extends LazyLogging {
 
     // TODO implementation instead of the current dummy
     logger.info(s"upsert block: blockHash=${block.hash}, previousBlockHash=${block.previousBlockHash}")
-    logger.debug(s"upsertblock: $block")
 
   }
 

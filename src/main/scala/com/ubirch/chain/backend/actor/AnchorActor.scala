@@ -17,7 +17,7 @@ class AnchorActor extends Actor
 
   override def receive: Receive = {
 
-    case AnchorNow =>
+    case an: AnchorNow =>
 
       Config.anchorEnabled match {
 
