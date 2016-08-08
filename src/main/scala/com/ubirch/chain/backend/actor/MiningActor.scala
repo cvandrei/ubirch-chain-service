@@ -44,6 +44,7 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
       logger.info("start mining a new block")
       val block = mine()
 
+      // TODO extract anchoring into a separate job
       anchor(block.hash) match {
 
         case Some(anchor) =>
