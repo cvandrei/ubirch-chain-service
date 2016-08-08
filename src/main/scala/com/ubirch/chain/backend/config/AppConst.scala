@@ -11,9 +11,9 @@ object AppConst {
   final val INTERFACE = s"$prefix.interface"
   final val PORT = s"$prefix.port"
 
+  final val BLOCK_CHECK_INTERVAL = s"$prefix.block.checkInterval"
   final val BLOCK_MAX_SIZE = s"$prefix.block.maxSize"
-  final val BLOCK_SIZE_CHECK_INTERVAL = s"$prefix.block.sizeCheckInterval"
-  final val BLOCK_INTERVAL = s"$prefix.block.interval"
+  final val BLOCK_MINE_EVERY_X_SECONDS = s"$prefix.block.mineEveryXSeconds"
 
   final val ANCHOR_ENABLED = s"$prefix.anchor.enabled"
   final val ANCHOR_URL = s"$prefix.anchor.url"

@@ -23,6 +23,13 @@ object Config {
   def port: Int = ConfigFactory.load.getInt(AppConst.PORT)
 
   /**
+    * Tells us how often we check if a new block may be mined
+    *
+    * @return number of seconds
+    */
+  def blockCheckInterval: Int = ConfigFactory.load.getInt(AppConst.BLOCK_CHECK_INTERVAL)
+
+  /**
     * Maximum size of blocks in kilobytes.
     *
     * @return max block size in kilobytes
@@ -30,18 +37,9 @@ object Config {
   def blockMaxSize: Int = ConfigFactory.load.getInt(AppConst.BLOCK_MAX_SIZE)
 
   /**
-    * The interval (in seconds) in which we check if the maximum block size has been reached.
-    *
-    * @return number of seconds between block size checks
+    * @return maximum number of seconds after which we mine a block
     */
-  def blockSizeCheckInterval: Int = ConfigFactory.load.getInt(AppConst.BLOCK_SIZE_CHECK_INTERVAL)
-
-  /**
-    * The maximum interval (in seconds) after which we "mine" a new block no matter how small it might be.
-    *
-    * @return block interval in seconds
-    */
-  def blockInterval: Int = ConfigFactory.load.getInt(AppConst.BLOCK_INTERVAL)
+  def mineEveryXSeconds: Int = ConfigFactory.load.getInt(AppConst.BLOCK_MINE_EVERY_X_SECONDS)
 
   /**
     * @return true if anchoring is enabled (which chains depends on Notary Service)

@@ -43,9 +43,9 @@ Configures the Akka-Http Server.
 | ----------------------- | ----------- |
 | interface               | network interface the service is connected to |
 | port                    | port on which service listens |
+| block.checkInterval     | how many seconds between checks if we may mine the next block |
 | block.maxSize           | maximum block size in kilobyte |
-| block.sizeCheckInterval | milliseconds between checks if the maxBlockSize has been reached |
-| block.interval          | number of seconds after which a block will definitely be generated |
+| block.mineEveryXSeconds | number of seconds after which we mine a new block independent of it's size |
 | anchor.enabled          | true if blocks may be anchored into another blockchain |
 | anchor.url              | url of Notary Service to send notifications to when anchroing is enabled |
 | anchor.interval         | interval (in seconds) in which blocks are anchored |
