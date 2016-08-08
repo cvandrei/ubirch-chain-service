@@ -32,7 +32,7 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
 
         case true =>
           logger.info(s"trigger mining of a new block (triggered by size check; blockSize: $sizeKb kb; ${hashes.size} hashes)")
-          self ! Mine // TODO trigger does not seem to work --> FIX ME !!!
+          mine()
 
         case false => logger.debug(s"block does not need to be mined yet (size: $sizeKb kb; ${hashes.size} hashes)")
 
@@ -52,7 +52,7 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
     val hashes = unminedHashes().hashes
     val block = BlockUtil.newBlock(previousBlockHash, hashes)
     val blockHash = block.hash
-    logger.debug(s"new block hash: $blockHash (blockSize=${BlockUtil.size(hashes) / 1000} kb; ${hashes.size} hashes)")
+    logger.info(s"new block hash: $blockHash (blockSize=${BlockUtil.size(hashes) / 1000} kb; ${hashes.size} hashes)")
 
     upsertBlock(block)
 
