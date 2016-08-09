@@ -17,12 +17,7 @@ resolvers += Resolver.bintrayRepo("hseeberger", "maven")
 resolvers += Resolver.bintrayRepo("rick-beton", "maven")
 resolvers ++= Seq("RoundEights" at "http://maven.spikemark.net/roundeights")
 
-libraryDependencies := Seq(
-
-  //scala
-  "org.scala-lang.modules" %% "scala-xml" % "1.0.5",
-  "org.scala-lang" % "scala-reflect" % "2.11.8",
-  "org.scala-lang" % "scala-library" % "2.11.8",
+libraryDependencies ++= Seq(
 
   //akka
   "com.typesafe.akka" %% "akka-actor" % akkaV,
