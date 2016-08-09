@@ -22,21 +22,13 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
 
       sizeCheck() match {
 
-        case true =>
-
-          logger.info(s"trigger mining of a new block (trigger: size)")
-          mine()
+        case true => mine()
 
         case false =>
 
           ageCheck() match {
-
-            case true =>
-              logger.info("start mining a new block (trigger: time)")
-              mine()
-
-            case false => logger.debug("don't have to mine a new block yet based on time trigger")
-
+            case true => mine()
+            case false => // do nothing
           }
 
       }
@@ -50,9 +42,18 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
 
     val hashes = unminedHashes().hashes
     val size = BlockUtil.size(hashes)
+    val sizeKb = BlockUtil.size(hashes) / 1000
     val maxBlockSizeBytes = Config.blockMaxSize * 1000
 
-    size >= maxBlockSizeBytes
+    size >= maxBlockSizeBytes match {
+
+      case true =>
+        logger.info(s"trigger mining of a new block (trigger: size) -- ${hashes.length} hashes ($sizeKb kb)")
+        true
+
+      case false => false
+
+    }
 
   }
 
@@ -61,7 +62,17 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
     val block = mostRecentBlock()
     val nextCreationDate = block.created.plusSeconds(Config.mineEveryXSeconds)
 
-    nextCreationDate.isBeforeNow
+    nextCreationDate.isBeforeNow match {
+
+      case true =>
+        logger.info("start mining a new block (trigger: time)")
+        true
+
+      case false =>
+        logger.debug("don't have to mine a new block yet based on time trigger")
+        false
+
+    }
 
   }
 
