@@ -9,14 +9,14 @@ import akka.pattern.ask
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.chain.backend.actor.{BlockCheck, AnchorActor, AnchorNow, GenesisActor, GenesisCheck, MiningActor}
+import com.ubirch.chain.backend.actor.{AnchorActor, AnchorNow, BlockCheck, GenesisActor, GenesisCheck, MiningActor}
 import com.ubirch.chain.backend.config.Config
 import com.ubirch.chain.backend.route.MainRoute
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.util.{Failure, Success}
 import scala.language.postfixOps
+import scala.util.{Failure, Success}
 
 /**
   * author: cvandrei
