@@ -21,7 +21,7 @@ class NotaryClientDebug extends FeatureSpec
 
   feature("NotaryClient.notarize") {
 
-    scenario("for manual debug") {
+    ignore("for manual debug") {
 
       val event = "ubirch-chain-test-2342"
       val url = new URL("http://localhost:8080/api/v1/chainService/hash")
