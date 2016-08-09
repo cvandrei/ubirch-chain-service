@@ -9,7 +9,7 @@ scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-feature")
 
 val akkaV = "2.4.9-RC2"
-val scalaTestV = "2.2.6"
+val scalaTestV = "3.0.0"
 val json4sV = "3.4.0"
 val configV = "1.3.0"
 
