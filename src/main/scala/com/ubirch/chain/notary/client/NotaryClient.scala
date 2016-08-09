@@ -9,7 +9,7 @@ import org.json4s.native.JsonMethods._
 import uk.co.bigbeeconsultants.http.HttpClient
 import uk.co.bigbeeconsultants.http.header.MediaType._
 import uk.co.bigbeeconsultants.http.request.RequestBody
-import uk.co.bigbeeconsultants.http.response.Status
+import uk.co.bigbeeconsultants.http.response.Status._
 
 /**
   * author: cvandrei
@@ -29,7 +29,7 @@ with LazyLogging {
 
     res.status match {
 
-      case Status.S200_OK => Some(parse(res.body.asString).extract[NotarizeResponse])
+      case S200_OK => Some(parse(res.body.asString).extract[NotarizeResponse])
 
       case _ =>
         logger.error(s"failed to notarize: blockHash=$blockHash, response=$res")
