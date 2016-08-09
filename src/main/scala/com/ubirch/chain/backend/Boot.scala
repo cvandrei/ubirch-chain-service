@@ -16,6 +16,7 @@ import com.ubirch.chain.backend.route.MainRoute
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
+import scala.language.postfixOps
 
 /**
   * author: cvandrei
