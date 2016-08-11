@@ -20,3 +20,4 @@ project/boot/
 .cache
 /.idea/
 /target/
+*.iml
