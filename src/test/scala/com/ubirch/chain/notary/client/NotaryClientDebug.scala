@@ -35,7 +35,7 @@ class NotaryClientDebug extends FeatureSpec
       println(s"status=${res.status}, body=${res.body.asString}")
       val hash = parse(res.body.asString).extract[Hash]
 
-      val expected = HashUtil.hexString(event)
+      val expected = HashUtil.sha256HexString(event)
       hash.hash should be(expected)
 
       println(s"hash=${hash.hash}")

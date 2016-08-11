@@ -128,5 +128,5 @@ object HashNode {
 }
 
 object MerkleTree {
-  def computeHash(data: String): String = HashUtil.digest(data)
+  def computeHash(data: String): String = HashUtil.sha256Digest(data)
 }

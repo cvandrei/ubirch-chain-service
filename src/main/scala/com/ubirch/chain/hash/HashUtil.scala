@@ -11,21 +11,21 @@ import scala.util.Random
   */
 object HashUtil {
 
-  def digest(data: String): Digest = data.sha256
+  def sha256Digest(data: String): Digest = data.sha256
 
-  def hexString(data: String): String = digest(data).hex
+  def sha256HexString(data: String): String = sha256Digest(data).hex
 
-  def byteArray(data: String): Array[Byte] = digest(data).bytes
+  def sha256ByteArray(data: String): Array[Byte] = sha256Digest(data).bytes
 
   def hashAsBytes(buf: String): Array[Byte] = Hash(buf).bytes
 
   def hashAsHex(buf: Array[Byte]): String = Hash(buf).hex
 
-  def randomHashes(count: Int = Random.nextInt(30000)): Seq[String] = {
+  def randomSha256Hashes(count: Int = Random.nextInt(30000)): Seq[String] = {
 
     val randomSeq: Seq[String] = for (i <- 1 to count) yield Random.nextLong.toString
 
-    randomSeq.map(HashUtil.hexString)
+    randomSeq.map(HashUtil.sha256HexString)
 
   }
 

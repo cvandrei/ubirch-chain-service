@@ -12,27 +12,27 @@ import scala.util.Random
 class HashUtilSpec extends FeatureSpec
   with Matchers {
 
-  feature("HashUtil.hexString") {
+  feature("HashUtil.sha256HexString") {
 
     scenario("ensure that SHA-256 is configured") {
-      HashUtil.hexString("ubirchChainService") should be("8faa746945edc3313ae873802616fe17e79f13623aac81e38cbde9e700c33b92")
+      HashUtil.sha256HexString("ubirchChainService") should be("8faa746945edc3313ae873802616fe17e79f13623aac81e38cbde9e700c33b92")
     }
 
   }
 
-  feature("HashUtil.bytesToHex && HashUtil.stringToBytes") {
+  feature("HashUtil.hashAsHex && HashUtil.hashAsBytes") {
 
     scenario("calculate hexString, convert to byte array and convert byte array back to hexString") {
 
       val input = "ubirchChainService"
-      val expected = HashUtil.hexString(input)
+      val expected = HashUtil.sha256HexString(input)
       println(s"expected: $expected")
 
-      // test part 1: stringToBytes
+      // test part 1: hashAsBytes
       val expectedBytes = HashUtil.hashAsBytes(expected)
       expectedBytes.length should be(32)
 
-      // test part 2: bytesToHex
+      // test part 2: hashAsHex
       val actual = HashUtil.hashAsHex(expectedBytes)
       println(s"actual: $actual")
       actual should be(expected)
@@ -41,19 +41,19 @@ class HashUtilSpec extends FeatureSpec
 
   }
 
-  feature("HashUtil.bytesToHex && HashUtil.byteArray") {
+  feature("HashUtil.hashAsHex && HashUtil.sha256ByteArray") {
 
     scenario("calculate hash as byte array and convert back to hexString") {
 
       val input = "ubirchChainService"
-      val expected = HashUtil.hexString(input)
+      val expected = HashUtil.sha256HexString(input)
       println(s"expected: $expected")
 
-      // test part 1: byteArray
-      val expectedBytes = HashUtil.byteArray(input)
+      // test part 1: sha256ByteArray
+      val expectedBytes = HashUtil.sha256ByteArray(input)
       expectedBytes.length should be(32)
 
-      // test part 2: bytesToHex
+      // test part 2: hashAsHex
       val actual = HashUtil.hashAsHex(expectedBytes)
       println(s"actual: $actual")
       actual should be(expected)
@@ -101,7 +101,7 @@ class HashUtilSpec extends FeatureSpec
     println(s"finished generating random list with $count elements")
     println(s"starting to calculate $count hashes")
     val before = DateTime.now
-    randomSeq.map(HashUtil.hexString)
+    randomSeq.map(HashUtil.sha256HexString)
     val after = DateTime.now
 
     val duration = after.getMillis - before.getMillis

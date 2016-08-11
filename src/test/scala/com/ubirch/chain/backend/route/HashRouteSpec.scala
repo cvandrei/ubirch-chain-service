@@ -34,7 +34,7 @@ class HashRouteSpec extends FeatureSpec
       val data = Data("ubirch-test")
       Post(RouteConstants.urlHash, data) ~> routes ~> check {
         status shouldEqual OK
-        responseAs[Hash].hash shouldEqual HashUtil.hexString(data.data)
+        responseAs[Hash].hash shouldEqual HashUtil.sha256HexString(data.data)
       }
     }
 

@@ -45,7 +45,7 @@ object BlockUtil extends LazyLogging {
 
     val before = DateTime.now
     val treeHash = toMerkleTree(hashes).hash()
-    val blockHash = hexString(treeHash ++ previousBlockHash)
+    val blockHash = sha256HexString(treeHash ++ previousBlockHash)
     val after = DateTime.now
     logger.debug(s"calculated block hash in ${after.getMillis - before.getMillis} ms")
 
@@ -70,7 +70,7 @@ object BlockUtil extends LazyLogging {
   def genesisBlock(): GenesisBlock = {
 
     val now = DateTime.now
-    val hashes = HashUtil.randomHashes(500) :+ (now.getMillis + "ubirchChainService")
+    val hashes = HashUtil.randomSha256Hashes(500) :+ (now.getMillis + "ubirchChainService")
     val hash = BlockUtil.toMerkleTree(hashes).hash()
 
     GenesisBlock(hash, Some(hashes), now)

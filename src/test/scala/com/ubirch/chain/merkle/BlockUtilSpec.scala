@@ -52,15 +52,15 @@ class BlockUtilSpec extends FeatureSpec
     scenario("sequence of five hashes results in block hash") {
 
       val hashes = Seq(
-        HashUtil.hexString("1234"),
-        HashUtil.hexString("2345"),
-        HashUtil.hexString("3456"),
-        HashUtil.hexString("4567"),
-        HashUtil.hexString("5678")
+        HashUtil.sha256HexString("1234"),
+        HashUtil.sha256HexString("2345"),
+        HashUtil.sha256HexString("3456"),
+        HashUtil.sha256HexString("4567"),
+        HashUtil.sha256HexString("5678")
       )
       val treeHash = Branch.createFromHashes(hashes).hash()
-      val previousBlockHash = HashUtil.hexString("previousBlockHash")
-      val expected = HashUtil.hexString(treeHash ++ previousBlockHash)
+      val previousBlockHash = HashUtil.sha256HexString("previousBlockHash")
+      val expected = HashUtil.sha256HexString(treeHash ++ previousBlockHash)
 
       BlockUtil.blockHash(hashes, previousBlockHash) should be(expected)
 

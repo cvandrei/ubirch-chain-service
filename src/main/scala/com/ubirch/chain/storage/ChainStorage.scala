@@ -39,10 +39,10 @@ trait ChainStorage extends LazyLogging {
 
       case _ =>
 
-        val blockHash = HashUtil.hexString(s"block hash - $hash")
-        val previousBlock = HashUtil.hexString(s"previous block hash - $hash")
-        val bitcoinAnchorHash = HashUtil.hexString(s"bitcoin anchor - $hash")
-        val ubirchAnchorHash = HashUtil.hexString(s"ubirch anchor - $hash")
+        val blockHash = HashUtil.sha256HexString(s"block hash - $hash")
+        val previousBlock = HashUtil.sha256HexString(s"previous block hash - $hash")
+        val bitcoinAnchorHash = HashUtil.sha256HexString(s"bitcoin anchor - $hash")
+        val ubirchAnchorHash = HashUtil.sha256HexString(s"ubirch anchor - $hash")
 
         Some(
           BlockInfo(
@@ -74,9 +74,9 @@ trait ChainStorage extends LazyLogging {
 
       case _ =>
 
-        val previousBlock = HashUtil.hexString(s"previous block hash - $hash")
-        val bitcoinAnchorHash = HashUtil.hexString(s"bitcoin anchor - $hash")
-        val ubirchAnchorHash = HashUtil.hexString(s"ubirch anchor - $hash")
+        val previousBlock = HashUtil.sha256HexString(s"previous block hash - $hash")
+        val bitcoinAnchorHash = HashUtil.sha256HexString(s"bitcoin anchor - $hash")
+        val ubirchAnchorHash = HashUtil.sha256HexString(s"ubirch anchor - $hash")
 
         Some(
           BlockInfo(
@@ -108,9 +108,9 @@ trait ChainStorage extends LazyLogging {
 
       case _ =>
 
-        val previousBlock = HashUtil.hexString(s"previous block hash - $hash")
-        val bitcoinAnchorHash = HashUtil.hexString(s"bitcoin anchor - $hash")
-        val ubirchAnchorHash = HashUtil.hexString(s"ubirch anchor - $hash")
+        val previousBlock = HashUtil.sha256HexString(s"previous block hash - $hash")
+        val bitcoinAnchorHash = HashUtil.sha256HexString(s"bitcoin anchor - $hash")
+        val ubirchAnchorHash = HashUtil.sha256HexString(s"ubirch anchor - $hash")
 
         Some(
           BlockInfo(
@@ -136,7 +136,7 @@ trait ChainStorage extends LazyLogging {
   def unminedHashes(): UnminedHashes = {
 
     // TODO implementation instead of the current dummy
-    UnminedHashes(HashUtil.randomHashes())
+    UnminedHashes(HashUtil.randomSha256Hashes())
 
   }
 
@@ -158,10 +158,10 @@ trait ChainStorage extends LazyLogging {
   def mostRecentBlock(): BlockInfo = {
 
     // TODO implementation instead of the current dummy
-    val hash = HashUtil.hexString(Random.nextInt().toString)
-    val previousBlock = HashUtil.hexString(s"most recent's previous block hash - $hash")
-    val bitcoinAnchorHash = HashUtil.hexString(s"bitcoin anchor - $hash")
-    val ubirchAnchorHash = HashUtil.hexString(s"ubirch anchor - $hash")
+    val hash = HashUtil.sha256HexString(Random.nextInt().toString)
+    val previousBlock = HashUtil.sha256HexString(s"most recent's previous block hash - $hash")
+    val bitcoinAnchorHash = HashUtil.sha256HexString(s"bitcoin anchor - $hash")
+    val ubirchAnchorHash = HashUtil.sha256HexString(s"ubirch anchor - $hash")
 
     BlockInfo(
       hash,
