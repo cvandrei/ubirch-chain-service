@@ -5,11 +5,6 @@ lazy val commonSettings = Seq(
   scalacOptions ++= Seq("-feature")
 )
 
-val akkaV = "2.4.9-RC2"
-val scalaTestV = "3.0.0"
-val json4sV = "3.4.0"
-val configV = "1.3.0"
-
 lazy val root = (project in file("."))
   .settings(commonSettings: _*)
   .aggregate(backend, share, json)
@@ -27,6 +22,11 @@ lazy val backend = project
     resolvers ++= Seq("RoundEights" at "http://maven.spikemark.net/roundeights"), // hasher
 
     libraryDependencies ++= {
+
+      val akkaV = "2.4.9-RC2"
+      val scalaTestV = "3.0.0"
+      val json4sV = "3.4.0"
+      val configV = "1.3.0"
 
       Seq(
 
