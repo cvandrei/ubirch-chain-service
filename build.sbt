@@ -2,7 +2,8 @@ import sbt.Keys._
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
-  scalacOptions ++= Seq("-feature")
+  scalacOptions ++= Seq("-feature"),
+  version := "0.1-SNAPSHOT"
 )
 
 lazy val root = (project in file("."))
@@ -14,8 +15,7 @@ lazy val backend = project
   .dependsOn(share, json)
   .settings(
 
-    name := "chainService-backend",
-    version := "1.0",
+    name := "server",
 
     resolvers += Resolver.bintrayRepo("hseeberger", "maven"),
     resolvers += Resolver.bintrayRepo("rick-beton", "maven"), // bee client
@@ -73,8 +73,7 @@ lazy val json = project
   .dependsOn(share)
   .settings(
 
-    name := "chainService-json",
-    version := "1.0",
+    name := "model",
 
     libraryDependencies ++= {
       Seq(
@@ -87,6 +86,5 @@ lazy val json = project
 lazy val share = project
   .settings(commonSettings: _*)
   .settings(
-    name := "chainService-share",
-    version := "1.0"
+    name := "share"
   )
