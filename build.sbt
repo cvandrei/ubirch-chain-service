@@ -92,6 +92,7 @@ lazy val mergeStrategy = Seq(
     case m if m.toLowerCase.endsWith("manifest.mf") => MergeStrategy.discard
     case m if m.toLowerCase.matches("meta-inf.*\\.sf$") => MergeStrategy.discard
     case "application.conf" => MergeStrategy.concat
+    case "application.base.conf" => MergeStrategy.concat
     case "reference.conf" => MergeStrategy.concat
     case _ => MergeStrategy.first
   }
