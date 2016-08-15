@@ -4,8 +4,8 @@ import akka.actor.Actor
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.backend.config.Config
 import com.ubirch.chain.json.{Anchor, AnchorType}
-import com.ubirch.chain.notary.client.NotaryClient
 import com.ubirch.chain.storage.ChainStorage
+import com.ubirch.notary.client.NotaryClient
 
 /**
   * author: cvandrei

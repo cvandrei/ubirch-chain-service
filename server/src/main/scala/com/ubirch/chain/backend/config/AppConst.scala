@@ -16,7 +16,6 @@ object AppConst {
   final val BLOCK_MINE_EVERY_X_SECONDS = s"$prefix.block.mineEveryXSeconds"
 
   final val ANCHOR_ENABLED = s"$prefix.anchor.enabled"
-  final val ANCHOR_URL = s"$prefix.anchor.url"
   final val ANCHOR_INTERVAL = s"$prefix.anchor.interval"
 
 }

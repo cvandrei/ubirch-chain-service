@@ -47,11 +47,6 @@ object Config {
   def anchorEnabled: Boolean = ConfigFactory.load.getBoolean(AppConst.ANCHOR_ENABLED)
 
   /**
-    * @return url to send notarize notifications to
-    */
-  def anchorUrl: String = ConfigFactory.load.getString(AppConst.ANCHOR_URL)
-
-  /**
     * @return interval (in seconds) between two anchors
     */
   def anchorInterval: Int = ConfigFactory.load.getInt(AppConst.ANCHOR_INTERVAL)
