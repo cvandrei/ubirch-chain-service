@@ -1,9 +1,9 @@
 package com.ubirch.chain.merkle
 
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.chain.hash.HashUtil
-import com.ubirch.chain.hash.HashUtil._
 import com.ubirch.chain.json.{BlockInfo, GenesisBlock}
+import com.ubirch.util.crypto.hash.HashUtil
+import com.ubirch.util.crypto.hash.HashUtil._
 import org.joda.time.DateTime
 
 /**

@@ -3,7 +3,7 @@ package com.ubirch.chain.notary.client
 import java.net.URL
 
 import com.ubirch.chain.backend.util.MyJsonProtocol
-import com.ubirch.chain.hash.HashUtil
+import com.ubirch.util.crypto.hash.HashUtil
 import com.ubirch.chain.json.Hash
 import org.json4s.native.JsonMethods._
 import org.scalatest.{FeatureSpec, Matchers}

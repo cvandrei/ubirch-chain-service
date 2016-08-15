@@ -1,7 +1,7 @@
 package com.ubirch.chain.storage
 
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.chain.hash.HashUtil
+import com.ubirch.util.crypto.hash.HashUtil
 import com.ubirch.chain.json.AnchorType._
 import com.ubirch.chain.json.{Anchor, BlockInfo, GenesisBlock, UnminedHashes}
 import com.ubirch.chain.merkle.BlockUtil

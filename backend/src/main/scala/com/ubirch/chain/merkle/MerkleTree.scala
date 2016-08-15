@@ -1,6 +1,6 @@
 package com.ubirch.chain.merkle
 
-import com.ubirch.chain.hash.HashUtil
+import com.ubirch.util.crypto.hash.HashUtil
 
 /**
   * Based on: https://github.com/ErikBjare/merkle

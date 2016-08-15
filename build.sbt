@@ -17,9 +17,11 @@ lazy val backend = project
 
     name := "server",
 
-    resolvers += Resolver.bintrayRepo("hseeberger", "maven"),
-    resolvers += Resolver.bintrayRepo("rick-beton", "maven"), // bee client
-    resolvers ++= Seq("RoundEights" at "http://maven.spikemark.net/roundeights"), // hasher
+    resolvers ++= Seq(
+      Resolver.bintrayRepo("hseeberger", "maven"),
+      Resolver.bintrayRepo("rick-beton", "maven"), // bee client
+      Resolver.sonatypeRepo("snapshots")
+    ),
 
     libraryDependencies ++= {
 
@@ -57,8 +59,8 @@ lazy val backend = project
         "ch.qos.logback" % "logback-core" % "1.1.3",
         "org.slf4j" % "slf4j-api" % "1.7.12",
 
-        // hashing
-        "com.roundeights" %% "hasher" % "1.2.0",
+        // ubirch
+        "com.ubirch.util" %% "crypto" % "0.2-SNAPSHOT",
 
         // misc
         "uk.co.bigbeeconsultants" %% "bee-client" % "0.29.1" // bee client

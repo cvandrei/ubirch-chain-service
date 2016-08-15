@@ -3,7 +3,7 @@ package com.ubirch.chain.merkle
 import java.util.NoSuchElementException
 
 import com.roundeights.hasher.Hasher
-import com.ubirch.chain.hash.HashUtil
+import com.ubirch.util.crypto.hash.HashUtil
 import org.scalatest.{FeatureSpec, Matchers}
 
 /**
