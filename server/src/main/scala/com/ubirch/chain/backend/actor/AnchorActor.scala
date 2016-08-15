@@ -52,7 +52,7 @@ class AnchorActor extends Actor
 
       logger.info(s"anchoring most recent blockHash: $blockHash")
 
-      NotaryClient.notarize(blockHash) match {
+      NotaryClient.notarize(blockHash, dataIsHash = true) match {
 
         case Some(notarizeResponse) =>
           val anchorHash = notarizeResponse.hash
