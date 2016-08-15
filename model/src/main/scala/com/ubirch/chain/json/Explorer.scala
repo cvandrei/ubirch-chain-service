@@ -50,11 +50,6 @@ case class BlockInfo(hash: String,
                     ) extends BaseBlock with PreviousBlockReference
 
 /**
-  * @param hashes list of unmined hashes
-  */
-case class UnminedHashes(hashes: Seq[String] = Seq.empty)
-
-/**
   * @param anchorTo which blockchain we anchor into
   * @param hash     hash of the anchor transaction
   * @param created  creation time

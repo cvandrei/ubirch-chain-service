@@ -1,10 +1,10 @@
 package com.ubirch.chain.storage
 
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.util.crypto.hash.HashUtil
 import com.ubirch.chain.json.AnchorType._
-import com.ubirch.chain.json.{Anchor, BlockInfo, GenesisBlock, UnminedHashes}
+import com.ubirch.chain.json.{Anchor, BlockInfo, GenesisBlock}
 import com.ubirch.chain.merkle.BlockUtil
+import com.ubirch.util.crypto.hash.HashUtil
 
 import scala.util.Random
 
@@ -133,10 +133,10 @@ trait ChainStorage extends LazyLogging {
     *
     * @return list of unmined hashes
     */
-  def unminedHashes(): UnminedHashes = {
+  def unminedHashes(): Seq[String] = {
 
     // TODO implementation instead of the current dummy
-    UnminedHashes(HashUtil.randomSha256Hashes())
+    HashUtil.randomSha256Hashes()
 
   }
 

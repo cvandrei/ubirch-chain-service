@@ -40,7 +40,7 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
     val blockMaxSizeKb = Config.blockMaxSize
     logger.debug(s"checking size of unmined hashes: ${AppConst.BLOCK_MAX_SIZE} = $blockMaxSizeKb kb")
 
-    val hashes = unminedHashes().hashes
+    val hashes = unminedHashes()
     val size = BlockUtil.size(hashes)
     val sizeKb = BlockUtil.size(hashes) / 1000
     val maxBlockSizeBytes = Config.blockMaxSize * 1000
@@ -79,7 +79,7 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
   private def mine(): BlockInfo = {
 
     val previousBlockHash = mostRecentBlock().hash
-    val hashes = unminedHashes().hashes
+    val hashes = unminedHashes()
     val block = BlockUtil.newBlock(previousBlockHash, hashes)
     val blockHash = block.hash
     logger.info(s"new block hash: $blockHash (blockSize=${BlockUtil.size(hashes) / 1000} kb; ${hashes.size} hashes)")
