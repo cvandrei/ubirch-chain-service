@@ -1,8 +1,14 @@
-import sbt.Keys._
+packagedArtifacts in file(".") := Map.empty // disable publishing of root project
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
   scalacOptions ++= Seq("-feature"),
+  organization := "com.ubirch.chain",
+  homepage := Some(url("http://ubirch.com")),
+  scmInfo := Some(ScmInfo(
+    url("https://gitlab.com/ubirch/ubirchChainService"),
+    "scm:git:https://gitlab.com/ubirch/ubirchChainService.git"
+  )),
   version := "0.1-SNAPSHOT"
 )
 
@@ -83,6 +89,3 @@ lazy val model = project
 
 lazy val share = project
   .settings(commonSettings: _*)
-  .settings(
-    name := "share"
-  )
