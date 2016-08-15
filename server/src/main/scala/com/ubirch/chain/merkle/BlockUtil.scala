@@ -16,7 +16,7 @@ object BlockUtil extends LazyLogging {
     * @param hashes hashes to sum up for total size
     * @return total size in byte
     */
-  def size(hashes: Seq[String]): Long = hashes.map(hashAsBytes(_).length.toLong).sum
+  def size(hashes: Seq[String]): Long = hashes.map(hashToBytes(_).length.toLong).sum
 
   /**
     * Converts a list of strings into a Merkle Tree (represented by a [Branch] instance).
