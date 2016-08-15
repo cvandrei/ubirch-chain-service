@@ -25,7 +25,7 @@ class HashRouteSpec extends FeatureSpec
 
     scenario(s"GET (not allowed)") {
       Get(RouteConstants.urlHash) ~> Route.seal(routes) ~> check {
-        status shouldEqual MethodNotAllowed
+        status shouldEqual NotFound
       }
     }
 
