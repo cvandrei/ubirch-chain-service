@@ -8,14 +8,12 @@ lazy val commonSettings = Seq(
 
 lazy val root = (project in file("."))
   .settings(commonSettings: _*)
-  .aggregate(backend, share, json)
+  .aggregate(server, share, model)
 
-lazy val backend = project
+lazy val server = project
   .settings(commonSettings: _*)
-  .dependsOn(share, json)
+  .dependsOn(share, model)
   .settings(
-
-    name := "server",
 
     resolvers ++= Seq(
       Resolver.bintrayRepo("hseeberger", "maven"),
@@ -70,12 +68,10 @@ lazy val backend = project
 
   )
 
-lazy val json = project
+lazy val model = project
   .settings(commonSettings: _*)
   .dependsOn(share)
   .settings(
-
-    name := "model",
 
     libraryDependencies ++= {
       Seq(

@@ -1,5 +1,14 @@
 # ubirch Chain Server
 
+## Scala Dependencies
+
+    resolvers += Resolver.sonatypeRepo("snapshots")
+    libraryDependencies ++= Seq(
+      "com.ubirch.chain" %% "share" % "0.1-SNAPSHOT"
+      "com.ubirch.chain" %% "model" % "0.1-SNAPSHOT"
+      "com.ubirch.chain" %% "server" % "0.1-SNAPSHOT"
+    )
+
 ## REST Methods
 
 ### Welcome / Health
