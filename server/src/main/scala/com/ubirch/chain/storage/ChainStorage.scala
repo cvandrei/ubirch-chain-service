@@ -2,10 +2,12 @@ package com.ubirch.chain.storage
 
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.json.AnchorType._
-import com.ubirch.chain.json.{Anchor, BlockInfo, GenesisBlock}
+import com.ubirch.chain.json.{Anchor, BlockInfo, GenesisBlock, Hash}
 import com.ubirch.chain.merkle.BlockUtil
 import com.ubirch.util.crypto.hash.HashUtil
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.Random
 
 /**
@@ -19,9 +21,19 @@ trait ChainStorage extends LazyLogging {
     *
     * @param hash the hash to store
     */
-  def storeHash(hash: String): Unit = {
+  def storeHash(hash: Hash): Unit = {
     // TODO implementation instead of the current dummy
     logger.info(s"storing hash: $hash")
+  }
+
+  /**
+    * deletes a set of hash from the list of unmined hashes.
+    *
+    * @param hash set of hashes to delete
+    */
+  def deleteHashes(hash: Seq[String]): Future[Boolean] = {
+    // TODO implementation instead of the current dummy
+    Future(true)
   }
 
   /**
@@ -30,10 +42,10 @@ trait ChainStorage extends LazyLogging {
     * @param hash hash based on which we look for the related block
     * @return block matching the input hash
     */
-  def getHash(hash: String): Option[BlockInfo] = {
+  def getHash(hash: Hash): Option[BlockInfo] = {
 
     // TODO implementation instead of the current dummy
-    hash match {
+    hash.hash match {
 
       case "404" => None
 
@@ -65,10 +77,10 @@ trait ChainStorage extends LazyLogging {
     * @param hash hash of the requested block
     * @return block matching the input hash
     */
-  def getBlock(hash: String): Option[BlockInfo] = {
+  def getBlock(hash: Hash): Option[BlockInfo] = {
 
     // TODO implementation instead of the current dummy
-    hash match {
+    hash.hash match {
 
       case "404" => None
 
@@ -80,7 +92,7 @@ trait ChainStorage extends LazyLogging {
 
         Some(
           BlockInfo(
-            hash,
+            hash.hash,
             previousBlockHash = previousBlock,
             anchors = Seq(
               Anchor(bitcoin, bitcoinAnchorHash),
@@ -99,10 +111,10 @@ trait ChainStorage extends LazyLogging {
     * @param hash hash of the requested block
     * @return block matching the input hash
     */
-  def getBlockWithHashes(hash: String): Option[BlockInfo] = {
+  def getBlockWithHashes(hash: Hash): Option[BlockInfo] = {
 
     // TODO implementation instead of the current dummy
-    hash match {
+    hash.hash match {
 
       case "404" => None
 
@@ -114,7 +126,7 @@ trait ChainStorage extends LazyLogging {
 
         Some(
           BlockInfo(
-            hash,
+            hash.hash,
             previousBlockHash = previousBlock,
             anchors = Seq(
               Anchor(bitcoin, bitcoinAnchorHash),

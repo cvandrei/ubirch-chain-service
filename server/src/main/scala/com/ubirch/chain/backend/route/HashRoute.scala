@@ -31,8 +31,9 @@ trait HashRoute extends MyJsonProtocol with ChainStorage {
 
               case false =>
                 val hash = HashUtil.sha256HexString(input.data)
-                storeHash(hash)
-                Hash(hash)
+                val hashObject = Hash(hash)
+                storeHash(hashObject)
+                hashObject
 
             }
 

@@ -85,6 +85,7 @@ class MiningActor extends Actor with ChainStorage with LazyLogging {
     logger.info(s"new block hash: $blockHash (blockSize=${BlockUtil.size(hashes) / 1000} kb; ${hashes.size} hashes)")
 
     upsertBlock(block)
+    deleteHashes(hashes)
 
     block
 
