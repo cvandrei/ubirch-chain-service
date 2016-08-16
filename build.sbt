@@ -32,7 +32,6 @@ lazy val server = project
 
 lazy val model = project
   .settings(commonSettings: _*)
-  .dependsOn(share)
   .settings(
 
     libraryDependencies ++= {

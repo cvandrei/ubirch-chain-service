@@ -1,12 +1,17 @@
 package com.ubirch.chain.json
 
-import com.ubirch.chain.share.RouteConstants
 import org.joda.time.DateTime
 
 /**
   * author: cvandrei
   * since: 2016-07-28
   */
+
+object Constants {
+
+  val version: String = "1.0"
+
+}
 
 /**
   * @param hash      hash value
@@ -22,7 +27,7 @@ trait BaseBlock {
   /** when the block was created **/
   val created: DateTime = DateTime.now
   /** in which version of ubirchChainService was this block created **/
-  val version: String = RouteConstants.v1
+  val version: String = Constants.version
   /** list of hashes included in the block (only set if you requested the full block) **/
   val hashes: Option[Seq[String]] = None // only set if you requested a full block
 }
@@ -58,5 +63,5 @@ case class BlockInfo(hash: String,
 case class Anchor(anchorTo: String,
                   hash: String,
                   created: DateTime = DateTime.now,
-                  version: String = RouteConstants.v1
+                  version: String = Constants.version
                  )
