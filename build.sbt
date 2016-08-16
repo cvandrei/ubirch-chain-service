@@ -1,33 +1,41 @@
 packagedArtifacts in file(".") := Map.empty // disable publishing of root project
 
 lazy val commonSettings = Seq(
+
   scalaVersion := "2.11.8",
   scalacOptions ++= Seq("-feature"),
   organization := "com.ubirch.chain",
+
   homepage := Some(url("http://ubirch.com")),
   scmInfo := Some(ScmInfo(
     url("https://gitlab.com/ubirch/ubirchChainService"),
     "scm:git:https://gitlab.com/ubirch/ubirchChainService.git"
   )),
-  version := "0.1-SNAPSHOT"
+  version := "0.1-SNAPSHOT",
+
+  resolvers ++= Seq(
+    Resolver.bintrayRepo("hseeberger", "maven"),
+    Resolver.sonatypeRepo("snapshots")
+  )
+
 )
 
 lazy val root = (project in file("."))
   .settings(commonSettings: _*)
-  .aggregate(server, share, model)
+  .aggregate(server, core, share, model)
 
 lazy val server = project
   .settings(commonSettings: _*)
-  .dependsOn(share, model)
+  .dependsOn(share, model, core)
   .settings(
-
-    resolvers ++= Seq(
-      Resolver.bintrayRepo("hseeberger", "maven"),
-      Resolver.sonatypeRepo("snapshots")
-    ),
-
     libraryDependencies ++= depServer
+  )
 
+lazy val core = project
+  .settings(commonSettings: _*)
+  .dependsOn(model)
+  .settings(
+    libraryDependencies ++= depCore
   )
 
 lazy val model = project
@@ -36,7 +44,7 @@ lazy val model = project
 
     libraryDependencies ++= {
       Seq(
-        "joda-time" % "joda-time" % "2.9.4"
+        depJodaTime
       )
     }
 
@@ -49,6 +57,8 @@ val akkaV = "2.4.9-RC2"
 val scalaTestV = "3.0.0"
 val json4sV = "3.4.0"
 val configV = "1.3.0"
+val notaryServiceV = "0.3.0-SNAPSHOT"
+val ubirchUtilCryptoV = "0.2-SNAPSHOT"
 
 lazy val depServer = Seq(
 
@@ -57,7 +67,7 @@ lazy val depServer = Seq(
   "com.typesafe.akka" %% "akka-http-experimental" % akkaV,
 
   //testing
-  "org.scalatest" %% "scalatest" % scalaTestV % "test",
+  depScalaTest,
   "com.typesafe.akka" %% "akka-testkit" % akkaV % "test",
   "com.typesafe.akka" %% "akka-http-testkit" % akkaV % "test",
 
@@ -74,16 +84,30 @@ lazy val depServer = Seq(
   "com.typesafe" % "config" % configV,
 
   // logging
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
+  depTypesafeScalaLogging,
   "ch.qos.logback" % "logback-classic" % "1.1.3",
   "ch.qos.logback" % "logback-core" % "1.1.3",
   "org.slf4j" % "slf4j-api" % "1.7.12",
 
   // ubirch
-  "com.ubirch.util" %% "crypto" % "0.2-SNAPSHOT",
-  "com.ubirch.notary" %% "client" % "0.3.0-SNAPSHOT"
+  "com.ubirch.notary" %% "client" % notaryServiceV
 
 )
+
+lazy val depCore = Seq(
+  depTypesafeScalaLogging,
+  depJodaTime,
+  depUbirchUtilCrypto,
+  depScalaTest
+)
+
+lazy val depTypesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
+
+lazy val depJodaTime = "joda-time" % "joda-time" % "2.9.4"
+
+lazy val depScalaTest = "org.scalatest" %% "scalatest" % scalaTestV % "test"
+
+lazy val depUbirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
 
 lazy val mergeStrategy = Seq(
   assemblyMergeStrategy in assembly := {

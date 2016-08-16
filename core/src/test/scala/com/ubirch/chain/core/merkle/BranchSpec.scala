@@ -1,4 +1,4 @@
-package com.ubirch.chain.merkle
+package com.ubirch.chain.core.merkle
 
 import org.scalatest.{FeatureSpec, Matchers}
 

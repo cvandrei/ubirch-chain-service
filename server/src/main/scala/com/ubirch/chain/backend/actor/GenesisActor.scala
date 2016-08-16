@@ -2,7 +2,7 @@ package com.ubirch.chain.backend.actor
 
 import akka.actor.Actor
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.chain.merkle.BlockUtil
+import com.ubirch.chain.core.merkle.BlockUtil
 import com.ubirch.chain.storage.ChainStorage
 
 /**

@@ -1,4 +1,4 @@
-package com.ubirch.chain.merkle
+package com.ubirch.chain.core.merkle
 
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.json.{BlockInfo, GenesisBlock}

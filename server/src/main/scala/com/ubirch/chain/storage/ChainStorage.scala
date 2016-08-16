@@ -1,9 +1,9 @@
 package com.ubirch.chain.storage
 
 import com.typesafe.scalalogging.LazyLogging
+import com.ubirch.chain.core.merkle.BlockUtil
 import com.ubirch.chain.json.AnchorType._
 import com.ubirch.chain.json.{HashInfo, Anchor, BlockInfo, GenesisBlock, Hash}
-import com.ubirch.chain.merkle.BlockUtil
 import com.ubirch.util.crypto.hash.HashUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global

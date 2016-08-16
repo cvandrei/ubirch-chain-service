@@ -4,8 +4,8 @@ import akka.actor.Actor
 import akka.stream.{ActorMaterializer, ActorMaterializerSettings}
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.backend.config.{AppConst, Config}
+import com.ubirch.chain.core.merkle.BlockUtil
 import com.ubirch.chain.json.BlockInfo
-import com.ubirch.chain.merkle.BlockUtil
 import com.ubirch.chain.storage.ChainStorage
 
 /**
