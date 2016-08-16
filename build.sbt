@@ -80,32 +80,32 @@ lazy val depServer = Seq(
   "org.json4s" %% "json4s-ext" % json4sV,
   "de.heikoseeberger" %% "akka-http-json4s" % "1.8.0",
 
-  // app config
-  "com.typesafe" % "config" % configV,
-
   // logging
   depTypesafeScalaLogging,
   "ch.qos.logback" % "logback-classic" % "1.1.3",
   "ch.qos.logback" % "logback-core" % "1.1.3",
-  "org.slf4j" % "slf4j-api" % "1.7.12",
-
-  // ubirch
-  "com.ubirch.notary" %% "client" % notaryServiceV
+  "org.slf4j" % "slf4j-api" % "1.7.12"
 
 )
 
 lazy val depCore = Seq(
+  depTypesafeConfig,
   depTypesafeScalaLogging,
   depJodaTime,
   depUbirchUtilCrypto,
+  depUbirchNotaryClient,
   depScalaTest
 )
+
+lazy val depTypesafeConfig = "com.typesafe" % "config" % configV
 
 lazy val depTypesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
 
 lazy val depJodaTime = "joda-time" % "joda-time" % "2.9.4"
 
 lazy val depScalaTest = "org.scalatest" %% "scalatest" % scalaTestV % "test"
+
+lazy val depUbirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
 
 lazy val depUbirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
 

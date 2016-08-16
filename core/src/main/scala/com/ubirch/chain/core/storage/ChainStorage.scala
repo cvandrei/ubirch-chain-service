@@ -1,9 +1,9 @@
-package com.ubirch.chain.storage
+package com.ubirch.chain.core.storage
 
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.core.merkle.BlockUtil
 import com.ubirch.chain.json.AnchorType._
-import com.ubirch.chain.json.{HashInfo, Anchor, BlockInfo, GenesisBlock, Hash}
+import com.ubirch.chain.json.{Anchor, BlockInfo, GenesisBlock, Hash, HashInfo}
 import com.ubirch.util.crypto.hash.HashUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -167,8 +167,8 @@ trait ChainStorage extends LazyLogging {
       hash,
       previousBlockHash = previousBlock,
       anchors = Seq(
-        Anchor(bitcoin, bitcoinAnchorHash),
-        Anchor(ubirch, ubirchAnchorHash)
+//        Anchor(bitcoin, bitcoinAnchorHash),
+//        Anchor(ubirch, ubirchAnchorHash)
       )
     )
 
