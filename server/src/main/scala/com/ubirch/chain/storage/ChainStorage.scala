@@ -2,7 +2,7 @@ package com.ubirch.chain.storage
 
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.json.AnchorType._
-import com.ubirch.chain.json.{Anchor, BlockInfo, GenesisBlock, Hash}
+import com.ubirch.chain.json.{HashInfo, Anchor, BlockInfo, GenesisBlock, Hash}
 import com.ubirch.chain.merkle.BlockUtil
 import com.ubirch.util.crypto.hash.HashUtil
 
@@ -42,7 +42,7 @@ trait ChainStorage extends LazyLogging {
     * @param hash hash based on which we look for the related block
     * @return block matching the input hash
     */
-  def getHash(hash: Hash): Option[BlockInfo] = {
+  def getHashInfo(hash: Hash): Option[HashInfo] = {
 
     // TODO implementation instead of the current dummy
     hash.hash match {
@@ -52,20 +52,8 @@ trait ChainStorage extends LazyLogging {
       case _ =>
 
         val blockHash = HashUtil.sha256HexString(s"block hash - $hash")
-        val previousBlock = HashUtil.sha256HexString(s"previous block hash - $hash")
-        val bitcoinAnchorHash = HashUtil.sha256HexString(s"bitcoin anchor - $hash")
-        val ubirchAnchorHash = HashUtil.sha256HexString(s"ubirch anchor - $hash")
 
-        Some(
-          BlockInfo(
-            blockHash,
-            previousBlockHash = previousBlock,
-            anchors = Seq(
-              Anchor(bitcoin, bitcoinAnchorHash),
-              Anchor(ubirch, ubirchAnchorHash)
-            )
-          )
-        )
+        Some(HashInfo(hash.hash, Some(blockHash)))
 
     }
 
