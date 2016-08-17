@@ -4,7 +4,7 @@ package com.ubirch.chain.core.config
   * author: cvandrei
   * since: 2016-07-26
   */
-object AppConst {
+object ConfigKeys {
 
   private final val prefix = "ubirchChainService"
 

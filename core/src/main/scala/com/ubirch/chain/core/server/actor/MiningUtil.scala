@@ -1,7 +1,7 @@
 package com.ubirch.chain.core.server.actor
 
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.chain.core.config.{AppConst, Config}
+import com.ubirch.chain.core.config.{ConfigKeys, Config}
 import com.ubirch.chain.core.merkle.BlockUtil
 import com.ubirch.chain.core.storage.ChainStorage
 import com.ubirch.chain.json.BlockInfo
@@ -33,7 +33,7 @@ class MiningUtil extends ChainStorage
   private def sizeCheck(): Boolean = {
 
     val blockMaxSizeKb = Config.blockMaxSize
-    logger.debug(s"checking size of unmined hashes: ${AppConst.BLOCK_MAX_SIZE} = $blockMaxSizeKb kb")
+    logger.debug(s"checking size of unmined hashes: ${ConfigKeys.BLOCK_MAX_SIZE} = $blockMaxSizeKb kb")
 
     val hashes = unminedHashes()
     val size = BlockUtil.size(hashes)
