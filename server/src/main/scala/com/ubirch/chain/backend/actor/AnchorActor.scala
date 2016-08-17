@@ -1,7 +1,7 @@
 package com.ubirch.chain.backend.actor
 
 import akka.actor.Actor
-import com.ubirch.chain.core.server.AnchorUtil
+import com.ubirch.chain.core.server.actor.AnchorUtil
 
 /**
   * author: cvandrei

@@ -1,4 +1,4 @@
-package com.ubirch.chain.core.server
+package com.ubirch.chain.core.server.actor
 
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.core.merkle.BlockUtil
