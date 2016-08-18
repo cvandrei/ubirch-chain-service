@@ -1,4 +1,4 @@
-packagedArtifacts in file(".") := Map.empty // disable publishing of root project
+packagedArtifacts in file(".") := Map.empty // disable publishing of root/default project
 
 lazy val commonSettings = Seq(
 
@@ -19,10 +19,6 @@ lazy val commonSettings = Seq(
   )
 
 )
-
-lazy val root = (project in file("."))
-  .settings(commonSettings: _*)
-  .aggregate(server, core, share, model)
 
 lazy val server = project
   .settings(commonSettings: _*)
