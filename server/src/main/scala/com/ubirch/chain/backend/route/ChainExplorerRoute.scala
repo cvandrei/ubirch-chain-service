@@ -5,7 +5,6 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.ubirch.chain.backend.util.MyJsonProtocol
 import com.ubirch.chain.core.server.routes.ChainExplorerRouteUtil
-import com.ubirch.chain.core.storage.ChainStorage
 import com.ubirch.chain.share.RouteConstants
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
@@ -13,7 +12,7 @@ import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
   * author: cvandrei
   * since: 2016-07-28
   */
-trait ChainExplorerRoute extends MyJsonProtocol with ChainStorage {
+trait ChainExplorerRoute extends MyJsonProtocol {
 
   private val empty404 = HttpResponse(StatusCodes.NotFound)
 
