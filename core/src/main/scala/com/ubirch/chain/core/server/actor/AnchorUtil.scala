@@ -2,16 +2,17 @@ package com.ubirch.chain.core.server.actor
 
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.core.config.Config
-import com.ubirch.chain.core.storage.ChainStorage
 import com.ubirch.chain.json.{Anchor, AnchorType}
+import com.ubirch.client.storage.ChainStorageServiceClient._
 import com.ubirch.notary.client.NotaryClient
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * author: cvandrei
   * since: 2016-08-16
   */
-class AnchorUtil extends ChainStorage
-  with LazyLogging {
+class AnchorUtil extends LazyLogging {
 
   def anchorNow(): Unit = {
 
@@ -21,22 +22,26 @@ class AnchorUtil extends ChainStorage
 
       case true =>
 
-        val block = mostRecentBlock()
-        block.anchors.isEmpty match {
+        mostRecentBlock() map {
 
-          case true =>
+          case None => logger.error("found no most recent block")
 
-            anchor(block.hash) match {
+          case Some(block) => block.anchors.isEmpty match {
 
-              case Some(anchor) =>
-                block.anchors :+ anchor
-                upsertBlock(block)
+            case false => logger.info("most recent block has been anchored already")
 
-              case _ => // do nothing
+            case true =>
+              anchor(block.hash) match {
 
-            }
+                case Some(anchor) =>
+                  block.anchors :+ anchor
+                  upsertBlock(block)
 
-          case false => logger.info("most recent block has been anchored already")
+                case _ => // do nothing
+
+              }
+
+          }
 
         }
 
@@ -48,7 +53,7 @@ class AnchorUtil extends ChainStorage
 
     logger.info(s"anchoring most recent blockHash: $blockHash")
 
-    NotaryClient.notarize(blockHash, dataIsHash = true) match {
+    NotaryClient.notarize(blockHash, true) match {
 
       case Some(notarizeResponse) =>
         val anchorHash = notarizeResponse.hash

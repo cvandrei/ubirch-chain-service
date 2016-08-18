@@ -1,17 +1,18 @@
 package com.ubirch.chain.core.server.routes
 
-import com.ubirch.chain.core.storage.ChainStorage
 import com.ubirch.chain.json.{Data, Hash}
+import com.ubirch.client.storage.ChainStorageServiceClient._
 import com.ubirch.util.crypto.hash.HashUtil
 import org.scalatest.{FeatureSpec, Matchers}
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * author: cvandrei
   * since: 2016-08-17
   */
 class HashRouteUtilSpec extends FeatureSpec
-  with Matchers
-  with ChainStorage {
+  with Matchers {
 
   private val hashRouteUtil = new HashRouteUtil
 
@@ -20,7 +21,7 @@ class HashRouteUtilSpec extends FeatureSpec
   feature("HashRouteUtil.hash") {
 
     scenario("invalid input: empty string") {
-      hashRouteUtil.hash(Data("")) shouldBe None
+      hashRouteUtil.hash(Data("")).map(_ shouldBe None)
     }
 
     ignore("valid input -> hash is stored") {
@@ -36,9 +37,11 @@ class HashRouteUtilSpec extends FeatureSpec
       val expectedHash = HashUtil.sha256HexString(input.data)
       res shouldBe Some(Hash(expectedHash))
 
-      val unmined = unminedHashes()
-      unmined should have length 1
-      unmined should contain(expectedHash)
+      unminedHashes() map { unmined =>
+        val hashes = unmined.hashes
+        hashes should have length 1
+        hashes should contain(expectedHash)
+      }
     }
 
     ignore("send same input twice") {
@@ -58,10 +61,14 @@ class HashRouteUtilSpec extends FeatureSpec
       res1 shouldBe Some(Hash(expectedHash))
       res2 shouldBe Some(Hash(expectedHash))
 
-      val unmined = unminedHashes()
-      unmined should have length 2
-      unmined.head should be(expectedHash)
-      unmined(1) should be(expectedHash)
+      unminedHashes() map { unmined =>
+
+        val hashes = unmined.hashes
+        hashes should have length 2
+        hashes.head should be(expectedHash)
+        hashes(1) should be(expectedHash)
+
+      }
 
     }
 

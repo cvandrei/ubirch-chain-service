@@ -20,6 +20,10 @@ lazy val commonSettings = Seq(
 
 )
 
+lazy val root = (project in file("."))
+  .settings(commonSettings: _*)
+  .aggregate(server, core, share, model)
+
 lazy val server = project
   .settings(commonSettings: _*)
   .dependsOn(share, model, core)
@@ -54,6 +58,7 @@ val scalaTestV = "3.0.0"
 val json4sV = "3.4.0"
 val configV = "1.3.0"
 val notaryServiceV = "0.3.0-SNAPSHOT"
+val storageServceV = "0.0.1-SNAPSHOT"
 val ubirchUtilCryptoV = "0.2-SNAPSHOT"
 
 lazy val depServer = Seq(
@@ -90,6 +95,7 @@ lazy val depCore = Seq(
   depJodaTime,
   depUbirchUtilCrypto,
   depUbirchNotaryClient,
+  depUbirchStorageClient,
   depScalaTest
 )
 
@@ -102,6 +108,8 @@ lazy val depJodaTime = "joda-time" % "joda-time" % "2.9.4"
 lazy val depScalaTest = "org.scalatest" %% "scalatest" % scalaTestV % "test"
 
 lazy val depUbirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
+
+lazy val depUbirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServceV
 
 lazy val depUbirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
 

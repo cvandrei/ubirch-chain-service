@@ -9,6 +9,8 @@ import com.ubirch.chain.json.Data
 import com.ubirch.chain.share.RouteConstants
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 /**
   * author: cvandrei
   * since: 2016-07-27
@@ -24,7 +26,7 @@ trait HashRoute extends MyJsonProtocol {
         entity(as[Data]) { input =>
           complete {
 
-            hashRouteUtil.hash(input) match {
+            hashRouteUtil.hash(input) map {
               case None => BadRequest
               case Some(hash) => hash
             }

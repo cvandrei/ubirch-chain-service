@@ -1,42 +1,20 @@
 package com.ubirch.chain.core.server.routes
 
-import com.ubirch.chain.core.storage.ChainStorage
-import com.ubirch.chain.json.{BlockInfo, Hash, HashInfo}
+import com.ubirch.backend.chain.model.{BlockInfo, FullBlock, Hash}
+import com.ubirch.client.storage.ChainStorageServiceClient._
+
+import scala.concurrent.Future
 
 /**
   * author: cvandrei
   * since: 2016-08-17
   */
-class ChainExplorerRouteUtil extends ChainStorage {
+class ChainExplorerRouteUtil {
 
-  def hash(hash: String): Option[HashInfo] = {
+  def hash(hash: String): Future[Option[FullBlock]] = getBlockByEventHash(Hash(hash))
 
-    val hashObject = Hash(hash)
-    getHashInfo(hashObject) match {
-      case None => None
-      case Some(hashInfo) => Some(hashInfo)
-    }
+  def block(hash: String): Future[Option[BlockInfo]] = getBlockInfo(Hash(hash))
 
-  }
-
-  def block(hash: String): Option[BlockInfo] = {
-
-    val hashObject = Hash(hash)
-    getBlock(hashObject) match {
-      case None => None
-      case Some(blockInfo) => Some(blockInfo)
-    }
-
-  }
-
-  def fullBlock(hash: String): Option[BlockInfo] = {
-
-    val hashObject = Hash(hash)
-    getBlockWithHashes(hashObject) match {
-      case None => None
-      case Some(blockInfo) => Some(blockInfo)
-    }
-
-  }
+  def fullBlock(hash: String): Future[Option[FullBlock]] = getFullBlock(hash)
 
 }
