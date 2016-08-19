@@ -2,7 +2,9 @@
 
 ## Scala Dependencies
 
-    resolvers += Resolver.sonatypeRepo("snapshots")
+    resolvers ++= Seq(
+      Resolver.sonatypeRepo("snapshots")
+    )
     libraryDependencies ++= Seq(
       "com.ubirch.chain" %% "share" % "0.1-SNAPSHOT"
       "com.ubirch.chain" %% "model" % "0.1-SNAPSHOT"
