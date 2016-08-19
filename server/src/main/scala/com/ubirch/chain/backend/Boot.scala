@@ -11,7 +11,7 @@ import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.backend.actor.{AnchorActor, AnchorNow, BlockCheck, GenesisActor, GenesisCheck, MiningActor}
 import com.ubirch.chain.backend.route.MainRoute
-import com.ubirch.chain.core.config.Config
+import com.ubirch.chain.core.config.{ConfigKeys, Config}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -70,9 +70,11 @@ object Boot extends App with LazyLogging {
 
     val scheduler = system.scheduler
     val blockCheckInterval = Config.blockCheckInterval
+    logger.info(s"schedule block check (${ConfigKeys.BLOCK_CHECK_INTERVAL}) to run every $blockCheckInterval seconds")
     scheduler.schedule(blockCheckInterval seconds, blockCheckInterval seconds, miningActor, new BlockCheck())
 
     val anchorInterval = Config.anchorInterval
+    logger.info(s"schedule anchoring (${ConfigKeys.ANCHOR_INTERVAL}) to run every $blockCheckInterval seconds")
     scheduler.schedule(10 seconds, anchorInterval seconds, anchorActor, new AnchorNow())
 
   }
