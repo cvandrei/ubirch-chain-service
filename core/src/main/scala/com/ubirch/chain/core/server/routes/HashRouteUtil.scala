@@ -1,7 +1,7 @@
 package com.ubirch.chain.core.server.routes
 
 import com.ubirch.chain.json.{Data, Hash}
-import com.ubirch.client.storage.ChainStorageServiceClient._
+import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -23,7 +23,7 @@ class HashRouteUtil {
 
       case false =>
         val hash = HashUtil.sha256HexString(input.data)
-        storeHash(hash) map {
+        ChainStorageServiceClient.storeHash(hash) map {
           case None => None
           case Some(storedHash) => Some(Hash(hash))
         }

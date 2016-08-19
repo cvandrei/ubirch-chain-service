@@ -1,7 +1,7 @@
 package com.ubirch.chain.core.server.routes
 
 import com.ubirch.backend.chain.model.{BlockInfo, FullBlock, Hash}
-import com.ubirch.client.storage.ChainStorageServiceClient._
+import com.ubirch.client.storage.ChainStorageServiceClient
 
 import scala.concurrent.Future
 
@@ -11,10 +11,10 @@ import scala.concurrent.Future
   */
 class ChainExplorerRouteUtil {
 
-  def hash(hash: String): Future[Option[FullBlock]] = getBlockByEventHash(Hash(hash))
+  def hash(hash: String): Future[Option[FullBlock]] = ChainStorageServiceClient.getBlockByEventHash(Hash(hash))
 
-  def block(hash: String): Future[Option[BlockInfo]] = getBlockInfo(Hash(hash))
+  def block(hash: String): Future[Option[BlockInfo]] = ChainStorageServiceClient.getBlockInfo(Hash(hash))
 
-  def fullBlock(hash: String): Future[Option[FullBlock]] = getFullBlock(hash)
+  def fullBlock(hash: String): Future[Option[FullBlock]] = ChainStorageServiceClient.getFullBlock(hash)
 
 }

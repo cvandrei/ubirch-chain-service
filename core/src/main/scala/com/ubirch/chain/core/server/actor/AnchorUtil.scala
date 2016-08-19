@@ -3,7 +3,7 @@ package com.ubirch.chain.core.server.actor
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.core.config.Config
 import com.ubirch.chain.json.{Anchor, AnchorType}
-import com.ubirch.client.storage.ChainStorageServiceClient._
+import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.notary.client.NotaryClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -22,7 +22,7 @@ class AnchorUtil extends LazyLogging {
 
       case true =>
 
-        mostRecentBlock() map {
+        ChainStorageServiceClient.mostRecentBlock() map {
 
           case None => logger.error("found no most recent block")
 
@@ -35,7 +35,7 @@ class AnchorUtil extends LazyLogging {
 
                 case Some(anchor) =>
                   block.anchors :+ anchor
-                  upsertBlock(block)
+                  ChainStorageServiceClient.upsertBlock(block)
 
                 case _ => // do nothing
 
