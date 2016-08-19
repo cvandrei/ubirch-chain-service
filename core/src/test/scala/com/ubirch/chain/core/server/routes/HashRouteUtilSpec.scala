@@ -1,7 +1,7 @@
 package com.ubirch.chain.core.server.routes
 
 import com.ubirch.chain.json.{Data, Hash}
-import com.ubirch.client.storage.ChainStorageServiceClient._
+import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
 import org.scalatest.{FeatureSpec, Matchers}
 
@@ -37,7 +37,7 @@ class HashRouteUtilSpec extends FeatureSpec
       val expectedHash = HashUtil.sha256HexString(input.data)
       res shouldBe Some(Hash(expectedHash))
 
-      unminedHashes() map { unmined =>
+      ChainStorageServiceClient.unminedHashes() map { unmined =>
         val hashes = unmined.hashes
         hashes should have length 1
         hashes should contain(expectedHash)
@@ -61,7 +61,7 @@ class HashRouteUtilSpec extends FeatureSpec
       res1 shouldBe Some(Hash(expectedHash))
       res2 shouldBe Some(Hash(expectedHash))
 
-      unminedHashes() map { unmined =>
+      ChainStorageServiceClient.unminedHashes() map { unmined =>
 
         val hashes = unmined.hashes
         hashes should have length 2
