@@ -1,5 +1,7 @@
 packagedArtifacts in file(".") := Map.empty // disable publishing of root/default project
 
+lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.dev.conf")
+
 lazy val commonSettings = Seq(
 
   scalaVersion := "2.11.8",
@@ -16,6 +18,14 @@ lazy val commonSettings = Seq(
   resolvers ++= Seq(
     Resolver.bintrayRepo("hseeberger", "maven"),
     Resolver.sonatypeRepo("snapshots")
+  ),
+
+  javaOptions in Test += testConfiguration,
+  fork in Test := true,
+  // in ThisBuild is important to run tests of each subproject sequential instead parallelizing them
+  testOptions in ThisBuild ++= Seq(
+    Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports"),
+    Tests.Argument(TestFrameworks.ScalaTest, "-o")
   )
 
 )
@@ -41,13 +51,7 @@ lazy val core = project
 lazy val model = project
   .settings(commonSettings: _*)
   .settings(
-
-    libraryDependencies ++= {
-      Seq(
-        depJodaTime
-      )
-    }
-
+    libraryDependencies += depJodaTime
   )
 
 lazy val share = project
@@ -58,7 +62,7 @@ val scalaTestV = "3.0.0"
 val json4sV = "3.4.0"
 val configV = "1.3.0"
 val notaryServiceV = "0.3.0-SNAPSHOT"
-val storageServceV = "0.0.1-SNAPSHOT"
+val storageServiceV = "0.0.1-SNAPSHOT"
 val ubirchUtilCryptoV = "0.2-SNAPSHOT"
 
 lazy val depServer = Seq(
@@ -96,7 +100,8 @@ lazy val depCore = Seq(
   depUbirchUtilCrypto,
   depUbirchNotaryClient,
   depUbirchStorageClient,
-  depScalaTest
+  depScalaTest,
+  depUbirchStorageTestUtil
 )
 
 lazy val depTypesafeConfig = "com.typesafe" % "config" % configV
@@ -109,9 +114,11 @@ lazy val depScalaTest = "org.scalatest" %% "scalatest" % scalaTestV % "test"
 
 lazy val depUbirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
 
-lazy val depUbirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServceV
+lazy val depUbirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServiceV
 
 lazy val depUbirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
+
+lazy val depUbirchStorageTestUtil = "com.ubirch.backend.storage" %% "test-util" % storageServiceV % "test"
 
 lazy val mergeStrategy = Seq(
   assemblyMergeStrategy in assembly := {
