@@ -4,7 +4,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.backend.chain.model.FullBlock
 import com.ubirch.chain.core.config.{Config, ConfigKeys}
 import com.ubirch.chain.core.merkle.BlockUtil
-import com.ubirch.client.storage.ChainStorageServiceClient._
+import com.ubirch.client.storage.ChainStorageServiceClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -25,7 +25,7 @@ class MiningUtil extends LazyLogging {
 
         ageCheck() map {
           case true => mine()
-          case false => // do nothing
+          case false => logger.debug("most recent block is not old enough yet")
         }
 
     }
@@ -37,7 +37,7 @@ class MiningUtil extends LazyLogging {
     val blockMaxSizeKb = Config.blockMaxSize
     logger.debug(s"checking size of unmined hashes: ${ConfigKeys.BLOCK_MAX_SIZE} = $blockMaxSizeKb kb")
 
-    unminedHashes() map { hashes =>
+    ChainStorageServiceClient.unminedHashes() map { hashes =>
 
       val size = BlockUtil.size(hashes.hashes)
       val sizeKb = size / 1000
@@ -59,7 +59,7 @@ class MiningUtil extends LazyLogging {
 
   private def ageCheck(): Future[Boolean] = {
 
-    mostRecentBlock() map {
+    ChainStorageServiceClient.mostRecentBlock() map {
 
       case None =>
 
@@ -69,7 +69,7 @@ class MiningUtil extends LazyLogging {
       case Some(block) =>
 
         val nextCreationDate = block.created.plusSeconds(Config.mineEveryXSeconds)
-
+        logger.debug(s"ageCheck -- mostRecentBlock.created=${block.created}, nextCreationDate=$nextCreationDate")
         nextCreationDate.isBeforeNow match {
 
           case true =>
@@ -88,7 +88,7 @@ class MiningUtil extends LazyLogging {
 
   private def mine(): Future[Option[FullBlock]] = {
 
-    mostRecentBlock() flatMap {
+    ChainStorageServiceClient.mostRecentBlock() flatMap {
 
       case None =>
         logger.error("found no most recent block")
@@ -96,7 +96,7 @@ class MiningUtil extends LazyLogging {
 
       case Some(mostRecentBlock) =>
 
-        unminedHashes() flatMap { unmined =>
+        ChainStorageServiceClient.unminedHashes() flatMap { unmined =>
 
           val previousBlockHash = mostRecentBlock.hash
           val hashes = unmined.hashes
@@ -105,7 +105,7 @@ class MiningUtil extends LazyLogging {
           val blockHash = newBlock.hash
           logger.info(s"new block hash: $blockHash (blockSize=${BlockUtil.size(hashes) / 1000} kb; ${hashes.size} hashes)")
 
-          upsertFullBlock(newBlock) flatMap  {
+          ChainStorageServiceClient.upsertFullBlock(newBlock) flatMap  {
 
             case None =>
               logger.error("failed to insert new block")
@@ -113,12 +113,12 @@ class MiningUtil extends LazyLogging {
 
             case Some(upsertedBlock) =>
               // TODO FIXME switch to Seq instead of Set !!!
-              deleteHashes(hashes.toSet) map {
+              ChainStorageServiceClient.deleteHashes(hashes.toSet) map {
 
                 case true => Some(upsertedBlock)
 
                 case false =>
-                  logger.error(s"failed to newly mined hashes from unmined list: newBlock.hash=${upsertedBlock.hash}")
+                  logger.error(s"failed to delete newly mined hashes from unmined list: newBlock.hash=${upsertedBlock.hash}")
                   Some(upsertedBlock)
 
               }
