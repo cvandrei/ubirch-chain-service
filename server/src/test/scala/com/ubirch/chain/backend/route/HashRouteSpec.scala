@@ -2,22 +2,17 @@ package com.ubirch.chain.backend.route
 
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.ubirch.chain.backend.util.MyJsonProtocol
-import com.ubirch.util.crypto.hash.HashUtil
 import com.ubirch.chain.json.{Data, Hash}
-import com.ubirch.chain.share.RouteConstants
+import com.ubirch.chain.share.routes.RouteConstants
+import com.ubirch.chain.util.test.RouteSpec
+import com.ubirch.util.crypto.hash.HashUtil
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
-import org.scalatest.{FeatureSpec, Matchers}
 
 /**
   * author: cvandrei
   * since: 2016-07-29
   */
-class HashRouteSpec extends FeatureSpec
-  with Matchers
-  with ScalatestRouteTest
-  with MyJsonProtocol {
+class HashRouteSpec extends RouteSpec {
 
   val routes = (new MainRoute).myRoute
 
@@ -48,7 +43,7 @@ class HashRouteSpec extends FeatureSpec
       }
     }
 
-    scenario(s"POST without invalid input (data is empty string)") {
+    scenario(s"POST invalid input (data is empty string)") {
 
       val data = Data("")
       Post(RouteConstants.urlHash, data) ~> routes ~> check {

@@ -1,7 +1,7 @@
-package com.ubirch.chain.backend.util
+package com.ubirch.chain.share.json
 
-import org.json4s._
 import org.json4s.ext.{JavaTypesSerializers, JodaTimeSerializers}
+import org.json4s.{DefaultFormats, Formats, jackson}
 
 /**
   * author: cvandrei

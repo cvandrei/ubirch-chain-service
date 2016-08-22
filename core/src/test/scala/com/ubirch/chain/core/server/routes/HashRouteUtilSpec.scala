@@ -1,10 +1,9 @@
 package com.ubirch.chain.core.server.routes
 
-import com.ubirch.backend.storage.StorageCleanUp
 import com.ubirch.chain.json.{Data, Hash}
+import com.ubirch.chain.util.test.ElasticSearchSpec
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
-import org.scalatest.{BeforeAndAfterEach, FeatureSpec, Matchers}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -12,10 +11,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * author: cvandrei
   * since: 2016-08-17
   */
-class HashRouteUtilSpec extends FeatureSpec
-  with Matchers
-  with BeforeAndAfterEach
-  with StorageCleanUp {
+class HashRouteUtilSpec extends ElasticSearchSpec {
 
   private val hashRouteUtil = new HashRouteUtil
 
@@ -92,10 +88,6 @@ class HashRouteUtilSpec extends FeatureSpec
 
     }
 
-  }
-
-  override protected def beforeEach(): Unit = {
-    resetStorage()
   }
 
 }

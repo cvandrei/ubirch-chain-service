@@ -1,6 +1,6 @@
 packagedArtifacts in file(".") := Map.empty // disable publishing of root/default project
 
-lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.dev.conf")
+lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.base.conf")
 
 lazy val commonSettings = Seq(
 
@@ -21,12 +21,7 @@ lazy val commonSettings = Seq(
   ),
 
   javaOptions in Test += testConfiguration,
-  fork in Test := true,
-  // in ThisBuild is important to run tests of each subproject sequential instead parallelizing them
-  testOptions in ThisBuild ++= Seq(
-    Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports"),
-    Tests.Argument(TestFrameworks.ScalaTest, "-o")
-  )
+  logBuffered in Test := false
 
 )
 
@@ -36,16 +31,18 @@ lazy val root = (project in file("."))
 
 lazy val server = project
   .settings(commonSettings: _*)
-  .dependsOn(share, model, core)
+  .dependsOn(share, model, core, testUtil)
   .settings(
-    libraryDependencies ++= depServer
+    libraryDependencies ++= depServer,
+    parallelExecution in Test := false
   )
 
 lazy val core = project
   .settings(commonSettings: _*)
-  .dependsOn(model)
+  .dependsOn(model, testUtil)
   .settings(
-    libraryDependencies ++= depCore
+    libraryDependencies ++= depCore,
+    parallelExecution in Test := false
   )
 
 lazy val model = project
@@ -54,8 +51,19 @@ lazy val model = project
     libraryDependencies += depJodaTime
   )
 
+lazy val testUtil = (project in file("test-util"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "test-util",
+    libraryDependencies ++= depTestUtil
+  )
+
+
 lazy val share = project
   .settings(commonSettings: _*)
+  .settings(
+    libraryDependencies ++= depShare
+  )
 
 val akkaV = "2.4.9-RC2"
 val scalaTestV = "3.0.0"
@@ -74,15 +82,9 @@ lazy val depServer = Seq(
   //testing
   depScalaTest,
   "com.typesafe.akka" %% "akka-testkit" % akkaV % "test",
-  "com.typesafe.akka" %% "akka-http-testkit" % akkaV % "test",
+  akkaHttpTestkit % "test",
 
   //json4s
-  "org.json4s" %% "json4s-core" % json4sV,
-  "org.json4s" %% "json4s-native" % json4sV,
-  "org.json4s" %% "json4s-ast" % json4sV,
-  "org.json4s" %% "json4s-core" % json4sV,
-  "org.json4s" %% "json4s-jackson" % json4sV,
-  "org.json4s" %% "json4s-ext" % json4sV,
   "de.heikoseeberger" %% "akka-http-json4s" % "1.8.0",
 
   // logging
@@ -91,7 +93,7 @@ lazy val depServer = Seq(
   "ch.qos.logback" % "logback-core" % "1.1.3",
   "org.slf4j" % "slf4j-api" % "1.7.12"
 
-)
+) ++ json4s
 
 lazy val depCore = Seq(
   depTypesafeConfig,
@@ -100,9 +102,29 @@ lazy val depCore = Seq(
   depUbirchUtilCrypto,
   depUbirchNotaryClient,
   depUbirchStorageClient,
-  depScalaTest,
-  depUbirchStorageTestUtil
+  depScalaTest % "test",
+  depUbirchStorageTestUtil % "test"
 )
+
+lazy val depShare = json4s
+
+lazy val depTestUtil = Seq(
+  depScalaTest,
+  depUbirchStorageTestUtil,
+  akkaHttpTestkit
+) ++ json4s
+
+lazy val json4s = Seq(
+  json4sCore,
+  json4sJackson,
+  json4sExt
+)
+lazy val json4sJackson = "org.json4s" %% "json4s-jackson" % json4sV
+lazy val json4sCore = "org.json4s" %% "json4s-core" % json4sV
+lazy val json4sExt = "org.json4s" %% "json4s-ext" % json4sV
+
+lazy val depScalaTest = "org.scalatest" %% "scalatest" % scalaTestV
+lazy val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % akkaV
 
 lazy val depTypesafeConfig = "com.typesafe" % "config" % configV
 
@@ -110,15 +132,10 @@ lazy val depTypesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-loggin
 
 lazy val depJodaTime = "joda-time" % "joda-time" % "2.9.4"
 
-lazy val depScalaTest = "org.scalatest" %% "scalatest" % scalaTestV % "test"
-
 lazy val depUbirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
-
 lazy val depUbirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServiceV
-
 lazy val depUbirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
-
-lazy val depUbirchStorageTestUtil = "com.ubirch.backend.storage" %% "test-util" % storageServiceV % "test"
+lazy val depUbirchStorageTestUtil = "com.ubirch.backend.storage" %% "test-util" % storageServiceV
 
 lazy val mergeStrategy = Seq(
   assemblyMergeStrategy in assembly := {

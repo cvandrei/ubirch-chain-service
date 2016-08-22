@@ -46,7 +46,7 @@ class MiningUtil extends LazyLogging {
       size >= maxBlockSizeBytes match {
 
         case true =>
-          logger.info(s"trigger mining of a new block (trigger: size) -- ${hashes.hashes.length} hashes ($sizeKb kb)")
+          logger.info(s"trigger mining of new block (size) -- ${hashes.hashes.length} hashes ($sizeKb kb)")
           true
 
         case false => false
@@ -69,15 +69,14 @@ class MiningUtil extends LazyLogging {
       case Some(block) =>
 
         val nextCreationDate = block.created.plusSeconds(Config.mineEveryXSeconds)
-        logger.debug(s"ageCheck -- mostRecentBlock.created=${block.created}, nextCreationDate=$nextCreationDate")
         nextCreationDate.isBeforeNow match {
 
           case true =>
-            logger.info("start mining a new block (trigger: time)")
+            logger.info(s"trigger mining of new block (time) -- mostRecentBlock.created=${block.created}, nextCreationDate=$nextCreationDate")
             true
 
           case false =>
-            logger.debug("don't have to mine a new block yet based on time trigger")
+            logger.debug("don't trigger mining of new block (time) -- mostRecentBlock.created=${block.created}, nextCreationDate=$nextCreationDate")
             false
 
         }
