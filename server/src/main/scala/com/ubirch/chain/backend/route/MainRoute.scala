@@ -2,9 +2,7 @@ package com.ubirch.chain.backend.route
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import com.ubirch.chain.share.routes.RouteConstants
-import RouteConstants._
-import com.ubirch.chain.share.routes.RouteConstants
+import com.ubirch.chain.share.routes.RouteConstants._
 
 /**
   * author: cvandrei

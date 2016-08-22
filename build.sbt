@@ -27,7 +27,7 @@ lazy val commonSettings = Seq(
 
 lazy val root = (project in file("."))
   .settings(commonSettings: _*)
-  .aggregate(server, core, share, model)
+  .aggregate(server, core, share, model, testUtil)
 
 lazy val server = project
   .settings(commonSettings: _*)

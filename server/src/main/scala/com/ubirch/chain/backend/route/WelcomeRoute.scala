@@ -21,5 +21,3 @@ trait WelcomeRoute extends MyJsonProtocol {
     }
   }
 }
-
-
