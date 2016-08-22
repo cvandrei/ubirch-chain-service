@@ -33,6 +33,7 @@ class HashRouteUtilSpec extends FeatureSpec
       ChainStorageServiceClient.unminedHashes() map { unmined =>
         unmined.hashes shouldBe 'isEmpty
       }
+
     }
 
     scenario("valid input -> hash is stored") {
@@ -40,8 +41,8 @@ class HashRouteUtilSpec extends FeatureSpec
       // prepare
       val input = Data("""{"foo": {"bar": 42}}""")
 
-      // test
       for {
+        // test
         res <- hashRouteUtil.hash(input)
       } yield {
 
@@ -55,17 +56,18 @@ class HashRouteUtilSpec extends FeatureSpec
           hashes should have length 1
           hashes should contain(expectedHash)
         }
+
       }
 
     }
 
-    scenario("send same input twice") {
+    scenario("send same input twice -> same hash stored twice") {
 
       // prepare
       val input = Data("""{"foo": {"bar": 42}}""")
 
       for {
-      // test: send input: 1st time
+        // test: send input: 1st time
         res1 <- hashRouteUtil.hash(input)
         // test: send input: 2nd time
         res2 <- hashRouteUtil.hash(input)
