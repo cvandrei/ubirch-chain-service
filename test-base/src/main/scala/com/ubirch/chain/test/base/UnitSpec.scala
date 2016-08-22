@@ -1,4 +1,4 @@
-package com.ubirch.chain.util.test
+package com.ubirch.chain.test.base
 
 import org.scalatest.{FeatureSpec, Matchers}
 

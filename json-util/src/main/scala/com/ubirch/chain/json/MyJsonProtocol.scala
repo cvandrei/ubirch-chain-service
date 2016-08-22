@@ -1,4 +1,4 @@
-package com.ubirch.chain.share.json
+package com.ubirch.chain.json
 
 import org.json4s.ext.{JavaTypesSerializers, JodaTimeSerializers}
 import org.json4s.{DefaultFormats, Formats, jackson}

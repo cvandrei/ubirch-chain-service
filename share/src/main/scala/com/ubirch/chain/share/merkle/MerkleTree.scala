@@ -1,4 +1,4 @@
-package com.ubirch.chain.core.merkle
+package com.ubirch.chain.share.merkle
 
 import com.ubirch.util.crypto.hash.HashUtil
 

@@ -1,6 +1,7 @@
-package com.ubirch.chain.core.merkle
+package com.ubirch.chain.share.merkle
 
 import java.util.NoSuchElementException
+
 import com.roundeights.hasher.Hasher
 import com.ubirch.util.crypto.hash.HashUtil
 import org.scalatest.{FeatureSpec, Matchers}

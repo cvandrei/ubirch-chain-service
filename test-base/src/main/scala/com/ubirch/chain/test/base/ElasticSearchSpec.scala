@@ -1,4 +1,4 @@
-package com.ubirch.chain.util.test
+package com.ubirch.chain.test.base
 
 import com.ubirch.backend.storage.StorageCleanUp
 import org.scalatest.BeforeAndAfterEach

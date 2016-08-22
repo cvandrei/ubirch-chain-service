@@ -20,18 +20,17 @@ lazy val commonSettings = Seq(
     Resolver.sonatypeRepo("snapshots")
   ),
 
-  javaOptions in Test += testConfiguration,
-  logBuffered in Test := false
+  javaOptions in Test += testConfiguration
 
 )
 
 lazy val root = (project in file("."))
   .settings(commonSettings: _*)
-  .aggregate(server, core, share, model, testUtil)
+  .aggregate(server, core, share, model, testUtil, testBase, jsonUtil)
 
 lazy val server = project
   .settings(commonSettings: _*)
-  .dependsOn(share, model, core, testUtil)
+  .dependsOn(share, model, core, testBase, config)
   .settings(
     libraryDependencies ++= depServer,
     parallelExecution in Test := false
@@ -39,7 +38,7 @@ lazy val server = project
 
 lazy val core = project
   .settings(commonSettings: _*)
-  .dependsOn(model, testUtil)
+  .dependsOn(model, testBase, share, config, testUtil)
   .settings(
     libraryDependencies ++= depCore,
     parallelExecution in Test := false
@@ -51,16 +50,34 @@ lazy val model = project
     libraryDependencies += depJodaTime
   )
 
-lazy val testUtil = (project in file("test-util"))
+lazy val jsonUtil = (project in file("json-util"))
   .settings(commonSettings: _*)
   .settings(
-    name := "test-util",
-    libraryDependencies ++= depTestUtil
+    libraryDependencies ++= depJsonUtil
   )
 
+lazy val config = project
+  .settings(commonSettings: _*)
+  .settings(
+    libraryDependencies ++= depConfig
+  )
+
+lazy val testUtil = (project in file("test-util"))
+  .settings(commonSettings: _*)
+  .dependsOn(share)
+  .settings(name := "test-util")
+
+lazy val testBase = (project in file("test-base"))
+  .settings(commonSettings: _*)
+    .dependsOn(jsonUtil)
+  .settings(
+    name := "test-base",
+    libraryDependencies ++= depTestBase
+  )
 
 lazy val share = project
   .settings(commonSettings: _*)
+  .dependsOn(testBase, config)
   .settings(
     libraryDependencies ++= depShare
   )
@@ -106,12 +123,23 @@ lazy val depCore = Seq(
   depUbirchStorageTestUtil % "test"
 )
 
-lazy val depShare = json4s
-
-lazy val depTestUtil = Seq(
-  depScalaTest,
-  depUbirchStorageTestUtil,
+lazy val depJsonUtil = Seq(
   akkaHttpTestkit
+) ++ json4s
+
+lazy val depShare = Seq(
+  depTypesafeScalaLogging,
+  depUbirchUtilCrypto,
+  depUbirchStorageClient
+) ++ json4s
+
+lazy val depConfig = Seq(
+  depTypesafeConfig
+)
+
+lazy val depTestBase = Seq(
+  depScalaTest,
+  depUbirchStorageTestUtil
 ) ++ json4s
 
 lazy val json4s = Seq(

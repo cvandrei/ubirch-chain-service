@@ -1,7 +1,7 @@
 package com.ubirch.chain.core.server.actor
 
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.chain.core.merkle.BlockUtil
+import com.ubirch.chain.share.merkle.BlockUtil
 import com.ubirch.client.storage.ChainStorageServiceClient
 import scala.concurrent.ExecutionContext.Implicits.global
 

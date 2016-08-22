@@ -1,9 +1,9 @@
-package com.ubirch.chain.core.server.actor
+package com.ubirch.chain.share.util
 
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.backend.chain.model.FullBlock
-import com.ubirch.chain.core.config.{Config, ConfigKeys}
-import com.ubirch.chain.core.merkle.BlockUtil
+import com.ubirch.chain.config.{Config, ConfigKeys}
+import com.ubirch.chain.share.merkle.BlockUtil
 import com.ubirch.client.storage.ChainStorageServiceClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -85,7 +85,7 @@ class MiningUtil extends LazyLogging {
 
   }
 
-  private def mine(): Future[Option[FullBlock]] = {
+  def mine(): Future[Option[FullBlock]] = {
 
     ChainStorageServiceClient.mostRecentBlock() flatMap {
 

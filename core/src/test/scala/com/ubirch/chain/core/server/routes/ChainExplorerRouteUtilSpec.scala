@@ -1,7 +1,9 @@
 package com.ubirch.chain.core.server.routes
 
-import com.ubirch.chain.json.Data
-import com.ubirch.chain.util.test.ElasticSearchSpec
+import com.ubirch.backend.chain.model.Data
+import com.ubirch.chain.share.util.{HashRouteUtil, MiningUtil}
+import com.ubirch.chain.test.base.ElasticSearchSpec
+import com.ubirch.chain.test.util.block.BlockGenerator
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -13,6 +15,7 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
 
   private val chainExplorerUtil = new ChainExplorerRouteUtil
   private val hashRouteUtil = new HashRouteUtil
+  private val miningUtil = new MiningUtil
 
   feature("ChainExplorerRouteUtil.hash") {
 
@@ -25,7 +28,6 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
       }
 
     }
-
 
     scenario("query known hash") {
 
@@ -73,8 +75,23 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
 
     }
 
-    ignore("query known block hash") {
-      // TODO
+    scenario("query known block hash") {
+
+      for {
+        block <- BlockGenerator.generateMinedBlock(5000)
+      } yield {
+
+        val hash = block.hash
+        for {
+          block <- chainExplorerUtil.block(hash)
+        } yield {
+
+          block shouldNot be(None)
+          block.get.hash shouldEqual hash
+
+        }
+      }
+
     }
 
   }
@@ -95,8 +112,23 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
 
     }
 
-    ignore("query known block hash") {
-      // TODO
+    scenario("query known block hash") {
+
+      for {
+        block <- BlockGenerator.generateMinedBlock(5000)
+      } yield {
+
+        val hash = block.hash
+        for {
+          block <- chainExplorerUtil.fullBlock(hash)
+        } yield {
+
+          block shouldNot be(None)
+          block.get.hash shouldEqual hash
+
+        }
+      }
+
     }
 
   }

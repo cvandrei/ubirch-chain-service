@@ -2,7 +2,7 @@ package com.ubirch.chain.backend.actor
 
 import akka.actor.Actor
 import akka.stream.{ActorMaterializer, ActorMaterializerSettings}
-import com.ubirch.chain.core.server.actor.MiningUtil
+import com.ubirch.chain.share.util.MiningUtil
 
 /**
   * author: cvandrei

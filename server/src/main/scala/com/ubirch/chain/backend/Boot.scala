@@ -11,7 +11,7 @@ import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.chain.backend.actor.{AnchorActor, AnchorNow, BlockCheck, GenesisActor, GenesisCheck, MiningActor}
 import com.ubirch.chain.backend.route.MainRoute
-import com.ubirch.chain.core.config.{ConfigKeys, Config}
+import com.ubirch.chain.config.{Config, ConfigKeys}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._

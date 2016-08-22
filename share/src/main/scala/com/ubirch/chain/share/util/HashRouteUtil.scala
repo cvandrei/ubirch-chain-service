@@ -1,6 +1,6 @@
-package com.ubirch.chain.core.server.routes
+package com.ubirch.chain.share.util
 
-import com.ubirch.chain.json.{Data, Hash}
+import com.ubirch.backend.chain.model.{Data, Hash}
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
 

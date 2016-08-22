@@ -1,4 +1,4 @@
-package com.ubirch.chain.core.config
+package com.ubirch.chain.config
 
 import com.typesafe.config.ConfigFactory
 
