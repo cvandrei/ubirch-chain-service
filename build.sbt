@@ -1,6 +1,6 @@
 packagedArtifacts in file(".") := Map.empty // disable publishing of root/default project
 
-lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.base.conf")
+lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.dev.conf")
 
 lazy val commonSettings = Seq(
 
