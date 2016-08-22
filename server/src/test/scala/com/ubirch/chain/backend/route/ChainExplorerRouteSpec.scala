@@ -2,10 +2,11 @@ package com.ubirch.chain.backend.route
 
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Route
-import com.ubirch.backend.chain.model.{Data, HashInfo}
+import com.ubirch.backend.chain.model.{BlockInfo, Data, FullBlock, HashInfo}
 import com.ubirch.chain.share.routes.RouteConstants
 import com.ubirch.chain.share.util.HashRouteUtil
 import com.ubirch.chain.test.base.RouteSpec
+import com.ubirch.chain.test.util.block.BlockGenerator
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
 /**
@@ -70,8 +71,19 @@ class ChainExplorerRouteSpec extends RouteSpec {
       }
     }
 
-    ignore("GET known hash") {
-      // TODO write test
+    scenario("GET known hash") {
+
+      for {
+        block <- BlockGenerator.generateMinedBlock(5000)
+      } yield {
+
+        val hash = block.hash
+        Get(RouteConstants.urlExplorerBlock(hash)) ~> routes ~> check {
+          status shouldEqual OK
+          responseAs[BlockInfo].hash shouldEqual hash
+        }
+      }
+
     }
 
   }
@@ -91,8 +103,19 @@ class ChainExplorerRouteSpec extends RouteSpec {
       }
     }
 
-    ignore("GET known hash") {
-      // TODO write test
+    scenario("GET known hash") {
+
+      for {
+        block <- BlockGenerator.generateMinedBlock(5000)
+      } yield {
+
+        val hash = block.hash
+        Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
+          status shouldEqual OK
+          responseAs[FullBlock].hash shouldEqual hash
+        }
+      }
+
     }
 
   }
