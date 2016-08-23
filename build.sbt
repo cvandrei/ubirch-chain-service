@@ -26,11 +26,11 @@ lazy val commonSettings = Seq(
 
 lazy val root = (project in file("."))
   .settings(commonSettings: _*)
-  .aggregate(server, core, share, model, testUtil, testBase, jsonUtil)
+  .aggregate(server, core, share, model, testUtil, testBase)
 
 lazy val server = project
   .settings(commonSettings: _*)
-  .dependsOn(share, model, core, testBase, config)
+  .dependsOn(share, core, testBase, config)
   .settings(
     libraryDependencies ++= depServer,
     parallelExecution in Test := false
@@ -38,7 +38,7 @@ lazy val server = project
 
 lazy val core = project
   .settings(commonSettings: _*)
-  .dependsOn(model, testBase, share, config, testUtil)
+  .dependsOn(testBase, share, config, testUtil)
   .settings(
     libraryDependencies ++= depCore,
     parallelExecution in Test := false
@@ -50,17 +50,10 @@ lazy val model = project
     libraryDependencies += depJodaTime
   )
 
-lazy val jsonUtil = (project in file("json-util"))
-  .settings(commonSettings: _*)
-  .settings(
-    name := "json-util",
-    libraryDependencies ++= depJsonUtil
-  )
-
 lazy val config = project
   .settings(commonSettings: _*)
   .settings(
-    libraryDependencies ++= depConfig
+    libraryDependencies += depTypesafeConfig
   )
 
 lazy val testUtil = (project in file("test-util"))
@@ -70,7 +63,6 @@ lazy val testUtil = (project in file("test-util"))
 
 lazy val testBase = (project in file("test-base"))
   .settings(commonSettings: _*)
-  .dependsOn(jsonUtil)
   .settings(
     name := "test-base",
     libraryDependencies ++= depTestBase
@@ -90,6 +82,7 @@ val configV = "1.3.0"
 val notaryServiceV = "0.3.0-SNAPSHOT"
 val storageServiceV = "0.0.1-SNAPSHOT"
 val ubirchUtilCryptoV = "0.2-SNAPSHOT"
+val ubirchUtilJsonAutoConvertV = "0.1-SNAPSHOT"
 
 lazy val depServer = Seq(
 
@@ -102,16 +95,15 @@ lazy val depServer = Seq(
   "com.typesafe.akka" %% "akka-testkit" % akkaV % "test",
   akkaHttpTestkit % "test",
 
-  //json4s
-  "de.heikoseeberger" %% "akka-http-json4s" % "1.8.0",
-
   // logging
   depTypesafeScalaLogging,
   "ch.qos.logback" % "logback-classic" % "1.1.3",
   "ch.qos.logback" % "logback-core" % "1.1.3",
-  "org.slf4j" % "slf4j-api" % "1.7.12"
+  "org.slf4j" % "slf4j-api" % "1.7.12",
 
-) ++ json4s
+  depUbirchUtilJsonAutoConvert
+
+)
 
 lazy val depCore = Seq(
   depTypesafeConfig,
@@ -124,9 +116,11 @@ lazy val depCore = Seq(
   depUbirchStorageTestUtil % "test"
 )
 
-lazy val depJsonUtil = Seq(
-  akkaHttpTestkit
-) ++ json4s
+lazy val depTestBase = Seq(
+  depScalaTest,
+  depUbirchStorageTestUtil,
+  depUbirchUtilJsonAutoConvert
+)
 
 lazy val depShare = Seq(
   depTypesafeScalaLogging,
@@ -134,23 +128,16 @@ lazy val depShare = Seq(
   depUbirchStorageClient
 ) ++ json4s
 
-lazy val depConfig = Seq(
-  depTypesafeConfig
-)
-
-lazy val depTestBase = Seq(
-  depScalaTest,
-  depUbirchStorageTestUtil
-) ++ json4s
-
 lazy val json4s = Seq(
   json4sCore,
   json4sJackson,
-  json4sExt
+  json4sExt,
+  seebergerJson4s
 )
 lazy val json4sJackson = "org.json4s" %% "json4s-jackson" % json4sV
 lazy val json4sCore = "org.json4s" %% "json4s-core" % json4sV
 lazy val json4sExt = "org.json4s" %% "json4s-ext" % json4sV
+lazy val seebergerJson4s = "de.heikoseeberger" %% "akka-http-json4s" % "1.8.0"
 
 lazy val depScalaTest = "org.scalatest" %% "scalatest" % scalaTestV
 lazy val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % akkaV
@@ -164,6 +151,7 @@ lazy val depJodaTime = "joda-time" % "joda-time" % "2.9.4"
 lazy val depUbirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
 lazy val depUbirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServiceV
 lazy val depUbirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
+lazy val depUbirchUtilJsonAutoConvert = "com.ubirch.util" %% "json-auto-convert" % ubirchUtilJsonAutoConvertV
 lazy val depUbirchStorageTestUtil = "com.ubirch.backend.storage" %% "test-util" % storageServiceV
 
 lazy val mergeStrategy = Seq(
