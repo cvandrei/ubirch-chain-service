@@ -53,6 +53,7 @@ lazy val model = project
 lazy val jsonUtil = (project in file("json-util"))
   .settings(commonSettings: _*)
   .settings(
+    name := "json-util",
     libraryDependencies ++= depJsonUtil
   )
 
@@ -69,7 +70,7 @@ lazy val testUtil = (project in file("test-util"))
 
 lazy val testBase = (project in file("test-base"))
   .settings(commonSettings: _*)
-    .dependsOn(jsonUtil)
+  .dependsOn(jsonUtil)
   .settings(
     name := "test-base",
     libraryDependencies ++= depTestBase
