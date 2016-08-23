@@ -2,8 +2,8 @@ package com.ubirch.chain.backend.route
 
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Route
+import com.ubirch.chain.core.server.util.RouteConstants
 import com.ubirch.chain.json.{Data, Hash}
-import com.ubirch.chain.share.routes.RouteConstants
 import com.ubirch.chain.test.base.RouteSpec
 import com.ubirch.util.crypto.hash.HashUtil
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._

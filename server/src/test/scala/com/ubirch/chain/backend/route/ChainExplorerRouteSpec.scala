@@ -3,7 +3,7 @@ package com.ubirch.chain.backend.route
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Route
 import com.ubirch.backend.chain.model.{BlockInfo, Data, FullBlock, HashInfo}
-import com.ubirch.chain.share.routes.RouteConstants
+import com.ubirch.chain.core.server.util.RouteConstants
 import com.ubirch.chain.share.util.HashRouteUtil
 import com.ubirch.chain.test.base.RouteSpec
 import com.ubirch.chain.test.util.block.BlockGenerator

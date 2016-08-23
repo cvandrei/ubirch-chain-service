@@ -1,4 +1,4 @@
-package com.ubirch.chain.share.routes
+package com.ubirch.chain.core.server.util
 
 /**
   * author: cvandrei

@@ -4,8 +4,8 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.ubirch.backend.chain.model.Data
+import com.ubirch.chain.core.server.util.RouteConstants
 import com.ubirch.chain.json.MyJsonProtocol
-import com.ubirch.chain.share.routes.RouteConstants
 import com.ubirch.chain.share.util.HashRouteUtil
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
