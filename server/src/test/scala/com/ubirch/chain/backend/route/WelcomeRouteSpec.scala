@@ -3,7 +3,8 @@ package com.ubirch.chain.backend.route
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.ubirch.chain.json.{MyJsonProtocol, Welcome}
+import com.ubirch.chain.json.Welcome
+import com.ubirch.util.json.MyJsonProtocol
 import org.scalatest.{FeatureSpec, Matchers}
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 

@@ -1,7 +1,7 @@
 package com.ubirch.chain.test.base
 
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.ubirch.chain.json.MyJsonProtocol
+import com.ubirch.util.json.MyJsonProtocol
 
 /**
   * author: cvandrei
