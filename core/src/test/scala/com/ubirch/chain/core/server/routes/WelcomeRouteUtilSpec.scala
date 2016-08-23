@@ -1,7 +1,7 @@
 package com.ubirch.chain.core.server.routes
 
-import com.ubirch.chain.json.Welcome
-import org.scalatest.{Matchers, FeatureSpec}
+import com.ubirch.backend.chain.model.Welcome
+import org.scalatest.{FeatureSpec, Matchers}
 
 /**
   * author: cvandrei

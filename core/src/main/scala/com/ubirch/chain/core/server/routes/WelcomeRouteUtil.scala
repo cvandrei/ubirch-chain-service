@@ -1,6 +1,6 @@
 package com.ubirch.chain.core.server.routes
 
-import com.ubirch.chain.json.Welcome
+import com.ubirch.backend.chain.model.Welcome
 
 /**
   * author: cvandrei

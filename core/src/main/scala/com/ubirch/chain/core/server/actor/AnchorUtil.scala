@@ -1,8 +1,8 @@
 package com.ubirch.chain.core.server.actor
 
 import com.typesafe.scalalogging.LazyLogging
+import com.ubirch.backend.chain.model.{Anchor, AnchorType}
 import com.ubirch.chain.config.Config
-import com.ubirch.chain.json.{Anchor, AnchorType}
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.notary.client.NotaryClient
 
@@ -53,7 +53,7 @@ class AnchorUtil extends LazyLogging {
 
     logger.info(s"anchoring most recent blockHash: $blockHash")
 
-    NotaryClient.notarize(blockHash, true) match {
+    NotaryClient.notarize(blockHash, dataIsHash = true) match {
 
       case Some(notarizeResponse) =>
         val anchorHash = notarizeResponse.hash

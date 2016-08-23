@@ -1,6 +1,6 @@
 packagedArtifacts in file(".") := Map.empty // disable publishing of root/default project
 
-lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.dev.conf")
+lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.base.conf")
 
 lazy val commonSettings = Seq(
 
@@ -47,7 +47,7 @@ lazy val core = project
 lazy val model = project
   .settings(commonSettings: _*)
   .settings(
-    libraryDependencies += depJodaTime
+    libraryDependencies += jodaTime
   )
 
 lazy val config = project
@@ -91,40 +91,42 @@ lazy val depServer = Seq(
   "com.typesafe.akka" %% "akka-http-experimental" % akkaV,
 
   //testing
-  depScalaTest,
+  scalatest % "test",
   "com.typesafe.akka" %% "akka-testkit" % akkaV % "test",
   akkaHttpTestkit % "test",
 
   // logging
-  depTypesafeScalaLogging,
+  typesafeScalaLogging,
   "ch.qos.logback" % "logback-classic" % "1.1.3",
   "ch.qos.logback" % "logback-core" % "1.1.3",
   "org.slf4j" % "slf4j-api" % "1.7.12",
 
-  depUbirchUtilJsonAutoConvert
+  ubirchUtilJsonAutoConvert
 
 )
 
 lazy val depCore = Seq(
-  depTypesafeScalaLogging,
-  depJodaTime,
-  depUbirchUtilCrypto,
-  depUbirchNotaryClient,
-  depUbirchStorageClient,
-  depScalaTest % "test",
-  depUbirchStorageTestUtil % "test"
+  typesafeScalaLogging,
+  jodaTime,
+  ubirchUtilCrypto,
+  ubirchStorageModel,
+  ubirchNotaryClient,
+  ubirchStorageClient,
+  scalatest % "test",
+  ubirchStorageTestUtil % "test"
 )
 
 lazy val depTestBase = Seq(
-  depScalaTest,
-  depUbirchStorageTestUtil,
-  depUbirchUtilJsonAutoConvert
+  scalatest,
+  akkaHttpTestkit,
+  ubirchStorageTestUtil,
+  ubirchUtilJsonAutoConvert
 )
 
 lazy val depShare = Seq(
-  depTypesafeScalaLogging,
-  depUbirchUtilCrypto,
-  depUbirchStorageClient
+  typesafeScalaLogging,
+  ubirchUtilCrypto,
+  ubirchStorageClient
 ) ++ json4s
 
 lazy val json4s = Seq(
@@ -138,19 +140,20 @@ lazy val json4sCore = "org.json4s" %% "json4s-core" % json4sV
 lazy val json4sExt = "org.json4s" %% "json4s-ext" % json4sV
 lazy val seebergerJson4s = "de.heikoseeberger" %% "akka-http-json4s" % "1.8.0"
 
-lazy val depScalaTest = "org.scalatest" %% "scalatest" % scalaTestV
+lazy val scalatest = "org.scalatest" %% "scalatest" % scalaTestV
 lazy val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % akkaV
 
-lazy val depTypesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
+lazy val typesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
 
-lazy val depJodaTime = "joda-time" % "joda-time" % "2.9.4"
+lazy val jodaTime = "joda-time" % "joda-time" % "2.9.4"
 
 lazy val ubirchUtilConfig = "com.ubirch.util" %% "config" % "0.1-SNAPSHOT"
-lazy val depUbirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
-lazy val depUbirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServiceV
-lazy val depUbirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
-lazy val depUbirchUtilJsonAutoConvert = "com.ubirch.util" %% "json-auto-convert" % ubirchUtilJsonAutoConvertV
-lazy val depUbirchStorageTestUtil = "com.ubirch.backend.storage" %% "test-util" % storageServiceV
+lazy val ubirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
+lazy val ubirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServiceV
+lazy val ubirchStorageTestUtil = "com.ubirch.backend.storage" %% "test-util" % storageServiceV
+lazy val ubirchStorageModel = "com.ubirch.backend.storage" %% "model" % storageServiceV
+lazy val ubirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
+lazy val ubirchUtilJsonAutoConvert = "com.ubirch.util" %% "json-auto-convert" % ubirchUtilJsonAutoConvertV
 
 lazy val mergeStrategy = Seq(
   assemblyMergeStrategy in assembly := {
