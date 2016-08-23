@@ -53,7 +53,7 @@ lazy val model = project
 lazy val config = project
   .settings(commonSettings: _*)
   .settings(
-    libraryDependencies += depTypesafeConfig
+    libraryDependencies += ubirchUtilConfig
   )
 
 lazy val testUtil = (project in file("test-util"))
@@ -106,7 +106,6 @@ lazy val depServer = Seq(
 )
 
 lazy val depCore = Seq(
-  depTypesafeConfig,
   depTypesafeScalaLogging,
   depJodaTime,
   depUbirchUtilCrypto,
@@ -142,12 +141,11 @@ lazy val seebergerJson4s = "de.heikoseeberger" %% "akka-http-json4s" % "1.8.0"
 lazy val depScalaTest = "org.scalatest" %% "scalatest" % scalaTestV
 lazy val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % akkaV
 
-lazy val depTypesafeConfig = "com.typesafe" % "config" % configV
-
 lazy val depTypesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
 
 lazy val depJodaTime = "joda-time" % "joda-time" % "2.9.4"
 
+lazy val ubirchUtilConfig = "com.ubirch.util" %% "config" % "0.1-SNAPSHOT"
 lazy val depUbirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
 lazy val depUbirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServiceV
 lazy val depUbirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
