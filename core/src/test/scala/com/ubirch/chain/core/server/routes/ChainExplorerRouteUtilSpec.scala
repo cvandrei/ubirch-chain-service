@@ -1,6 +1,6 @@
 package com.ubirch.chain.core.server.routes
 
-import com.ubirch.backend.chain.model.Data
+import com.ubirch.backend.chain.model.HashRequest
 import com.ubirch.chain.share.util.{HashRouteUtil, MiningUtil}
 import com.ubirch.chain.test.base.ElasticSearchSpec
 import com.ubirch.chain.test.util.block.BlockGenerator
@@ -32,7 +32,7 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
     scenario("query known hash") {
 
       // prepare
-      val input = Data("""{"foo": {"bar": 42}}""")
+      val input = HashRequest("""{"foo": {"bar": 42}}""")
       hashRouteUtil.hash(input) map {
 
         case None => fail("failed to create hash during preparation")

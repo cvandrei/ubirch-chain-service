@@ -1,6 +1,6 @@
 package com.ubirch.chain.test.util.block
 
-import com.ubirch.backend.chain.model.{Data, FullBlock}
+import com.ubirch.backend.chain.model.{FullBlock, HashRequest}
 import com.ubirch.chain.share.util.{HashRouteUtil, MiningUtil}
 import com.ubirch.util.crypto.hash.HashUtil
 import org.scalatest.FeatureSpec
@@ -16,7 +16,7 @@ object BlockGenerator extends FeatureSpec {
 
   def generateMinedBlock(maxElementCount: Int): Future[FullBlock] = {
 
-    val hashes = HashUtil.randomSha256Hashes(maxElementCount) map(Data(_))
+    val hashes = HashUtil.randomSha256Hashes(maxElementCount) map (HashRequest(_))
     hashes foreach (new HashRouteUtil).hash
 
     (new MiningUtil).mine() map {

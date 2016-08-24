@@ -1,6 +1,6 @@
 package com.ubirch.chain.share.util
 
-import com.ubirch.backend.chain.model.{Hash, Data}
+import com.ubirch.backend.chain.model.HashRequest
 import com.ubirch.chain.test.base.ElasticSearchSpec
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
@@ -20,7 +20,7 @@ class HashRouteUtilSpec extends ElasticSearchSpec {
     scenario("invalid input: empty string") {
 
       // test
-      val hashResponse = hashRouteUtil.hash(Data(""))
+      val hashResponse = hashRouteUtil.hash(HashRequest(""))
 
       // verify
       hashResponse map (_ shouldBe None)
@@ -35,7 +35,7 @@ class HashRouteUtilSpec extends ElasticSearchSpec {
     scenario("valid input -> hash is stored") {
 
       // prepare
-      val input = Data("""{"foo": {"bar": 42}}""")
+      val input = HashRequest("""{"foo": {"bar": 42}}""")
 
       for {
         // test
@@ -45,7 +45,7 @@ class HashRouteUtilSpec extends ElasticSearchSpec {
         // verify
         Thread.sleep(500)
         val expectedHash = HashUtil.sha256HexString(input.data)
-        res shouldBe Some(Hash(expectedHash))
+        res shouldBe Some(HashRequest(expectedHash))
 
         ChainStorageServiceClient.unminedHashes() map { unmined =>
           val hashes = unmined.hashes
@@ -60,7 +60,7 @@ class HashRouteUtilSpec extends ElasticSearchSpec {
     scenario("send same input twice -> same hash stored twice") {
 
       // prepare
-      val input = Data("""{"foo": {"bar": 42}}""")
+      val input = HashRequest("""{"foo": {"bar": 42}}""")
 
       for {
         // test: send input: 1st time
@@ -71,8 +71,8 @@ class HashRouteUtilSpec extends ElasticSearchSpec {
 
         // verify
         val expectedHash = HashUtil.sha256HexString(input.data)
-        res1 shouldBe Some(Hash(expectedHash))
-        res2 shouldBe Some(Hash(expectedHash))
+        res1 shouldBe Some(HashRequest(expectedHash))
+        res2 shouldBe Some(HashRequest(expectedHash))
 
         Thread.sleep(500)
         ChainStorageServiceClient.unminedHashes() map { unmined =>

@@ -1,6 +1,6 @@
 package com.ubirch.chain.share.util
 
-import com.ubirch.backend.chain.model.{Data, Hash}
+import com.ubirch.backend.chain.model.{HashRequest, HashedData}
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
 
@@ -15,7 +15,13 @@ class HashRouteUtil {
 
   private val invalidData: Set[String] = Set("")
 
-  def hash(input: Data): Future[Option[Hash]] = {
+  /**
+    * Hashes the input and stores it for future mining.
+    *
+    * @param input the data to hash
+    * @return None if input data is invalid; a hash otherwise
+    */
+  def hash(input: HashRequest): Future[Option[HashedData]] = {
 
     invalidData.contains(input.data) match {
 
@@ -25,7 +31,7 @@ class HashRouteUtil {
         val hash = HashUtil.sha256HexString(input.data)
         ChainStorageServiceClient.storeHash(hash) map {
           case None => None
-          case Some(storedHash) => Some(Hash(hash))
+          case Some(storedHash) => Some(HashedData(hash))
         }
 
     }
