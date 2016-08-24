@@ -10,8 +10,8 @@ object RouteConstants {
   val v1 = "v1"
   val chainService = "chainService"
   val hash = "hash"
-  val eventHash = "eventHash"
   val explorer = "explorer"
+  val eventHash = "eventHash"
   val blockInfo = "blockInfo"
   val fullBlock = "fullBlock"
 
