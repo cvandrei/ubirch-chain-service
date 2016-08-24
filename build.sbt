@@ -1,6 +1,6 @@
 packagedArtifacts in file(".") := Map.empty // disable publishing of root/default project
 
-lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.base.conf")
+lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.dev.conf")
 
 lazy val commonSettings = Seq(
 
@@ -26,7 +26,7 @@ lazy val commonSettings = Seq(
 
 lazy val root = (project in file("."))
   .settings(commonSettings: _*)
-  .aggregate(server, core, share, model, testUtil, testBase)
+  .aggregate(server, core, share, testUtil, testBase)
 
 lazy val server = project
   .settings(commonSettings: _*)
@@ -42,12 +42,6 @@ lazy val core = project
   .settings(
     libraryDependencies ++= depCore,
     parallelExecution in Test := false
-  )
-
-lazy val model = project
-  .settings(commonSettings: _*)
-  .settings(
-    libraryDependencies += jodaTime
   )
 
 lazy val config = project
@@ -107,7 +101,6 @@ lazy val depServer = Seq(
 
 lazy val depCore = Seq(
   typesafeScalaLogging,
-  jodaTime,
   ubirchUtilCrypto,
   ubirchStorageModel,
   ubirchNotaryClient,
@@ -144,8 +137,6 @@ lazy val scalatest = "org.scalatest" %% "scalatest" % scalaTestV
 lazy val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % akkaV
 
 lazy val typesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
-
-lazy val jodaTime = "joda-time" % "joda-time" % "2.9.4"
 
 lazy val ubirchUtilConfig = "com.ubirch.util" %% "config" % "0.1-SNAPSHOT"
 lazy val ubirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
