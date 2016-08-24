@@ -28,11 +28,8 @@ class HashRouteUtil {
       case true => Future(None)
 
       case false =>
-        val hash = HashUtil.sha256HexString(input.data)
-        ChainStorageServiceClient.storeHash(hash) map {
-          case None => None
-          case Some(storedHash) => Some(HashedData(hash))
-        }
+        val hash = HashedData(HashUtil.sha256HexString(input.data))
+        ChainStorageServiceClient.storeHash(hash)
 
     }
 
