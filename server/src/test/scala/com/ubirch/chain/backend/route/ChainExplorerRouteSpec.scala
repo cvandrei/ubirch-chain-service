@@ -66,7 +66,7 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
     scenario("GET unknown hash") {
       val hash = "1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"
-      Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
+      Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> Route.seal(routes) ~> check {
         status shouldEqual NotFound
       }
     }
@@ -98,7 +98,7 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
     scenario("GET unknown hash") {
       val hash = "1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"
-      Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
+      Get(RouteConstants.urlExplorerFullBlock(hash)) ~> Route.seal(routes) ~> check {
         status shouldEqual NotFound
       }
     }
