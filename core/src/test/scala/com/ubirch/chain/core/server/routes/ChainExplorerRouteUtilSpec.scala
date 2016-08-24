@@ -17,12 +17,12 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
   private val hashRouteUtil = new HashRouteUtil
   private val miningUtil = new MiningUtil
 
-  feature("ChainExplorerRouteUtil.hash") {
+  feature("ChainExplorerRouteUtil.eventHash") {
 
     scenario("query unknown hash") {
 
       for {
-        res <- chainExplorerUtil.hash("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff")
+        res <- chainExplorerUtil.eventHash("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff")
       } yield {
         res should be(None)
       }
@@ -44,7 +44,7 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
 
           for {
           // test
-            res <- chainExplorerUtil.hash(hash)
+            res <- chainExplorerUtil.eventHash(hash)
           } yield {
 
             // verify
@@ -59,13 +59,13 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
 
   }
 
-  feature("ChainExplorerRouteUtil.block") {
+  feature("ChainExplorerRouteUtil.blockInfo") {
 
     scenario("query unknown hash") {
 
       for {
       // test
-        res <- chainExplorerUtil.block("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff")
+        res <- chainExplorerUtil.blockInfo("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff")
       } yield {
 
         // verify
@@ -83,7 +83,7 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
 
         val hash = block.hash
         for {
-          block <- chainExplorerUtil.block(hash)
+          block <- chainExplorerUtil.blockInfo(hash)
         } yield {
 
           block shouldNot be(None)

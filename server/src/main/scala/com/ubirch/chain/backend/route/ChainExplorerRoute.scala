@@ -24,17 +24,17 @@ trait ChainExplorerRoute extends MyJsonProtocol {
 
     (get & pathPrefix(RouteConstants.explorer)) {
 
-      pathPrefix(RouteConstants.hash / Segment) { hash =>
+      pathPrefix(RouteConstants.eventHash / Segment) { hash =>
         complete {
-          chainExplorerRouteUtil.hash(hash) map {
+          chainExplorerRouteUtil.eventHash(hash) map {
             case None => empty404
             case Some(hashInfo) => hashInfo
           }
         }
 
-      } ~ path(RouteConstants.block / Segment) { hash =>
+      } ~ path(RouteConstants.blockInfo / Segment) { hash =>
         complete {
-          chainExplorerRouteUtil.block(hash) map {
+          chainExplorerRouteUtil.blockInfo(hash) map {
             case None => empty404
             case Some(blockInfo) => blockInfo
           }
@@ -44,7 +44,7 @@ trait ChainExplorerRoute extends MyJsonProtocol {
         complete {
           chainExplorerRouteUtil.fullBlock(hash) map {
             case None => empty404
-            case Some(blockInfo) => blockInfo
+            case Some(fullBlock) => fullBlock
           }
         }
 

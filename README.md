@@ -26,9 +26,15 @@
 
 ### Chain Explorer
 
-    curl localhost:8080/api/v1/chainService/explorer/hash/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
-    
-    curl localhost:8080/api/v1/chainService/explorer/block/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
+Query a block's info based on an event hash:
+
+    curl localhost:8080/api/v1/chainService/explorer/eventHash/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
+
+Query a block's info based on a block hash:
+
+    curl localhost:8080/api/v1/chainService/explorer/blockInfo/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
+
+Query a full block based on a block hash:
 
     curl localhost:8080/api/v1/chainService/explorer/fullBlock/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
 

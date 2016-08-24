@@ -18,17 +18,17 @@ class ChainExplorerRouteSpec extends RouteSpec {
   private val routes = (new MainRoute).myRoute
   private val hashRouteUtil = new HashRouteUtil
 
-  feature(s"call hash explorer route: ${RouteConstants.urlExplorerHashPrefix}/:hash") {
+  feature(s"call hash explorer route: ${RouteConstants.urlExplorerEventHashPrefix}/:hash") {
 
     scenario("GET without hash in address") {
-      Get(RouteConstants.urlExplorerHash("")) ~> Route.seal(routes) ~> check {
+      Get(RouteConstants.urlExplorerEventHash("")) ~> Route.seal(routes) ~> check {
         status shouldEqual NotFound
       }
     }
 
     scenario("GET unknown hash") {
       val hash = "1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"
-      Get(RouteConstants.urlExplorerHash(hash)) ~> routes ~> check {
+      Get(RouteConstants.urlExplorerEventHash(hash)) ~> routes ~> check {
         status shouldEqual NotFound
       }
     }
@@ -46,7 +46,7 @@ class ChainExplorerRouteSpec extends RouteSpec {
         Thread.sleep(500)
 
         // test
-        Get(RouteConstants.urlExplorerHash(hash)) ~> routes ~> check {
+        Get(RouteConstants.urlExplorerEventHash(hash)) ~> routes ~> check {
           status shouldEqual OK
           responseAs[HashInfo].hash shouldEqual hash
         }
@@ -56,17 +56,17 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
   }
 
-  feature(s"call hash explorer route: ${RouteConstants.urlExplorerBlockPrefix}/:hash") {
+  feature(s"call hash explorer route: ${RouteConstants.urlExplorerBlockInfoPrefix}/:hash") {
 
     scenario("GET without hash in address") {
-      Get(RouteConstants.urlExplorerBlock("")) ~> Route.seal(routes) ~> check {
+      Get(RouteConstants.urlExplorerBlockInfo("")) ~> Route.seal(routes) ~> check {
         status shouldEqual NotFound
       }
     }
 
     scenario("GET unknown hash") {
       val hash = "1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"
-      Get(RouteConstants.urlExplorerBlock(hash)) ~> routes ~> check {
+      Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
         status shouldEqual NotFound
       }
     }
@@ -78,7 +78,7 @@ class ChainExplorerRouteSpec extends RouteSpec {
       } yield {
 
         val hash = block.hash
-        Get(RouteConstants.urlExplorerBlock(hash)) ~> routes ~> check {
+        Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
           status shouldEqual OK
           responseAs[BlockInfo].hash shouldEqual hash
         }
