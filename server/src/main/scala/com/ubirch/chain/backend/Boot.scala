@@ -74,7 +74,7 @@ object Boot extends App with LazyLogging {
     scheduler.schedule(blockCheckInterval seconds, blockCheckInterval seconds, miningActor, new BlockCheck())
 
     val anchorInterval = Config.anchorInterval
-    logger.info(s"schedule anchoring (${ConfigKeys.ANCHOR_INTERVAL}) to run every $blockCheckInterval seconds")
+    logger.info(s"schedule anchoring (${ConfigKeys.ANCHOR_INTERVAL}) to run every $anchorInterval seconds")
     scheduler.schedule(10 seconds, anchorInterval seconds, anchorActor, new AnchorNow())
 
   }
