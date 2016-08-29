@@ -69,9 +69,9 @@ object Boot extends App with LazyLogging {
   private def scheduleMiningRelatedJobs(): Unit = {
 
     val scheduler = system.scheduler
-    val blockCheckInterval = Config.blockCheckInterval
-    logger.info(s"schedule block check (${ConfigKeys.BLOCK_CHECK_INTERVAL}) to run every $blockCheckInterval seconds")
-    scheduler.schedule(2 seconds, blockCheckInterval seconds, miningActor, new BlockCheck())
+    val miningInitialDelay = 2
+    logger.info(s"schedule next block check (${ConfigKeys.BLOCK_CHECK_INTERVAL}) to run in $miningInitialDelay seconds")
+    scheduler.scheduleOnce(miningInitialDelay seconds, miningActor, new BlockCheck())
 
     val anchorInterval = Config.anchorInterval
     logger.info(s"schedule anchoring (${ConfigKeys.ANCHOR_INTERVAL}) to run every $anchorInterval seconds")
