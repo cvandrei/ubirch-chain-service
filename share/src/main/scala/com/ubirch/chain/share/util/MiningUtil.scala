@@ -16,17 +16,21 @@ import scala.concurrent.Future
   */
 class MiningUtil extends LazyLogging {
 
-  def blockCheck(): Unit = {
+  def blockCheck(): Future[Option[FullBlock]] = {
 
-    sizeCheck() map {
+    sizeCheck() flatMap {
 
       case true => mine()
 
       case false =>
 
-        ageCheck() map {
+        ageCheck() flatMap {
+
           case true => mine()
-          case false => logger.debug("most recent block is not old enough yet")
+
+          case false =>
+            logger.debug("most recent block is not old enough yet")
+            Future(None)
         }
 
     }
