@@ -1,7 +1,6 @@
 package com.ubirch.chain.backend.actor
 
 import akka.actor.Actor
-import akka.stream.{ActorMaterializer, ActorMaterializerSettings}
 import com.ubirch.chain.share.util.MiningUtil
 
 /**
@@ -10,7 +9,6 @@ import com.ubirch.chain.share.util.MiningUtil
   */
 class MiningActor extends Actor {
 
-  final implicit val materializer: ActorMaterializer = ActorMaterializer(ActorMaterializerSettings(context.system))
   val miningUtil = new MiningUtil
 
   override def receive: Receive = {
