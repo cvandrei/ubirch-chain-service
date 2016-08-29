@@ -112,7 +112,9 @@ class ChainExplorerRouteSpec extends RouteSpec {
         val hash = block.hash
         Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
           status shouldEqual OK
-          responseAs[FullBlock].hash shouldEqual hash
+          val fullBlock = responseAs[FullBlock]
+          fullBlock.hash shouldEqual hash
+          fullBlock.hashes.get contains block.hashes.get.head
         }
       }
 
