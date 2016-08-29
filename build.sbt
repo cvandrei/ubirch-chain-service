@@ -1,6 +1,6 @@
 packagedArtifacts in file(".") := Map.empty // disable publishing of root/default project
 
-lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.dev.conf")
+lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.base.conf")
 
 lazy val commonSettings = Seq(
 
@@ -20,7 +20,8 @@ lazy val commonSettings = Seq(
     Resolver.sonatypeRepo("snapshots")
   ),
 
-  javaOptions in Test += testConfiguration
+  javaOptions in Test += testConfiguration,
+  parallelExecution in Test := false
 
 )
 
@@ -32,16 +33,14 @@ lazy val server = project
   .settings(commonSettings: _*)
   .dependsOn(share, core, testBase, config)
   .settings(
-    libraryDependencies ++= depServer,
-    parallelExecution in Test := false
+    libraryDependencies ++= depServer
   )
 
 lazy val core = project
   .settings(commonSettings: _*)
   .dependsOn(testBase, share, config, testUtil)
   .settings(
-    libraryDependencies ++= depCore,
-    parallelExecution in Test := false
+    libraryDependencies ++= depCore
   )
 
 lazy val config = project
