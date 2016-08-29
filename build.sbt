@@ -24,7 +24,7 @@ lazy val commonSettings = Seq(
 
 )
 
-lazy val root = (project in file("."))
+lazy val chainService = (project in file("."))
   .settings(commonSettings: _*)
   .aggregate(server, core, share, testUtil, testBase)
 
