@@ -100,10 +100,11 @@ class MiningUtil extends LazyLogging {
 
           val previousBlockHash = mostRecentBlock.hash
           val hashes = unmined.hashes
+          val newNumber = mostRecentBlock.number + 1
 
-          val newBlock = BlockUtil.newBlock(previousBlockHash, hashes)
+          val newBlock = BlockUtil.newBlock(previousBlockHash, newNumber, hashes)
           val blockHash = newBlock.hash
-          logger.info(s"new block hash: $blockHash (blockSize=${BlockUtil.size(hashes) / 1000} kb; ${hashes.size} hashes)")
+          logger.info(s"new block: hash=$blockHash, number=$newNumber (${hashes.size} hashes; ${BlockUtil.size(hashes) / 1000} kb)")
 
           ChainStorageServiceClient.upsertFullBlock(newBlock) flatMap {
 
@@ -139,10 +140,10 @@ class MiningUtil extends LazyLogging {
 
         ChainStorageServiceClient.getGenesisBlock map {
           case None => None
-          case Some(genesis) => Some(BaseBlockInfo(genesis.hash, created = genesis.created, version = genesis.version))
+          case Some(genesis) => Some(BaseBlockInfo(genesis.hash, genesis.number, genesis.created, genesis.version))
         }
 
-      case Some(block) => Future(Some(BaseBlockInfo(block.hash, created = block.created, version = block.version)))
+      case Some(block) => Future(Some(BaseBlockInfo(block.hash, block.number, block.created, block.version)))
 
     }
 
@@ -151,6 +152,7 @@ class MiningUtil extends LazyLogging {
 }
 
 case class BaseBlockInfo(hash: String,
+                         number: Long,
                          created: DateTime,
                          version: String
                         )

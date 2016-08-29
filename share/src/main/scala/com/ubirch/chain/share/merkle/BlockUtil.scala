@@ -60,13 +60,14 @@ object BlockUtil extends LazyLogging {
     * @param hashes            hashes included in this block
     * @return new block object
     */
-  def newBlock(previousBlockHash: String, hashes: Seq[String]): FullBlock = {
+  def newBlock(previousBlockHash: String, number: Long, hashes: Seq[String]): FullBlock = {
 
     val hash = blockHash(hashes, previousBlockHash)
     FullBlock(hash,
       DateTime.now,
       "1.0",
       previousBlockHash,
+      number,
       hashes = Some(hashes)
     )
 
