@@ -6,11 +6,12 @@
       Resolver.sonatypeRepo("snapshots")
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "config" % "0.1-SNAPSHOT",
       "com.ubirch.chain" %% "server" % "0.1-SNAPSHOT",
-      "com.ubirch.chain" %% "share" % "0.1-SNAPSHOT",
-      "com.ubirch.chain" %% "test-base" % "0.1-SNAPSHOT",
+      "com.ubirch.chain" %% "core" % "0.1-SNAPSHOT",
+      "com.ubirch.chain" %% "config" % "0.1-SNAPSHOT",
       "com.ubirch.chain" %% "test-util" % "0.1-SNAPSHOT
+      "com.ubirch.chain" %% "test-base" % "0.1-SNAPSHOT",
+      "com.ubirch.chain" %% "share" % "0.1-SNAPSHOT",
     )
 
 ## REST Methods
