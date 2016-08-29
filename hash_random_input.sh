@@ -9,6 +9,6 @@ while true; do
     curl -XPOST localhost:8080/api/v1/chainService/hash -H "Content-Type: application/json" -d "$json"
     echo "\n"
 
-    sleep 0.05
+    sleep 0.01
 
 done
