@@ -5,6 +5,7 @@ import com.ubirch.backend.chain.model.FullBlock
 import com.ubirch.chain.config.{Config, ConfigKeys}
 import com.ubirch.chain.share.merkle.BlockUtil
 import com.ubirch.client.storage.ChainStorageServiceClient
+import org.joda.time.DateTime
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -59,7 +60,7 @@ class MiningUtil extends LazyLogging {
 
   private def ageCheck(): Future[Boolean] = {
 
-    ChainStorageServiceClient.mostRecentBlock() map {
+    mostRecentBlock() map {
 
       case None =>
 
@@ -87,7 +88,7 @@ class MiningUtil extends LazyLogging {
 
   def mine(): Future[Option[FullBlock]] = {
 
-    ChainStorageServiceClient.mostRecentBlock() flatMap {
+    mostRecentBlock() flatMap {
 
       case None =>
         logger.error("found no most recent block")
@@ -104,7 +105,7 @@ class MiningUtil extends LazyLogging {
           val blockHash = newBlock.hash
           logger.info(s"new block hash: $blockHash (blockSize=${BlockUtil.size(hashes) / 1000} kb; ${hashes.size} hashes)")
 
-          ChainStorageServiceClient.upsertFullBlock(newBlock) flatMap  {
+          ChainStorageServiceClient.upsertFullBlock(newBlock) flatMap {
 
             case None =>
               logger.error("failed to insert new block")
@@ -130,4 +131,26 @@ class MiningUtil extends LazyLogging {
 
   }
 
+  private def mostRecentBlock(): Future[Option[BaseBlockInfo]] = {
+
+    ChainStorageServiceClient.mostRecentBlock() flatMap {
+
+      case None =>
+
+        ChainStorageServiceClient.getGenesisBlock map {
+          case None => None
+          case Some(genesis) => Some(BaseBlockInfo(genesis.hash, created = genesis.created, version = genesis.version))
+        }
+
+      case Some(block) => Future(Some(BaseBlockInfo(block.hash, created = block.created, version = block.version)))
+
+    }
+
+  }
+
 }
+
+case class BaseBlockInfo(hash: String,
+                         created: DateTime,
+                         version: String
+                        )
