@@ -120,4 +120,41 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
   }
 
+  feature("all block explorer methods combined in one test") {
+
+    scenario("mine a block and check if all explorer methods contain the desired information") {
+
+      for {
+        block <- BlockGenerator.generateMinedBlock(5000)
+      } yield {
+
+        val hash = block.hash
+        val someEventHash = block.hashes.get.head
+
+        // check blockInfo for someEventHash
+        Get(RouteConstants.urlExplorerEventHash(someEventHash)) ~> routes ~> check {
+          status shouldEqual OK
+          responseAs[BlockInfo].hash shouldEqual hash
+        }
+
+        // check block info
+        Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
+          status shouldEqual OK
+          responseAs[BlockInfo].hash shouldEqual hash
+        }
+
+        // check full block
+        Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
+          status shouldEqual OK
+          val fullBlock = responseAs[FullBlock]
+          fullBlock.hash shouldEqual hash
+          fullBlock.hashes.get contains someEventHash
+        }
+
+      }
+
+    }
+
+  }
+
 }
