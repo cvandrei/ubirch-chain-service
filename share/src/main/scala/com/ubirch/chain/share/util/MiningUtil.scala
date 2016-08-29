@@ -77,7 +77,7 @@ class MiningUtil extends LazyLogging {
             true
 
           case false =>
-            logger.debug("don't trigger mining of new block (time) -- mostRecentBlock.created=${block.created}, nextCreationDate=$nextCreationDate")
+            logger.debug(s"don't trigger mining of new block (time) -- mostRecentBlock.created=${block.created}, nextCreationDate=$nextCreationDate")
             false
 
         }
