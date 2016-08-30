@@ -1,6 +1,7 @@
 package com.ubirch.chain.test.util
 
 import com.ubirch.backend.chain.model.{FullBlock, GenesisBlock, HashRequest}
+import com.ubirch.chain.config.Config
 import com.ubirch.chain.share.merkle.BlockUtil
 import com.ubirch.chain.share.util.{HashRouteUtil, MiningUtil}
 import com.ubirch.client.storage.ChainStorageServiceClient
@@ -20,16 +21,24 @@ object BlockGenerator {
   private val miningUtil = new MiningUtil
   private val hashRouteUtil = new HashRouteUtil
 
-  def createGenesisBlock(createdOpt: Option[DateTime] = None): GenesisBlock = {
+  def createGenesisBlock(ageCheckResultsInTrue: Boolean = false): GenesisBlock = {
 
     val genesis = BlockUtil.genesisBlock()
 
-    val genesisToPersist = createdOpt match {
-      case None => genesis
-      case Some(created) => genesis.copy(created = created)
+    val genesisToPersist = ageCheckResultsInTrue match {
+
+      case true =>
+        val created = DateTime.now.minusSeconds(Config.mineEveryXSeconds + 10)
+        genesis.copy(created = created)
+
+      case false => genesis
+
     }
 
-    Await.result(ChainStorageServiceClient.saveGenesisBlock(genesisToPersist), 2 seconds).get
+    val genesisBlock = Await.result(ChainStorageServiceClient.saveGenesisBlock(genesisToPersist), 2 seconds)
+    Thread.sleep(300)
+
+    genesisBlock.get
 
   }
 

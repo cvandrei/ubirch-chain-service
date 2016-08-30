@@ -27,8 +27,78 @@ class MiningUtilSpec extends ElasticSearchSpec {
     // TODO write tests
   }
 
-  ignore("MiningUtil.checkMiningTriggers") {
-    // TODO write tests
+  feature("MiningUtil.checkMiningTriggers") {
+
+    scenario("sizeCheck: false; ageCheck: false") {
+
+      // prepare
+      BlockGenerator.createGenesisBlock()
+
+      Await.result(miningUtil.sizeCheck(), 2 seconds) shouldBe false
+      Await.result(miningUtil.ageCheck(), 2 seconds) shouldBe false
+
+      // test & verify
+      for {
+        checkTriggers <- miningUtil.checkMiningTriggers()
+      } yield {
+        checkTriggers shouldBe false
+      }
+
+    }
+
+    scenario("sizeCheck: true; ageCheck: false") {
+
+      // prepare
+      BlockGenerator.createGenesisBlock()
+      HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = true)
+
+      Await.result(miningUtil.sizeCheck(), 2 seconds) shouldBe true
+      Await.result(miningUtil.ageCheck(), 2 seconds) shouldBe false
+
+      // test & verify
+      for {
+        checkTriggers <- miningUtil.checkMiningTriggers()
+      } yield {
+        checkTriggers shouldBe true
+      }
+    }
+
+    scenario("sizeCheck: false; ageCheck: true") {
+
+      // prepare
+      BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
+      HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = false)
+
+      Await.result(miningUtil.sizeCheck(), 2 seconds) shouldBe false
+      Await.result(miningUtil.ageCheck(), 2 seconds) shouldBe true
+
+      // test & verify
+      for {
+        checkTriggers <- miningUtil.checkMiningTriggers()
+      } yield {
+        checkTriggers shouldBe true
+      }
+
+    }
+
+    scenario("sizeCheck: true; ageCheck: true") {
+
+      // prepare
+      BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
+      HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = true)
+
+      Await.result(miningUtil.sizeCheck(), 2 seconds) shouldBe true
+      Await.result(miningUtil.ageCheck(), 2 seconds) shouldBe true
+
+      // test & verify
+      for {
+        checkTriggers <- miningUtil.checkMiningTriggers()
+      } yield {
+        checkTriggers shouldBe true
+      }
+
+    }
+
   }
 
   feature("MiningUtil.sizeCheck") {
@@ -51,7 +121,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("size of unmined hashes below threshold") {
 
-      HashGenerator.createUnminedHashes(belowSizeThreshold = true)
+      HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = false)
 
       for {
         sizeCheck <- miningUtil.sizeCheck()
@@ -63,7 +133,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("size of unmined hashes above threshold") {
 
-      HashGenerator.createUnminedHashes(belowSizeThreshold = false)
+      HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = true)
 
       for {
         sizeCheck <- miningUtil.sizeCheck()
@@ -105,8 +175,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
     scenario("has only a genesis block (old enough)") {
 
       // prepare
-      val created = DateTime.now.minus(Config.mineEveryXSeconds)
-      BlockGenerator.createGenesisBlock(Some(created))
+      BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
 
       for {
         ageCheck <- miningUtil.ageCheck()
@@ -135,8 +204,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
       // prepare
       val mineEveryXSeconds = Config.mineEveryXSeconds
 
-      val createdGenesis = DateTime.now.minusSeconds(mineEveryXSeconds * 2)
-      val genesis = BlockGenerator.createGenesisBlock(Some(createdGenesis))
+      val genesis = BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
 
       val createdBlock = DateTime.now.minusSeconds(mineEveryXSeconds)
       BlockGenerator.generateFullBlock(genesis.hash, genesis.number, 1000, createdBlock)

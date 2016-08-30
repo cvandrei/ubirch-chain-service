@@ -17,30 +17,27 @@ import scala.language.postfixOps
   */
 object HashGenerator extends UnitSpec {
 
-  def createUnminedHashes(belowSizeThreshold: Boolean): Long = {
+  def createUnminedHashes(sizeCheckResultsInTrue: Boolean): Long = {
 
-    val blockMaxSize: Long = Config.blockMaxSize
-    val elemCount = belowSizeThreshold match {
-      case true => (blockMaxSize / 32).toInt
-      case false => (blockMaxSize / 32).toInt + 1
+    val blockMaxSize: Long = Config.blockMaxSizeKB
+    val elemCount = sizeCheckResultsInTrue match {
+      case true => (blockMaxSize / 32).toInt + 50
+      case false => (blockMaxSize / 32).toInt
     }
 
     val randomHashes = HashUtil.randomSha256Hashes(elemCount)
-    belowSizeThreshold match {
-      case true => BlockUtil.size(randomHashes) should be < blockMaxSize
-      case false => BlockUtil.size(randomHashes) should be > blockMaxSize
-    }
     randomHashes map (HashedData(_)) foreach ChainStorageServiceClient.storeHash
     Thread.sleep(3000)
 
     val unminedHashes = Await.result(ChainStorageServiceClient.unminedHashes(), 3 seconds)
-    val size = BlockUtil.size(unminedHashes.hashes)
-    belowSizeThreshold match {
-      case true => size should be < blockMaxSize
-      case false => size should be > blockMaxSize
+
+    val actualSize = BlockUtil.size(unminedHashes.hashes)
+    sizeCheckResultsInTrue match {
+      case true => actualSize should be > blockMaxSize
+      case false => actualSize should be < blockMaxSize
     }
 
-    size
+    actualSize
 
   }
 

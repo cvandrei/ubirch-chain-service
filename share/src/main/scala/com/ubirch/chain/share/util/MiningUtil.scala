@@ -16,6 +16,8 @@ import scala.concurrent.Future
   */
 class MiningUtil extends LazyLogging {
 
+  // TODO scaladoc for all methods
+
   def blockCheck(): Future[Option[FullBlock]] = {
 
     checkMiningTriggers() flatMap {
@@ -84,18 +86,17 @@ class MiningUtil extends LazyLogging {
 
   def sizeCheck(): Future[Boolean] = {
 
-    val blockMaxSizeKb = Config.blockMaxSize
-    logger.debug(s"checking size of unmined hashes: ${ConfigKeys.BLOCK_MAX_SIZE} = $blockMaxSizeKb kb")
+    val maxBlockSizeBytes = Config.blockMaxSizeByte
+    val maxBlockSizeKB = Config.blockMaxSizeKB
+    logger.debug(s"checking size of unmined hashes: ${ConfigKeys.BLOCK_MAX_SIZE} = $maxBlockSizeKB kb")
 
     ChainStorageServiceClient.unminedHashes() map { hashes =>
 
       val size = BlockUtil.size(hashes.hashes)
-      val sizeKb = size / 1000
-      val maxBlockSizeBytes = Config.blockMaxSize * 1000
-
       size >= maxBlockSizeBytes match {
 
         case true =>
+          val sizeKb = size / 1000
           logger.info(s"trigger mining of new block (size) -- ${hashes.hashes.length} hashes ($sizeKb kb)")
           true
 

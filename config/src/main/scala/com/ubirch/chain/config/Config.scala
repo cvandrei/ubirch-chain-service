@@ -34,7 +34,9 @@ object Config extends ConfigBase {
     *
     * @return max block size in kilobytes
     */
-  def blockMaxSize: Int = config.getInt(ConfigKeys.BLOCK_MAX_SIZE)
+  def blockMaxSizeKB: Long = config.getLong(ConfigKeys.BLOCK_MAX_SIZE)
+
+  def blockMaxSizeByte: Long = blockMaxSizeKB * 1000
 
   /**
     * @return maximum number of seconds after which we mine a block
