@@ -18,74 +18,9 @@ class MiningUtil extends LazyLogging {
 
   def blockCheck(): Future[Option[FullBlock]] = {
 
-    sizeCheck() flatMap {
-
+    checkMiningTriggers() flatMap {
       case true => mine()
-
-      case false =>
-
-        ageCheck() flatMap {
-
-          case true => mine()
-
-          case false =>
-            logger.debug("most recent block is not old enough yet")
-            Future(None)
-        }
-
-    }
-
-  }
-
-  private def sizeCheck(): Future[Boolean] = {
-
-    val blockMaxSizeKb = Config.blockMaxSize
-    logger.debug(s"checking size of unmined hashes: ${ConfigKeys.BLOCK_MAX_SIZE} = $blockMaxSizeKb kb")
-
-    ChainStorageServiceClient.unminedHashes() map { hashes =>
-
-      val size = BlockUtil.size(hashes.hashes)
-      val sizeKb = size / 1000
-      val maxBlockSizeBytes = Config.blockMaxSize * 1000
-
-      size >= maxBlockSizeBytes match {
-
-        case true =>
-          logger.info(s"trigger mining of new block (size) -- ${hashes.hashes.length} hashes ($sizeKb kb)")
-          true
-
-        case false => false
-
-      }
-
-    }
-
-  }
-
-  private def ageCheck(): Future[Boolean] = {
-
-    mostRecentBlock() map {
-
-      case None =>
-
-        logger.error("found no most recent block")
-        false
-
-      case Some(block) =>
-
-        val nextCreationDate = block.created.plusSeconds(Config.mineEveryXSeconds)
-        nextCreationDate.isBeforeNow match {
-
-          case true =>
-            logger.info(s"trigger mining of new block (time) -- mostRecentBlock.created=${block.created}, nextCreationDate=$nextCreationDate")
-            true
-
-          case false =>
-            logger.debug(s"don't trigger mining of new block (time) -- mostRecentBlock.created=${block.created}, nextCreationDate=$nextCreationDate")
-            false
-
-        }
-
+      case false => Future(None)
     }
 
   }
@@ -136,7 +71,71 @@ class MiningUtil extends LazyLogging {
 
   }
 
-  private def mostRecentBlock(): Future[Option[BaseBlockInfo]] = {
+  def checkMiningTriggers(): Future[Boolean] = {
+
+    for {
+      sizeTrigger <- sizeCheck()
+      ageTrigger <- ageCheck()
+    } yield {
+      sizeTrigger && ageTrigger
+    }
+
+  }
+
+  def sizeCheck(): Future[Boolean] = {
+
+    val blockMaxSizeKb = Config.blockMaxSize
+    logger.debug(s"checking size of unmined hashes: ${ConfigKeys.BLOCK_MAX_SIZE} = $blockMaxSizeKb kb")
+
+    ChainStorageServiceClient.unminedHashes() map { hashes =>
+
+      val size = BlockUtil.size(hashes.hashes)
+      val sizeKb = size / 1000
+      val maxBlockSizeBytes = Config.blockMaxSize * 1000
+
+      size >= maxBlockSizeBytes match {
+
+        case true =>
+          logger.info(s"trigger mining of new block (size) -- ${hashes.hashes.length} hashes ($sizeKb kb)")
+          true
+
+        case false => false
+
+      }
+
+    }
+
+  }
+
+  def ageCheck(): Future[Boolean] = {
+
+    mostRecentBlock() map {
+
+      case None =>
+
+        logger.error("found no most recent block")
+        false
+
+      case Some(block) =>
+
+        val nextCreationDate = block.created.plusSeconds(Config.mineEveryXSeconds)
+        nextCreationDate.isBeforeNow match {
+
+          case true =>
+            logger.info(s"trigger mining of new block (time) -- mostRecentBlock.created=${block.created}, nextCreationDate=$nextCreationDate")
+            true
+
+          case false =>
+            logger.debug(s"do not trigger mining of new block (time) -- mostRecentBlock.created=${block.created}, nextCreationDate=$nextCreationDate")
+            false
+
+        }
+
+    }
+
+  }
+
+  def mostRecentBlock(): Future[Option[BaseBlockInfo]] = {
 
     ChainStorageServiceClient.mostRecentBlock() flatMap {
 

@@ -6,7 +6,7 @@ import com.ubirch.backend.chain.model.{BlockInfo, FullBlock, HashInfo, HashReque
 import com.ubirch.chain.core.server.util.RouteConstants
 import com.ubirch.chain.share.util.HashRouteUtil
 import com.ubirch.chain.test.base.RouteSpec
-import com.ubirch.chain.test.util.block.BlockGenerator
+import com.ubirch.chain.test.util.BlockGenerator
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
 /**
@@ -73,15 +73,11 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
     scenario("GET known hash") {
 
-      for {
-        block <- BlockGenerator.generateMinedBlock(5000)
-      } yield {
+      val hash = BlockGenerator.generateMinedBlock().hash
 
-        val hash = block.hash
-        Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
-          status shouldEqual OK
-          responseAs[BlockInfo].hash shouldEqual hash
-        }
+      Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
+        status shouldEqual OK
+        responseAs[BlockInfo].hash shouldEqual hash
       }
 
     }
@@ -105,17 +101,14 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
     scenario("GET known hash") {
 
-      for {
-        block <- BlockGenerator.generateMinedBlock(5000)
-      } yield {
+      val block = BlockGenerator.generateMinedBlock()
+      val hash = block.hash
 
-        val hash = block.hash
-        Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
-          status shouldEqual OK
-          val fullBlock = responseAs[FullBlock]
-          fullBlock.hash shouldEqual hash
-          fullBlock.hashes.get contains block.hashes.get.head
-        }
+      Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
+        status shouldEqual OK
+        val fullBlock = responseAs[FullBlock]
+        fullBlock.hash shouldEqual hash
+        fullBlock.hashes.get contains block.hashes.get.head
       }
 
     }
@@ -126,33 +119,28 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
     scenario("mine a block and check if all explorer methods contain the desired information") {
 
-      for {
-        block <- BlockGenerator.generateMinedBlock(5000)
-      } yield {
+      val block = BlockGenerator.generateMinedBlock()
+      val hash = block.hash
+      val someEventHash = block.hashes.get.head
 
-        val hash = block.hash
-        val someEventHash = block.hashes.get.head
+      // check blockInfo for someEventHash
+      Get(RouteConstants.urlExplorerEventHash(someEventHash)) ~> routes ~> check {
+        status shouldEqual OK
+        responseAs[BlockInfo].hash shouldEqual hash
+      }
 
-        // check blockInfo for someEventHash
-        Get(RouteConstants.urlExplorerEventHash(someEventHash)) ~> routes ~> check {
-          status shouldEqual OK
-          responseAs[BlockInfo].hash shouldEqual hash
-        }
+      // check block info
+      Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
+        status shouldEqual OK
+        responseAs[BlockInfo].hash shouldEqual hash
+      }
 
-        // check block info
-        Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
-          status shouldEqual OK
-          responseAs[BlockInfo].hash shouldEqual hash
-        }
-
-        // check full block
-        Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
-          status shouldEqual OK
-          val fullBlock = responseAs[FullBlock]
-          fullBlock.hash shouldEqual hash
-          fullBlock.hashes.get contains someEventHash
-        }
-
+      // check full block
+      Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
+        status shouldEqual OK
+        val fullBlock = responseAs[FullBlock]
+        fullBlock.hash shouldEqual hash
+        fullBlock.hashes.get contains someEventHash
       }
 
     }
