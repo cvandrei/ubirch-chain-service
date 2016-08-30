@@ -46,6 +46,18 @@ object HashGenerator extends UnitSpec {
 
   }
 
+  def createXManyUnminedHashes(count: Int): Long = {
+
+    val randomHashes = HashUtil.randomSha256Hashes(count)
+    randomHashes map (HashedData(_)) foreach ChainStorageServiceClient.storeHash
+    Thread.sleep(1500)
+
+    val unminedHashes = Await.result(ChainStorageServiceClient.unminedHashes(), 3 seconds)
+
+    BlockUtil.size(unminedHashes.hashes)
+
+  }
+
   /**
     * Convenience method generating n many random hashes (useful for tests).
     *

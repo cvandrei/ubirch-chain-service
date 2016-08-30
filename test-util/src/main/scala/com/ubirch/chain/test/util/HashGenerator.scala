@@ -10,6 +10,7 @@ import com.ubirch.util.crypto.hash.HashUtil
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.language.postfixOps
+import scala.util.Random
 
 /**
   * author: cvandrei
@@ -38,6 +39,32 @@ object HashGenerator extends UnitSpec {
     }
 
     actualSize
+
+  }
+
+  def createXManyUnminedHashes(count: Int): Long = {
+
+    val randomHashes = HashUtil.randomSha256Hashes(count)
+    randomHashes map (HashedData(_)) foreach ChainStorageServiceClient.storeHash
+    Thread.sleep(1500)
+
+    val unminedHashes = Await.result(ChainStorageServiceClient.unminedHashes(), 3 seconds)
+
+    BlockUtil.size(unminedHashes.hashes)
+
+  }
+
+  /**
+    * Convenience method generating n many random hashes (useful for tests).
+    *
+    * @param maxElementCount maximum number of randomly generated hashes
+    * @return sequence of random hashes
+    */
+  def randomSha512Hashes(maxElementCount: Int = Random.nextInt(30000)): Seq[String] = {
+
+    val randomSeq: Seq[String] = for (i <- 1 to maxElementCount) yield Random.nextLong.toString
+
+    randomSeq.map(HashUtil.sha512HexString)
 
   }
 

@@ -18,6 +18,7 @@ import scala.language.postfixOps
 class MiningUtilSpec extends ElasticSearchSpec {
 
   val miningUtil = new MiningUtil
+  val awaitTimeout: FiniteDuration = 10 seconds
 
   ignore("MiningUtil.blockCheck") {
     // TODO write tests
@@ -25,16 +26,52 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
   feature("MiningUtil.mine") {
 
-    ignore("most recent block does not exist") {
-      // TODO
+    scenario("most recent block does not exist") {
+
+      // prepare
+      Await.result(miningUtil.mostRecentBlock(), awaitTimeout) shouldBe None
+
+      // test
+      for {
+        minedBlock <- miningUtil.mine()
+      } yield {
+        // verify
+        minedBlock shouldBe None
+      }
+
     }
 
-    ignore("most recent block exists but unmined hashes is empty") {
-      // TODO
+    scenario("most recent block exists but unmined hashes is empty") {
+
+      // prepare
+      BlockGenerator.createGenesisBlock()
+      Await.result(miningUtil.mostRecentBlock(), awaitTimeout).isDefined shouldBe true
+
+      // test
+      for {
+        minedBlock <- miningUtil.mine()
+      } yield {
+        // verify
+        minedBlock shouldBe None
+      }
+
     }
 
-    ignore("most recent block exists and there's unmined hashes") {
-      // TODO
+    scenario("most recent block exists and there's unmined hashes") {
+
+      // prepare
+      BlockGenerator.createGenesisBlock()
+      Await.result(miningUtil.mostRecentBlock(), awaitTimeout).isDefined shouldBe true
+      HashGenerator.createXManyUnminedHashes(500)
+
+      // test
+      for {
+        minedBlock <- miningUtil.mine()
+      } yield {
+        // verify
+        minedBlock shouldBe None
+      }
+
     }
 
   }
@@ -46,8 +83,8 @@ class MiningUtilSpec extends ElasticSearchSpec {
       // prepare
       BlockGenerator.createGenesisBlock()
 
-      Await.result(miningUtil.sizeCheck(), 2 seconds) shouldBe false
-      Await.result(miningUtil.ageCheck(), 2 seconds) shouldBe false
+      Await.result(miningUtil.sizeCheck(), awaitTimeout) shouldBe false
+      Await.result(miningUtil.ageCheck(), awaitTimeout) shouldBe false
 
       // test & verify
       for {
@@ -64,8 +101,8 @@ class MiningUtilSpec extends ElasticSearchSpec {
       BlockGenerator.createGenesisBlock()
       HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = true)
 
-      Await.result(miningUtil.sizeCheck(), 2 seconds) shouldBe true
-      Await.result(miningUtil.ageCheck(), 2 seconds) shouldBe false
+      Await.result(miningUtil.sizeCheck(), awaitTimeout) shouldBe true
+      Await.result(miningUtil.ageCheck(), awaitTimeout) shouldBe false
 
       // test & verify
       for {
@@ -81,8 +118,8 @@ class MiningUtilSpec extends ElasticSearchSpec {
       BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
       HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = false)
 
-      Await.result(miningUtil.sizeCheck(), 2 seconds) shouldBe false
-      Await.result(miningUtil.ageCheck(), 2 seconds) shouldBe true
+      Await.result(miningUtil.sizeCheck(), awaitTimeout) shouldBe false
+      Await.result(miningUtil.ageCheck(), awaitTimeout) shouldBe true
 
       // test & verify
       for {
@@ -99,8 +136,8 @@ class MiningUtilSpec extends ElasticSearchSpec {
       BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
       HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = true)
 
-      Await.result(miningUtil.sizeCheck(), 2 seconds) shouldBe true
-      Await.result(miningUtil.ageCheck(), 2 seconds) shouldBe true
+      Await.result(miningUtil.sizeCheck(), awaitTimeout) shouldBe true
+      Await.result(miningUtil.ageCheck(), awaitTimeout) shouldBe true
 
       // test & verify
       for {
@@ -161,7 +198,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("no blocks, not even the genesis block") {
 
-      Await.result(ChainStorageServiceClient.getGenesisBlock, 2 seconds) shouldBe None
+      Await.result(ChainStorageServiceClient.getGenesisBlock, awaitTimeout) shouldBe None
 
       for {
         ageCheck <- miningUtil.ageCheck()
@@ -237,7 +274,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("no blocks, not even the genesis block") {
 
-      Await.result(ChainStorageServiceClient.getGenesisBlock, 2 seconds) shouldBe None
+      Await.result(ChainStorageServiceClient.getGenesisBlock, awaitTimeout) shouldBe None
 
       for {
         mostRecent <- miningUtil.mostRecentBlock()
