@@ -23,8 +23,20 @@ class MiningUtilSpec extends ElasticSearchSpec {
     // TODO write tests
   }
 
-  ignore("MiningUtil.mine") {
-    // TODO write tests
+  feature("MiningUtil.mine") {
+
+    ignore("most recent block does not exist") {
+      // TODO
+    }
+
+    ignore("most recent block exists but unmined hashes is empty") {
+      // TODO
+    }
+
+    ignore("most recent block exists and there's unmined hashes") {
+      // TODO
+    }
+
   }
 
   feature("MiningUtil.checkMiningTriggers") {

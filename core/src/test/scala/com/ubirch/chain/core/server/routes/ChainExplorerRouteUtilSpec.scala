@@ -77,6 +77,7 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
 
     scenario("query known block hash") {
 
+      BlockGenerator.createGenesisBlock()
       val hash = BlockGenerator.generateMinedBlock().hash
 
       for {
@@ -109,6 +110,7 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
 
     scenario("query known block hash") {
 
+      BlockGenerator.createGenesisBlock()
       val hash = BlockGenerator.generateMinedBlock().hash
 
       for {

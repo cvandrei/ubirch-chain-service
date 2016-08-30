@@ -46,9 +46,11 @@ object BlockGenerator {
 
     val hashes = HashUtil.randomSha256Hashes(elementCount) map (HashRequest(_))
     hashes foreach hashRouteUtil.hash
-    Thread.sleep(1000)
+    Thread.sleep(1500)
 
-    Await.result(miningUtil.mine(), 5 seconds).get
+    val block = Await.result(miningUtil.mine(), 5 seconds).get
+    Thread.sleep(500)
+    block
 
   }
 
