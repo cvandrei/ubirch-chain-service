@@ -69,3 +69,7 @@ Configures the Akka-Http Server.
 | anchor.enabled          | true if blocks may be anchored into another blockchain |
 | anchor.url              | url of Notary Service to send notifications to when anchroing is enabled |
 | anchor.interval         | interval (in seconds) in which blocks are anchored |
+
+## Automated Tests
+
+Some of the existing automated tests depend on an ElasticSearch instance running on localhost.
