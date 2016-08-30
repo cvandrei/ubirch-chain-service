@@ -18,6 +18,8 @@ import scala.util.Random
   */
 object HashGenerator extends UnitSpec {
 
+  private val awaitTimeout = 10 seconds
+
   def createUnminedHashes(sizeCheckResultsInTrue: Boolean): Long = {
 
     val blockMaxSize: Long = Config.blockMaxSizeByte
@@ -27,14 +29,10 @@ object HashGenerator extends UnitSpec {
       case false => (blockMaxSize / 64).toInt
     }
 
-    /* by default ElasticSearch returns a maximum of 10000 elements for every search so we operate with SHA-512 hashes
-     * instead of SHA-256 which is the server's default.
-     */
-    val randomHashes = randomSha512Hashes(elemCount)
-    randomHashes map (HashedData(_)) foreach ChainStorageServiceClient.storeHash
-    Thread.sleep(4000)
+    createXManyUnminedHashes(elemCount)
+    Thread.sleep(2500)
 
-    val unminedHashes = Await.result(ChainStorageServiceClient.unminedHashes(), 3 seconds)
+    val unminedHashes = Await.result(ChainStorageServiceClient.unminedHashes(), awaitTimeout)
 
     val actualSize = BlockUtil.size(unminedHashes.hashes)
     sizeCheckResultsInTrue match {
@@ -48,11 +46,14 @@ object HashGenerator extends UnitSpec {
 
   def createXManyUnminedHashes(count: Int): Long = {
 
+    /* by default ElasticSearch returns a maximum of 10000 elements for every search so we operate with SHA-512 hashes
+     * instead of SHA-256 which is the server's default.
+     */
     val randomHashes = HashUtil.randomSha256Hashes(count)
     randomHashes map (HashedData(_)) foreach ChainStorageServiceClient.storeHash
     Thread.sleep(1500)
 
-    val unminedHashes = Await.result(ChainStorageServiceClient.unminedHashes(), 3 seconds)
+    val unminedHashes = Await.result(ChainStorageServiceClient.unminedHashes(), awaitTimeout)
 
     BlockUtil.size(unminedHashes.hashes)
 
