@@ -2,6 +2,11 @@ packagedArtifacts in file(".") := Map.empty // disable publishing of root/defaul
 
 lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.base.conf")
 
+// see http://www.scala-sbt.org/0.13/docs/Parallel-Execution.html for details
+concurrentRestrictions in Global := Seq(
+  Tags.limit(Tags.Test, 1)
+)
+
 lazy val commonSettings = Seq(
 
   scalaVersion := "2.11.8",
@@ -20,8 +25,7 @@ lazy val commonSettings = Seq(
     Resolver.sonatypeRepo("snapshots")
   ),
 
-  javaOptions in Test += testConfiguration,
-  parallelExecution in Test := false
+  javaOptions in Test += testConfiguration
 
 )
 
