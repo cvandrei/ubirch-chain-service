@@ -18,6 +18,7 @@ import scala.language.postfixOps
   */
 object BlockGenerator {
 
+  private val awaitTimeout: Int = 10
   private val miningUtil = new MiningUtil
   private val hashRouteUtil = new HashRouteUtil
 
@@ -48,7 +49,7 @@ object BlockGenerator {
     hashes foreach hashRouteUtil.hash
     Thread.sleep(1500)
 
-    val block = Await.result(miningUtil.mine(), 5 seconds).get
+    val block = Await.result(miningUtil.mine(), awaitTimeout seconds).get
     Thread.sleep(500)
     block
 
@@ -66,7 +67,7 @@ object BlockGenerator {
     val currentBlockHash = BlockUtil.blockHash(hashes, previousBlockHash)
     val fullBlock = FullBlock(currentBlockHash, created, version = "1.0", previousBlockHash, previousBlockNumber + 1, Some(hashes))
 
-    Await.result(ChainStorageServiceClient.upsertFullBlock(fullBlock), 2 seconds).get
+    Await.result(ChainStorageServiceClient.upsertFullBlock(fullBlock), awaitTimeout seconds).get
 
   }
 
