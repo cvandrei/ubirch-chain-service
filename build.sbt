@@ -25,8 +25,7 @@ lazy val commonSettings = Seq(
     Resolver.sonatypeRepo("snapshots")
   )
 
-  //javaOptions in Test += testConfiguration,
-  , parallelExecution in Test := false
+  //javaOptions in Test += testConfiguration
 
 )
 
