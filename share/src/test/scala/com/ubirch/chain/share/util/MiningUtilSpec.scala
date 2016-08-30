@@ -20,8 +20,42 @@ class MiningUtilSpec extends ElasticSearchSpec {
   val miningUtil = new MiningUtil
   val awaitTimeout: FiniteDuration = 10 seconds
 
-  ignore("MiningUtil.blockCheck") {
-    // TODO write tests
+  feature("MiningUtil.blockCheck") {
+
+    scenario("trigger = false") {
+
+      // prepare
+      Await.result(miningUtil.mostRecentBlock(), awaitTimeout) shouldBe None
+
+      // test
+      for {
+        blockCheck <- miningUtil.blockCheck()
+      } yield {
+        // verify
+        blockCheck shouldBe None
+      }
+
+    }
+
+    scenario("trigger = true") {
+
+      // prepare
+      val genesisHash = BlockGenerator.createGenesisBlock().hash
+      HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = true)
+
+      Await.result(miningUtil.mostRecentBlock(), awaitTimeout).get.hash shouldBe genesisHash
+
+      // test
+      for {
+        blockCheck <- miningUtil.blockCheck()
+      } yield {
+        // verify
+        blockCheck shouldBe Some
+        blockCheck.get.previousBlockHash shouldBe genesisHash
+      }
+
+    }
+
   }
 
   feature("MiningUtil.mine") {
