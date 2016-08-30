@@ -1,6 +1,6 @@
 packagedArtifacts in file(".") := Map.empty // disable publishing of root/default project
 
-lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.base.conf")
+//lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.base.conf")
 
 // see http://www.scala-sbt.org/0.13/docs/Parallel-Execution.html for details
 concurrentRestrictions in Global := Seq(
@@ -19,13 +19,14 @@ lazy val commonSettings = Seq(
     "scm:git:https://gitlab.com/ubirch/ubirchChainService.git"
   )),
   version := "0.1-SNAPSHOT",
-
+  test in assembly := {},
   resolvers ++= Seq(
     Resolver.bintrayRepo("hseeberger", "maven"),
     Resolver.sonatypeRepo("snapshots")
-  ),
+  )
 
-  javaOptions in Test += testConfiguration
+  //javaOptions in Test += testConfiguration,
+  , parallelExecution in Test := false
 
 )
 
@@ -35,10 +36,9 @@ lazy val chainService = (project in file("."))
 
 lazy val server = project
   .settings(commonSettings: _*)
+  .settings(mergeStrategy: _*)
+  .settings(libraryDependencies ++= depServer)
   .dependsOn(share, core, testBase, config)
-  .settings(
-    libraryDependencies ++= depServer
-  )
 
 lazy val core = project
   .settings(commonSettings: _*)
@@ -154,8 +154,10 @@ lazy val mergeStrategy = Seq(
     case PathList("org", "joda", "time", xs@_*) => MergeStrategy.first
     case m if m.toLowerCase.endsWith("manifest.mf") => MergeStrategy.discard
     case m if m.toLowerCase.matches("meta-inf.*\\.sf$") => MergeStrategy.discard
-    case "application.conf" => MergeStrategy.concat
-    case "application.base.conf" => MergeStrategy.concat
+    case m if m.toLowerCase.endsWith("application.conf") => MergeStrategy.concat
+    case m if m.toLowerCase.endsWith("application.dev.conf") => MergeStrategy.first
+    case m if m.toLowerCase.endsWith("application.base.conf") => MergeStrategy.first
+    case m if m.toLowerCase.endsWith("logback.xml") => MergeStrategy.first
     case "reference.conf" => MergeStrategy.concat
     case _ => MergeStrategy.first
   }
