@@ -1,8 +1,10 @@
 package com.ubirch.chain.share.util
 
+import com.ubirch.chain.config.Config
 import com.ubirch.chain.share.testutil.{BlockGenerator, HashGenerator}
 import com.ubirch.chain.test.base.ElasticSearchSpec
 import com.ubirch.client.storage.ChainStorageServiceClient
+import org.joda.time.DateTime
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -73,8 +75,82 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
   }
 
-  ignore("MiningUtil.ageCheck") {
-    // TODO write tests
+  feature("MiningUtil.ageCheck") {
+
+    scenario("no blocks, not even the genesis block") {
+
+      Await.result(ChainStorageServiceClient.getGenesisBlock, 2 seconds) shouldBe None
+
+      for {
+        ageCheck <- miningUtil.ageCheck()
+      } yield {
+        ageCheck shouldBe false
+      }
+
+    }
+
+    scenario("has only a genesis block (too new)") {
+
+      // prepare
+      BlockGenerator.createGenesisBlock()
+
+      for {
+        ageCheck <- miningUtil.ageCheck()
+      } yield {
+        ageCheck shouldBe false
+      }
+
+    }
+
+    scenario("has only a genesis block (old enough)") {
+
+      // prepare
+      val created = DateTime.now.minus(Config.mineEveryXSeconds)
+      BlockGenerator.createGenesisBlock(Some(created))
+
+      for {
+        ageCheck <- miningUtil.ageCheck()
+      } yield {
+        ageCheck shouldBe true
+      }
+
+    }
+
+    scenario("has genesis block and one regular block (too new)") {
+
+      // prepare
+      BlockGenerator.createGenesisBlock()
+      BlockGenerator.generateMinedBlock()
+
+      for {
+        ageCheck <- miningUtil.ageCheck()
+      } yield {
+        ageCheck shouldBe false
+      }
+
+    }
+
+    scenario("has genesis block and one regular block (old enough)") {
+
+      // prepare
+      val mineEveryXSeconds = Config.mineEveryXSeconds
+
+      val createdGenesis = DateTime.now.minusSeconds(mineEveryXSeconds * 2)
+      val genesis = BlockGenerator.createGenesisBlock(Some(createdGenesis))
+
+      val createdBlock = DateTime.now.minusSeconds(mineEveryXSeconds)
+      BlockGenerator.generateFullBlock(genesis.hash, genesis.number, 1000, createdBlock)
+
+      // test
+      for {
+        ageCheck <- miningUtil.ageCheck()
+      } yield {
+        // verify
+        ageCheck shouldBe true
+      }
+
+    }
+
   }
 
   feature("MiningUtil.mostRecentBlock") {
@@ -112,7 +188,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     }
 
-    scenario("has genesis block and one regular block afterwards") {
+    scenario("has genesis block and one regular block") {
 
       // prepare
       BlockGenerator.createGenesisBlock()
