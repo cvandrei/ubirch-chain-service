@@ -32,7 +32,7 @@ object HashGenerator extends UnitSpec {
      */
     val randomHashes = randomSha512Hashes(elemCount)
     randomHashes map (HashedData(_)) foreach ChainStorageServiceClient.storeHash
-    Thread.sleep(3000)
+    Thread.sleep(4000)
 
     val unminedHashes = Await.result(ChainStorageServiceClient.unminedHashes(), 3 seconds)
 
