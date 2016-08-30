@@ -16,8 +16,11 @@ import scala.concurrent.Future
   */
 class MiningUtil extends LazyLogging {
 
-  // TODO scaladoc for all methods
-
+  /**
+    * Check if the next block needs to be mined and mine it if the answer is yes.
+    *
+    * @return the newly mined block; None if mining did not trigger
+    */
   def blockCheck(): Future[Option[FullBlock]] = {
 
     checkMiningTriggers() flatMap {
@@ -27,6 +30,11 @@ class MiningUtil extends LazyLogging {
 
   }
 
+  /**
+    * Mine the next block.
+    *
+    * @return the newly block; None if an error occurred (see logfile for details)
+    */
   def mine(): Future[Option[FullBlock]] = {
 
     mostRecentBlock() flatMap {
@@ -73,6 +81,11 @@ class MiningUtil extends LazyLogging {
 
   }
 
+  /**
+    * Checks if mining may be triggered.
+    *
+    * @return true if mining may be triggered; false otherwise
+    */
   def checkMiningTriggers(): Future[Boolean] = {
 
     for {
@@ -84,6 +97,12 @@ class MiningUtil extends LazyLogging {
 
   }
 
+  /**
+    * Mining can be triggered by the size of unmined hashes and this method checks if the maximum size for a block has
+    * been reached.
+    *
+    * @return true if size based trigger fires; false otherwise
+    */
   def sizeCheck(): Future[Boolean] = {
 
     val maxBlockSizeBytes = Config.blockMaxSizeByte
@@ -108,6 +127,12 @@ class MiningUtil extends LazyLogging {
 
   }
 
+  /**
+    * Mining can be triggered by the age of the most recent block and this method checks if the most recent block has
+    * reached it's maximum age.
+    *
+    * @return true if time based trigger fires; false otherwise
+    */
   def ageCheck(): Future[Boolean] = {
 
     mostRecentBlock() map {
@@ -136,6 +161,11 @@ class MiningUtil extends LazyLogging {
 
   }
 
+  /**
+    * Gives us basic information about the most recent block.
+    *
+    * @return most recent block infos if one exists; None otherwise
+    */
   def mostRecentBlock(): Future[Option[BaseBlockInfo]] = {
 
     ChainStorageServiceClient.mostRecentBlock() flatMap {
