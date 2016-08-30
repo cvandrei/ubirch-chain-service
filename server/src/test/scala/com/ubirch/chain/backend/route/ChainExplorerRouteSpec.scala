@@ -73,6 +73,7 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
     scenario("GET known hash") {
 
+      BlockGenerator.createGenesisBlock()
       val hash = BlockGenerator.generateMinedBlock().hash
 
       Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
@@ -101,6 +102,7 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
     scenario("GET known hash") {
 
+      BlockGenerator.createGenesisBlock()
       val block = BlockGenerator.generateMinedBlock()
       val hash = block.hash
 
@@ -119,6 +121,7 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
     scenario("mine a block and check if all explorer methods contain the desired information") {
 
+      BlockGenerator.createGenesisBlock()
       val block = BlockGenerator.generateMinedBlock()
       val hash = block.hash
       val someEventHash = block.hashes.get.head
