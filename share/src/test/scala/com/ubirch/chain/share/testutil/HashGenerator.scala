@@ -7,9 +7,7 @@ import com.ubirch.chain.test.base.UnitSpec
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
 
-import scala.concurrent.Await
-import scala.concurrent.duration._
-import scala.language.postfixOps
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Random
 
 /**
@@ -18,44 +16,55 @@ import scala.util.Random
   */
 object HashGenerator extends UnitSpec {
 
-  private val awaitTimeout = 10 seconds
-
+  /**
+    * Creates enough random hashes to trigger mining based on the total size of all unmined hashes.
+    *
+    * Hashes are persisted and this method waits until we can query them from the storage. This means that once this
+    * method has finished you can continue with your tests without delay.
+    *
+    * @param sizeCheckResultsInTrue true if size will trigger mining when checked
+    * @return size of created hashes in byte
+    */
   def createUnminedHashes(sizeCheckResultsInTrue: Boolean): Long = {
 
     val blockMaxSize: Long = Config.blockMaxSizeByte
-    val (elemCount, sleep) = sizeCheckResultsInTrue match {
+    val elemCount = sizeCheckResultsInTrue match {
       // 64 is the number of bytes for a SHA-512 hash
-      case true => ((blockMaxSize / 64).toInt + 1, 1500)
-      case false => ((blockMaxSize / 64).toInt, 5000)
+      case true => (blockMaxSize / 64).toInt + 1
+      case false => (blockMaxSize / 64).toInt
     }
 
-    createXManyUnminedHashes(elemCount, sleep)
+    val size = createXManyUnminedHashes(elemCount)
 
-    val unminedHashes = Await.result(ChainStorageServiceClient.unminedHashes(), awaitTimeout)
-
-    // TODO repeat size check every 200 ms until it matches what we want
-    val actualSize = BlockUtil.size(unminedHashes.hashes)
     sizeCheckResultsInTrue match {
-      case true => actualSize should be > blockMaxSize
-      case false => actualSize should be < blockMaxSize
+      case true => size should be > blockMaxSize
+      case false => size should be < blockMaxSize
     }
 
-    actualSize
+    size
 
   }
 
-  def createXManyUnminedHashes(count: Int, sleep: Int = 1500): Long = {
+  /**
+    * Creates n random hashes, persists them and waits until we can query them from the storage. This means that once
+    * this method has finished you can continue with your tests without delay.
+    *
+    * @param count how many hashes to create
+    * @return size of created hashes in byte
+    */
+  def createXManyUnminedHashes(count: Int): Long = {
 
     /* by default ElasticSearch returns a maximum of 10000 elements for every search so we operate with SHA-512 hashes
      * instead of SHA-256 which is the server's default.
      */
-    val randomHashes = HashUtil.randomSha256Hashes(count)
-    randomHashes map (HashedData(_)) foreach ChainStorageServiceClient.storeHash
-    Thread.sleep(sleep)
+    val randomHashes = randomSha512Hashes(count)
+    val hashedData = randomHashes map (HashedData(_))
+    hashedData foreach ChainStorageServiceClient.storeHash
 
-    val unminedHashes = Await.result(ChainStorageServiceClient.unminedHashes(), awaitTimeout)
+    val size = BlockUtil.size(randomHashes)
+    waitUntilHashesPersisted(size)
 
-    BlockUtil.size(unminedHashes.hashes)
+    size
 
   }
 
@@ -72,5 +81,23 @@ object HashGenerator extends UnitSpec {
     randomSeq.map(HashUtil.sha512HexString)
 
   }
+
+  private def waitUntilHashesPersisted(expectedSize: Long): Unit = {
+
+    ChainStorageServiceClient.unminedHashes.map { unmined =>
+      isUnminedSizeReached(expectedSize, unmined.hashes) match {
+
+        case true => // done
+
+        case false =>
+          Thread.sleep(100)
+          waitUntilHashesPersisted(expectedSize)
+
+      }
+    }
+
+  }
+
+  private def isUnminedSizeReached(expectedSize: Long, hashes: Seq[String]) = BlockUtil.size(hashes) >= expectedSize
 
 }
