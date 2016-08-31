@@ -19,8 +19,9 @@ import scala.language.postfixOps
   */
 object BlockGenerator extends FeatureSpec {
 
-  val miningUtil = new MiningUtil
-  val hashRouteUtil = new HashRouteUtil
+  private val awaitTimeout = 10 seconds
+  private val miningUtil = new MiningUtil
+  private val hashRouteUtil = new HashRouteUtil
 
   def createGenesisBlock(ageCheckResultsInTrue: Boolean = false): GenesisBlock = {
 
@@ -36,7 +37,7 @@ object BlockGenerator extends FeatureSpec {
 
     }
 
-    val genesisBlock = Await.result(ChainStorageServiceClient.saveGenesisBlock(genesisToPersist), 2 seconds)
+    val genesisBlock = Await.result(ChainStorageServiceClient.saveGenesisBlock(genesisToPersist), awaitTimeout)
     Thread.sleep(300)
 
     genesisBlock.get
@@ -65,7 +66,7 @@ object BlockGenerator extends FeatureSpec {
     val currentBlockHash = BlockUtil.blockHash(hashes, previousBlockHash)
     val fullBlock = FullBlock(currentBlockHash, created, version = "1.0", previousBlockHash, previousBlockNumber + 1, Some(hashes))
 
-    Await.result(ChainStorageServiceClient.upsertFullBlock(fullBlock), 2 seconds).get
+    Await.result(ChainStorageServiceClient.upsertFullBlock(fullBlock), awaitTimeout).get
 
   }
 
