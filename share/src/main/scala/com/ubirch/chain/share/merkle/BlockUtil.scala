@@ -13,7 +13,7 @@ import org.joda.time.DateTime
 object BlockUtil extends LazyLogging {
 
   /**
-    * @param hashes hashes to sum up for total size
+    * @param hashes hashes whose length to sum up
     * @return total size in byte
     */
   def size(hashes: Seq[String]): Long = hashes.map(hashToBytes(_).length.toLong).sum
