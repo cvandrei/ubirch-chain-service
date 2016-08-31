@@ -6,10 +6,7 @@ import com.ubirch.chain.test.base.ElasticSearchSpec
 import com.ubirch.client.storage.ChainStorageServiceClient
 import org.joda.time.DateTime
 
-import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-import scala.language.postfixOps
 
 /**
   * author: cvandrei
@@ -17,22 +14,20 @@ import scala.language.postfixOps
   */
 class MiningUtilSpec extends ElasticSearchSpec {
 
-  val miningUtil = new MiningUtil
-  val awaitTimeout: FiniteDuration = 10 seconds
+  private val miningUtil = new MiningUtil
 
   feature("MiningUtil.blockCheck") {
 
     scenario("trigger = false") {
 
-      // prepare
-      Await.result(miningUtil.mostRecentBlock(), awaitTimeout) shouldBe None
-
-      // test
       for {
-        blockCheck <- miningUtil.blockCheck()
+        mostRecent <- miningUtil.mostRecentBlock()
+        blockCheck <- miningUtil.blockCheck() // test
       } yield {
-        // verify
-        blockCheck shouldBe None
+
+        mostRecent shouldBe None // verify preparation
+        blockCheck shouldBe None // verify
+
       }
 
     }
@@ -43,15 +38,18 @@ class MiningUtilSpec extends ElasticSearchSpec {
       val genesisHash = BlockGenerator.createGenesisBlock().hash
       HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = true)
 
-      Await.result(miningUtil.mostRecentBlock(), awaitTimeout).get.hash shouldBe genesisHash
-
-      // test
       for {
-        blockCheck <- miningUtil.blockCheck()
+        mostRecent <- miningUtil.mostRecentBlock()
+        blockCheck <- miningUtil.blockCheck() // test
       } yield {
+
+        // verify preparation
+        mostRecent.get.hash shouldBe genesisHash
+
         // verify
         blockCheck shouldBe Some
         blockCheck.get.previousBlockHash shouldBe genesisHash
+
       }
 
     }
