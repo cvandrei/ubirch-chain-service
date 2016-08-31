@@ -117,34 +117,45 @@ class MiningUtilSpec extends ElasticSearchSpec {
       // prepare
       BlockGenerator.createGenesisBlock()
 
-      Await.result(miningUtil.sizeCheck(), awaitTimeout) shouldBe false
-      Await.result(miningUtil.ageCheck(), awaitTimeout) shouldBe false
-
-      // test & verify
       for {
-        checkTriggers <- miningUtil.checkMiningTriggers()
+        sizeCheck <- miningUtil.sizeCheck()
+        ageCheck <- miningUtil.ageCheck()
+        checkTriggers <- miningUtil.checkMiningTriggers() // test
       } yield {
+
+        // verify preparation
+        sizeCheck shouldBe false
+        ageCheck shouldBe false
+
+        // verify
         checkTriggers shouldBe false
+
       }
 
     }
 
-    ignore("sizeCheck: true; ageCheck: false") {
+    scenario("sizeCheck: true; ageCheck: false") {
 
-      // TODO fix test
       // prepare
       BlockGenerator.createGenesisBlock()
       HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = true)
 
-      Await.result(miningUtil.sizeCheck(), awaitTimeout) shouldBe true
-      Await.result(miningUtil.ageCheck(), awaitTimeout) shouldBe false
-
-      // test & verify
       for {
-        checkTriggers <- miningUtil.checkMiningTriggers()
+        sizeCheck <- miningUtil.sizeCheck()
+        ageCheck <- miningUtil.ageCheck()
+        checkTriggers <- miningUtil.checkMiningTriggers() // test
       } yield {
+
+        // verify preparation
+        sizeCheck shouldBe true
+        ageCheck shouldBe false
+
+        // verify
         checkTriggers shouldBe true
+
       }
+
+
     }
 
     scenario("sizeCheck: false; ageCheck: true") {
@@ -153,33 +164,42 @@ class MiningUtilSpec extends ElasticSearchSpec {
       BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
       HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = false)
 
-      Await.result(miningUtil.sizeCheck(), awaitTimeout) shouldBe false
-      Await.result(miningUtil.ageCheck(), awaitTimeout) shouldBe true
-
-      // test & verify
       for {
-        checkTriggers <- miningUtil.checkMiningTriggers()
+        sizeCheck <- miningUtil.sizeCheck()
+        ageCheck <- miningUtil.ageCheck()
+        checkTriggers <- miningUtil.checkMiningTriggers() // test
       } yield {
+
+        // verify preparation
+        sizeCheck shouldBe false
+        ageCheck shouldBe true
+
+        // verify
         checkTriggers shouldBe true
+
       }
 
     }
 
-    ignore("sizeCheck: true; ageCheck: true") {
+    scenario("sizeCheck: true; ageCheck: true") {
 
-      // TODO fix test
       // prepare
       BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
       HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = true)
 
-      Await.result(miningUtil.sizeCheck(), awaitTimeout) shouldBe true
-      Await.result(miningUtil.ageCheck(), awaitTimeout) shouldBe true
-
-      // test & verify
       for {
-        checkTriggers <- miningUtil.checkMiningTriggers()
+        sizeCheck <- miningUtil.sizeCheck()
+        ageCheck <- miningUtil.ageCheck()
+        checkTriggers <- miningUtil.checkMiningTriggers() // test
       } yield {
+
+        // verify preparation
+        sizeCheck shouldBe true
+        ageCheck shouldBe true
+
+        // verify
         checkTriggers shouldBe true
+
       }
 
     }
@@ -190,16 +210,17 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("no unmined hashes") {
 
-      // prepare
-      val currentUnmined = Await.result(ChainStorageServiceClient.unminedHashes(), 3 seconds)
-      currentUnmined.hashes shouldBe 'isEmpty
-
-      // test
       for {
-        sizeCheck <- miningUtil.sizeCheck()
+        currentUnmined <- ChainStorageServiceClient.unminedHashes() // prepare
+        sizeCheck <- miningUtil.sizeCheck() // test
       } yield {
+
+        // verify prepare
+        currentUnmined.hashes shouldBe 'isEmpty
+
         // verify
         sizeCheck shouldBe false
+
       }
 
     }
@@ -234,12 +255,14 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("no blocks, not even the genesis block") {
 
-      Await.result(ChainStorageServiceClient.getGenesisBlock, awaitTimeout) shouldBe None
-
       for {
-        ageCheck <- miningUtil.ageCheck()
+        genesis <- ChainStorageServiceClient.getGenesisBlock // prepare
+        ageCheck <- miningUtil.ageCheck() // test
       } yield {
-        ageCheck shouldBe false
+
+        genesis shouldBe None // verify prepare
+        ageCheck shouldBe false // verify
+
       }
 
     }
@@ -310,12 +333,14 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("no blocks, not even the genesis block") {
 
-      Await.result(ChainStorageServiceClient.getGenesisBlock, awaitTimeout) shouldBe None
-
       for {
-        mostRecent <- miningUtil.mostRecentBlock()
+        genesis <- ChainStorageServiceClient.getGenesisBlock // prepare
+        mostRecent <- miningUtil.mostRecentBlock() // test
       } yield {
-        mostRecent shouldBe None
+
+        genesis shouldBe None // verify preparation
+        mostRecent shouldBe None // verify
+
       }
 
     }
