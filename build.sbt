@@ -65,7 +65,10 @@ lazy val testBase = (project in file("test-base"))
   .settings(commonSettings: _*)
   .settings(
     name := "test-base",
-    libraryDependencies ++= depTestBase
+    libraryDependencies ++= depTestBase,
+    resolvers ++= Seq(
+      Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
+    )
   )
 
 lazy val share = project

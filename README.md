@@ -2,15 +2,13 @@
 
 ## Scala Dependencies
 
-### `share`
+### `config`
 
     resolvers ++= Seq(
-      Resolver.sonatypeRepo("snapshots"),
-      "RoundEights" at "http://maven.spikemark.net/roundeights", // Hasher
-      Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
+      Resolver.sonatypeRepo("snapshots")
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "share" % "0.1-SNAPSHOT"
+      "com.ubirch.chain" %% "config" % "0.1-SNAPSHOT"
     )
 
 ### `core`
@@ -23,17 +21,43 @@
     libraryDependencies ++= Seq(
       "com.ubirch.chain" %% "core" % "0.1-SNAPSHOT"
     )
-
-### other modules
+        
+### `server`
 
     resolvers ++= Seq(
       Resolver.sonatypeRepo("snapshots")
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "server" % "0.1-SNAPSHOT",
-      "com.ubirch.chain" %% "config" % "0.1-SNAPSHOT",
-      "com.ubirch.chain" %% "test-util" % "0.1-SNAPSHOT",
+      "com.ubirch.chain" %% "server" % "0.1-SNAPSHOT"
+    )
+
+### `share`
+
+    resolvers ++= Seq(
+      Resolver.sonatypeRepo("snapshots"),
+      "RoundEights" at "http://maven.spikemark.net/roundeights", // Hasher
+      Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
+    )
+    libraryDependencies ++= Seq(
+      "com.ubirch.chain" %% "share" % "0.1-SNAPSHOT"
+    )
+
+### `test-base`
+
+    resolvers ++= Seq(
+      Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
+    )
+    libraryDependencies ++= Seq(
       "com.ubirch.chain" %% "test-base" % "0.1-SNAPSHOT"
+    )
+
+### `test-util`
+
+    resolvers ++= Seq(
+      Resolver.sonatypeRepo("snapshots")
+    )
+    libraryDependencies ++= Seq(
+      "com.ubirch.chain" %% "test-util" % "0.1-SNAPSHOT"
     )
 
 ## REST Methods
