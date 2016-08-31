@@ -50,7 +50,7 @@ object BlockGenerator extends FeatureSpec {
     hashes foreach hashRouteUtil.hash
     Thread.sleep(1000) // TODO query ElasticSearch to find out when block has been indexed
 
-    Await.result(miningUtil.mine(), 5 seconds).get
+    Await.result(miningUtil.mine(), awaitTimeout).get
 
   }
 
