@@ -16,6 +16,9 @@ import scala.util.Random
   */
 object HashGenerator extends UnitSpec {
 
+  /** defines which hash algorithm to use when creating event hashes */
+  private val hashAlgorithm = "SHA-512"
+
   /**
     * Creates enough random hashes to trigger mining based on the total size of all unmined hashes.
     *
@@ -28,11 +31,7 @@ object HashGenerator extends UnitSpec {
   def createUnminedHashes(sizeCheckResultsInTrue: Boolean): Long = {
 
     val blockMaxSize: Long = Config.blockMaxSizeByte
-    val elemCount = sizeCheckResultsInTrue match {
-      // 64 is the number of bytes for a SHA-512 hash
-      case true => (blockMaxSize / 64).toInt + 1
-      case false => (blockMaxSize / 64).toInt
-    }
+    val elemCount = calculateElementCount(sizeCheckResultsInTrue, hashAlgorithm)
 
     val size = createXManyUnminedHashes(elemCount)
 
@@ -57,7 +56,11 @@ object HashGenerator extends UnitSpec {
     /* by default ElasticSearch returns a maximum of 10000 elements for every search so we operate with SHA-512 hashes
      * instead of SHA-256 which is the server's default.
      */
-    val randomHashes = randomSha512Hashes(count)
+    val randomHashes: Seq[String] = hashAlgorithm.toUpperCase match {
+      case "SHA-256" => HashUtil.randomSha256Hashes(count)
+      case "SHA-512" => randomSha512Hashes(count)
+    }
+
     val hashedData = randomHashes map (HashedData(_))
     hashedData foreach ChainStorageServiceClient.storeHash
 
@@ -99,5 +102,21 @@ object HashGenerator extends UnitSpec {
   }
 
   private def isUnminedSizeReached(expectedSize: Long, hashes: Seq[String]) = BlockUtil.size(hashes) >= expectedSize
+
+  private def calculateElementCount(sizeCheckResultsInTrue: Boolean, algorithm: String): Int = {
+
+    val hashSize = algorithm.toUpperCase match {
+      case "SHA-256" => 32
+      case "SHA-512" => 64
+    }
+
+    val blockMaxSize: Long = Config.blockMaxSizeByte
+
+    sizeCheckResultsInTrue match {
+      case true => (blockMaxSize / hashSize).toInt + 1
+      case false => (blockMaxSize / hashSize).toInt
+    }
+
+  }
 
 }
