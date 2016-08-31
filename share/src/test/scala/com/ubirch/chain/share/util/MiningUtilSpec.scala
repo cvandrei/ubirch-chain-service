@@ -62,15 +62,17 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("most recent block does not exist") {
 
-      // prepare
-      Await.result(miningUtil.mostRecentBlock(), awaitTimeout) shouldBe None
-
-      // test
       for {
-        minedBlock <- miningUtil.mine()
+        mostRecent <- miningUtil.mostRecentBlock() // prepare
+        minedBlock <- miningUtil.mine() // test
       } yield {
+
+        // verify preparation
+        mostRecent shouldBe None
+
         // verify
         minedBlock shouldBe None
+
       }
 
     }
@@ -79,12 +81,15 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
       // prepare
       BlockGenerator.createGenesisBlock()
-      Await.result(miningUtil.mostRecentBlock(), awaitTimeout).isDefined shouldBe true
 
-      // test
       for {
-        minedBlock <- miningUtil.mine()
+        mostRecent <- miningUtil.mostRecentBlock() // prepare
+        minedBlock <- miningUtil.mine() // test
       } yield {
+
+        // verify preparation
+        mostRecent shouldBe 'isDefined
+
         // verify
         minedBlock shouldBe None
       }
@@ -95,15 +100,19 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
       // prepare
       BlockGenerator.createGenesisBlock()
-      Await.result(miningUtil.mostRecentBlock(), awaitTimeout).isDefined shouldBe true
       HashGenerator.createXManyUnminedHashes(500)
 
-      // test
       for {
-        minedBlock <- miningUtil.mine()
+        mostRecent <- miningUtil.mostRecentBlock() // prepare
+        minedBlock <- miningUtil.mine() // test
       } yield {
+
+        // verify preparation
+        mostRecent shouldBe 'isDefined
+
         // verify
         minedBlock shouldBe None
+
       }
 
     }

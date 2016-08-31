@@ -1,6 +1,6 @@
 package com.ubirch.chain.share.testutil
 
-import com.ubirch.backend.chain.model.{FullBlock, GenesisBlock, HashRequest}
+import com.ubirch.backend.chain.model.{FullBlock, GenesisBlock, HashRequest, HashedData}
 import com.ubirch.chain.config.Config
 import com.ubirch.chain.share.merkle.BlockUtil
 import com.ubirch.chain.share.util.{HashRouteUtil, MiningUtil}
@@ -10,6 +10,7 @@ import org.joda.time.DateTime
 import org.scalatest.FeatureSpec
 
 import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -19,44 +20,52 @@ import scala.language.postfixOps
   */
 object BlockGenerator extends FeatureSpec {
 
-  private val awaitTimeout = 10 seconds
+  private val awaitTimeout = 100 seconds
   private val miningUtil = new MiningUtil
   private val hashRouteUtil = new HashRouteUtil
 
   def createGenesisBlock(ageCheckResultsInTrue: Boolean = false): GenesisBlock = {
 
-    val genesis = BlockUtil.genesisBlock()
+    val genesisTemplate = BlockUtil.genesisBlock()
 
     val genesisToPersist = ageCheckResultsInTrue match {
 
       case true =>
         val created = DateTime.now.minusSeconds(Config.mineEveryXSeconds + 10)
-        genesis.copy(created = created)
+        genesisTemplate.copy(created = created)
 
-      case false => genesis
+      case false => genesisTemplate
 
     }
 
-    val genesisBlock = Await.result(ChainStorageServiceClient.saveGenesisBlock(genesisToPersist), awaitTimeout)
-    Thread.sleep(300) // TODO query ElasticSearch to find out when block has been indexed
+    ChainStorageServiceClient.saveGenesisBlock(genesisToPersist)
+    waitUntilGenesisBlockPersisted()
 
-    genesisBlock.get
+    genesisToPersist
 
   }
 
-  def generateMinedBlock(elementCount: Int = 1000): FullBlock = {
+  def generateMinedBlock(elementCount: Int = 250): FullBlock = {
 
-    val hashes = HashUtil.randomSha256Hashes(elementCount) map (HashRequest(_))
-    hashes foreach hashRouteUtil.hash
-    Thread.sleep(1000) // TODO query ElasticSearch to find out when block has been indexed
+    HashGenerator.createXManyUnminedHashes(elementCount)
 
-    Await.result(miningUtil.mine(), awaitTimeout).get
+    val fullBlock = miningUtil.mine() map {
+
+      case None => fail("failed to generate a mined block")
+
+      case Some(block) =>
+        waitUntilBlockPersisted(block.hash)
+        block
+
+    }
+
+    Await.result(fullBlock, awaitTimeout)
 
   }
 
   def generateFullBlock(previousBlockHash: String,
                         previousBlockNumber: Long,
-                        elementCount: Int = 1000,
+                        elementCount: Int = 250,
                         created: DateTime = DateTime.now
                        ): FullBlock = {
 
@@ -66,7 +75,38 @@ object BlockGenerator extends FeatureSpec {
     val currentBlockHash = BlockUtil.blockHash(hashes, previousBlockHash)
     val fullBlock = FullBlock(currentBlockHash, created, version = "1.0", previousBlockHash, previousBlockNumber + 1, Some(hashes))
 
-    Await.result(ChainStorageServiceClient.upsertFullBlock(fullBlock), awaitTimeout).get
+    ChainStorageServiceClient.upsertFullBlock(fullBlock)
+    waitUntilBlockPersisted(currentBlockHash)
+
+    fullBlock
+
+  }
+
+  private def waitUntilGenesisBlockPersisted(): Unit = {
+
+    ChainStorageServiceClient.getGenesisBlock map {
+
+      case None =>
+        Thread.sleep(100)
+        waitUntilGenesisBlockPersisted()
+
+      case Some(block) => // done
+
+    }
+
+  }
+
+  private def waitUntilBlockPersisted(hash: String): Unit = {
+
+    ChainStorageServiceClient.getBlockInfo(HashedData(hash)) map {
+
+      case None =>
+        Thread.sleep(100)
+        waitUntilBlockPersisted(hash)
+
+      case Some(block) => // done
+
+    }
 
   }
 
