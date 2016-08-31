@@ -43,7 +43,11 @@ lazy val core = project
   .settings(commonSettings: _*)
   .dependsOn(testBase, share, config, testUtil)
   .settings(
-    libraryDependencies ++= depCore
+    libraryDependencies ++= depCore,
+    resolvers ++= Seq(
+      "RoundEights" at "http://maven.spikemark.net/roundeights", // Hasher
+      Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
+    )
   )
 
 lazy val config = project
@@ -68,7 +72,11 @@ lazy val share = project
   .settings(commonSettings: _*)
   .dependsOn(testBase, config)
   .settings(
-    libraryDependencies ++= depShare
+    libraryDependencies ++= depShare,
+    resolvers ++= Seq(
+      "RoundEights" at "http://maven.spikemark.net/roundeights", // Hasher
+      Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
+    )
   )
 
 val akkaV = "2.4.9-RC2"
