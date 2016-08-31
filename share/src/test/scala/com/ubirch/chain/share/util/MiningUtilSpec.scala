@@ -322,7 +322,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
       val genesis = BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
 
       val createdBlock = DateTime.now.minusSeconds(mineEveryXSeconds)
-      BlockGenerator.generateFullBlock(genesis.hash, genesis.number, 1000, createdBlock)
+      BlockGenerator.generateFullBlock(genesis.hash, genesis.number, created = createdBlock)
 
       // test
       for {
