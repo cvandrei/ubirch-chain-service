@@ -92,7 +92,7 @@ class MiningUtil extends LazyLogging {
       sizeTrigger <- sizeCheck()
       ageTrigger <- ageCheck()
     } yield {
-      sizeTrigger && ageTrigger
+      sizeTrigger || ageTrigger
     }
 
   }
