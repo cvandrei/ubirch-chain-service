@@ -7,6 +7,7 @@ import com.ubirch.chain.test.base.UnitSpec
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.postfixOps
 import scala.util.Random
 
