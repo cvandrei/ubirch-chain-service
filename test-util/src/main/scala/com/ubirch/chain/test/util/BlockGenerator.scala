@@ -18,6 +18,7 @@ import scala.language.postfixOps
   */
 object BlockGenerator {
 
+  // TODO synchronize with share/BlockGenerator after that one has been refactored
   private val awaitTimeout: Int = 10
   private val miningUtil = new MiningUtil
   private val hashRouteUtil = new HashRouteUtil
