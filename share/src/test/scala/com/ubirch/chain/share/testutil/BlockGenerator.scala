@@ -38,7 +38,7 @@ object BlockGenerator extends FeatureSpec {
     }
 
     val genesisBlock = Await.result(ChainStorageServiceClient.saveGenesisBlock(genesisToPersist), awaitTimeout)
-    Thread.sleep(300)
+    Thread.sleep(300) // TODO query ElasticSearch to find out when block has been indexed
 
     genesisBlock.get
 
@@ -48,7 +48,7 @@ object BlockGenerator extends FeatureSpec {
 
     val hashes = HashUtil.randomSha256Hashes(elementCount) map (HashRequest(_))
     hashes foreach hashRouteUtil.hash
-    Thread.sleep(1000)
+    Thread.sleep(1000) // TODO query ElasticSearch to find out when block has been indexed
 
     Await.result(miningUtil.mine(), 5 seconds).get
 
