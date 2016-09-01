@@ -38,6 +38,13 @@ trait ChainExplorerRoute extends MyJsonProtocol {
           case Some(blockInfo) => complete(blockInfo)
         }
 
+      } ~ path(RouteConstants.blockInfoByPrevious / Segment) { hash =>
+
+        onSuccess(chainExplorerRouteUtil.blockInfoByPreviousBlockHash(hash)) {
+          case None => complete(unknownBlockHash)
+          case Some(blockInfo) => complete(blockInfo)
+        }
+
       } ~ path(RouteConstants.fullBlock / Segment) { hash =>
 
         onSuccess(chainExplorerRouteUtil.fullBlock(hash)) {

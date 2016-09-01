@@ -92,6 +92,40 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
 
   }
 
+  feature("ChainExplorerRouteUtil.blockInfoByPrevious") {
+
+    scenario("query unknown hash") {
+
+      // test
+      for {
+        res <- chainExplorerUtil.blockInfoByPreviousBlockHash("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff")
+      } yield {
+
+        // verify
+        res should be(None)
+
+      }
+
+    }
+
+    scenario("query known block hash") {
+
+      BlockGenerator.createGenesisBlock()
+      val fullBlock = BlockGenerator.generateMinedBlock()
+
+      for {
+        block <- chainExplorerUtil.blockInfoByPreviousBlockHash(fullBlock.previousBlockHash)
+      } yield {
+
+        block shouldNot be(None)
+        block.get.hash shouldEqual fullBlock.hash
+        block.get.previousBlockHash shouldEqual fullBlock.previousBlockHash
+
+      }
+    }
+
+  }
+
   feature("ChainExplorerRouteUtil.fullBlock") {
 
     scenario("query unknown hash") {

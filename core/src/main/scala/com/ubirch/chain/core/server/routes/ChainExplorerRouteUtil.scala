@@ -28,6 +28,14 @@ class ChainExplorerRouteUtil {
   def blockInfo(blockHash: String): Future[Option[BlockInfo]] = ChainStorageServiceClient.getBlockInfo(HashedData(blockHash))
 
   /**
+    * Gives us the BlockInfo based on the previous block's hash.
+    *
+    * @param blockHash blockHash to search with
+    * @return None if no block with given blockHash exists; a BlockInfo otherwise
+    */
+  def blockInfoByPreviousBlockHash(blockHash: String): Future[Option[BlockInfo]] = ChainStorageServiceClient.getBlockInfoByPreviousBlockHash(HashedData(blockHash))
+
+  /**
     * Gives us the FullBlock for the given blockHash.
     *
     * @param blockHash blockHash to search with

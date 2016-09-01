@@ -85,6 +85,37 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
   }
 
+  feature(s"call hash explorer route: ${RouteConstants.urlExplorerBlockInfoByPreviousPrefix}/:hash") {
+
+    scenario("GET without hash in address") {
+      Get(RouteConstants.urlExplorerBlockInfoByPrevious("")) ~> Route.seal(routes) ~> check {
+        status shouldEqual NotFound
+      }
+    }
+
+    scenario("GET unknown hash") {
+      val hash = "1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"
+      Get(RouteConstants.urlExplorerBlockInfoByPrevious(hash)) ~> Route.seal(routes) ~> check {
+        status shouldEqual NotFound
+      }
+    }
+
+    scenario("GET known hash") {
+
+      BlockGenerator.createGenesisBlock()
+      val fullBlock = BlockGenerator.generateMinedBlock()
+
+      Get(RouteConstants.urlExplorerBlockInfoByPrevious(fullBlock.previousBlockHash)) ~> routes ~> check {
+        status shouldEqual OK
+        val resBlock = responseAs[BlockInfo]
+        resBlock.hash shouldEqual fullBlock.hash
+        resBlock.previousBlockHash shouldEqual fullBlock.previousBlockHash
+      }
+
+    }
+
+  }
+
   feature(s"call hash explorer route: ${RouteConstants.urlExplorerFullBlockPrefix}/:hash") {
 
     scenario("GET without hash in address") {
