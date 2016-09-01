@@ -59,7 +59,12 @@ lazy val config = project
 lazy val testUtil = (project in file("test-util"))
   .settings(commonSettings: _*)
   .dependsOn(share)
-  .settings(name := "test-util")
+  .settings(
+    name := "test-util",
+    resolvers ++= Seq(
+      "RoundEights" at "http://maven.spikemark.net/roundeights" // Hasher
+    )
+  )
 
 lazy val testBase = (project in file("test-base"))
   .settings(commonSettings: _*)

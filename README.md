@@ -54,7 +54,8 @@
 ### `test-util`
 
     resolvers ++= Seq(
-      Resolver.sonatypeRepo("snapshots")
+      Resolver.sonatypeRepo("snapshots"),
+      "RoundEights" at "http://maven.spikemark.net/roundeights" // Hasher
     )
     libraryDependencies ++= Seq(
       "com.ubirch.chain" %% "test-util" % "0.1-SNAPSHOT"
