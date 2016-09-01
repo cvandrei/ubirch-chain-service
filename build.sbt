@@ -21,7 +21,7 @@ lazy val commonSettings = Seq(
   version := "0.1-SNAPSHOT",
   test in assembly := {},
   resolvers ++= Seq(
-    Resolver.bintrayRepo("hseeberger", "maven"),
+    resolverSeebergerJson,
     Resolver.sonatypeRepo("snapshots")
   )
 
@@ -45,8 +45,8 @@ lazy val core = project
   .settings(
     libraryDependencies ++= depCore,
     resolvers ++= Seq(
-      "RoundEights" at "http://maven.spikemark.net/roundeights", // Hasher
-      Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
+      resolverHasher,
+      resolverBeeClient
     )
   )
 
@@ -62,7 +62,7 @@ lazy val testUtil = (project in file("test-util"))
   .settings(
     name := "test-util",
     resolvers ++= Seq(
-      "RoundEights" at "http://maven.spikemark.net/roundeights" // Hasher
+      resolverHasher
     )
   )
 
@@ -72,7 +72,7 @@ lazy val testBase = (project in file("test-base"))
     name := "test-base",
     libraryDependencies ++= depTestBase,
     resolvers ++= Seq(
-      Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
+      resolverBeeClient
     )
   )
 
@@ -82,8 +82,8 @@ lazy val share = project
   .settings(
     libraryDependencies ++= depShare,
     resolvers ++= Seq(
-      "RoundEights" at "http://maven.spikemark.net/roundeights", // Hasher
-      Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
+      resolverHasher,
+      resolverBeeClient
     )
   )
 
@@ -163,6 +163,10 @@ lazy val ubirchStorageTestUtil = "com.ubirch.backend.storage" %% "test-util" % s
 lazy val ubirchStorageModel = "com.ubirch.backend.storage" %% "model" % storageServiceV
 lazy val ubirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
 lazy val ubirchUtilJsonAutoConvert = "com.ubirch.util" %% "json-auto-convert" % ubirchUtilJsonAutoConvertV
+
+lazy val resolverSeebergerJson = Resolver.bintrayRepo("hseeberger", "maven")
+lazy val resolverHasher = "RoundEights" at "http://maven.spikemark.net/roundeights"
+lazy val resolverBeeClient = Resolver.bintrayRepo("rick-beton", "maven")
 
 lazy val mergeStrategy = Seq(
   assemblyMergeStrategy in assembly := {
