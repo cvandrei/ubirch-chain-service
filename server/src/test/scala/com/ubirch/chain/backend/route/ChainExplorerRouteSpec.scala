@@ -73,12 +73,18 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
     scenario("GET known hash") {
 
-      BlockGenerator.createGenesisBlock()
-      val hash = BlockGenerator.generateMinedBlock().hash
+      for {
+        genesis <- BlockGenerator.createGenesisBlock()
+        block <- BlockGenerator.generateMinedBlock()
+      } yield {
 
-      Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
-        status shouldEqual OK
-        responseAs[BlockInfo].hash shouldEqual hash
+        val hash = block.hash
+
+        Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
+          status shouldEqual OK
+          responseAs[BlockInfo].hash shouldEqual hash
+        }
+
       }
 
     }
@@ -102,14 +108,18 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
     scenario("GET known hash") {
 
-      BlockGenerator.createGenesisBlock()
-      val fullBlock = BlockGenerator.generateMinedBlock()
+      for {
+        genesis <- BlockGenerator.createGenesisBlock()
+        fullBlock <- BlockGenerator.generateMinedBlock()
+      } yield {
 
-      Get(RouteConstants.urlExplorerBlockInfoByPrevious(fullBlock.previousBlockHash)) ~> routes ~> check {
-        status shouldEqual OK
-        val resBlock = responseAs[BlockInfo]
-        resBlock.hash shouldEqual fullBlock.hash
-        resBlock.previousBlockHash shouldEqual fullBlock.previousBlockHash
+        Get(RouteConstants.urlExplorerBlockInfoByPrevious(fullBlock.previousBlockHash)) ~> routes ~> check {
+          status shouldEqual OK
+          val resBlock = responseAs[BlockInfo]
+          resBlock.hash shouldEqual fullBlock.hash
+          resBlock.previousBlockHash shouldEqual fullBlock.previousBlockHash
+        }
+
       }
 
     }
@@ -133,15 +143,22 @@ class ChainExplorerRouteSpec extends RouteSpec {
 
     scenario("GET known hash") {
 
-      BlockGenerator.createGenesisBlock()
-      val block = BlockGenerator.generateMinedBlock()
-      val hash = block.hash
+      for {
 
-      Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
-        status shouldEqual OK
-        val fullBlock = responseAs[FullBlock]
-        fullBlock.hash shouldEqual hash
-        fullBlock.hashes.get contains block.hashes.get.head
+        genesis <- BlockGenerator.createGenesisBlock()
+        block <- BlockGenerator.generateMinedBlock()
+
+      } yield {
+
+        val hash = block.hash
+
+        Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
+          status shouldEqual OK
+          val fullBlock = responseAs[FullBlock]
+          fullBlock.hash shouldEqual hash
+          fullBlock.hashes.get contains block.hashes.get.head
+        }
+
       }
 
     }

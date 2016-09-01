@@ -9,10 +9,8 @@ import com.ubirch.util.crypto.hash.HashUtil
 import org.joda.time.DateTime
 import org.scalatest.FeatureSpec
 
-import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-import scala.language.postfixOps
+import scala.concurrent.Future
 
 /**
   * author: cvandrei
@@ -20,11 +18,10 @@ import scala.language.postfixOps
   */
 object BlockGenerator extends FeatureSpec {
 
-  private val awaitTimeout = 100 seconds
   private val miningUtil = new MiningUtil
   private val hashRouteUtil = new HashRouteUtil
 
-  def createGenesisBlock(ageCheckResultsInTrue: Boolean = false): GenesisBlock = {
+  def createGenesisBlock(ageCheckResultsInTrue: Boolean = false): Future[GenesisBlock] = {
 
     val genesisTemplate = BlockUtil.genesisBlock()
 
@@ -38,18 +35,21 @@ object BlockGenerator extends FeatureSpec {
 
     }
 
-    ChainStorageServiceClient.saveGenesisBlock(genesisToPersist)
-    waitUntilGenesisBlockPersisted()
+    for {
+      genesisCreated <- ChainStorageServiceClient.saveGenesisBlock(genesisToPersist)
+    } yield {
 
-    genesisToPersist
+      waitUntilGenesisBlockPersisted()
+      genesisCreated.get
+
+    }
 
   }
 
-  def generateMinedBlock(elementCount: Int = 250): FullBlock = {
+  def generateMinedBlock(elementCount: Int = 250): Future[FullBlock] = {
 
     HashGenerator.createXManyUnminedHashes(elementCount)
-
-    val fullBlock = miningUtil.mine() map {
+    miningUtil.mine() map {
 
       case None => fail("failed to generate a mined block")
 
@@ -59,15 +59,13 @@ object BlockGenerator extends FeatureSpec {
 
     }
 
-    Await.result(fullBlock, awaitTimeout)
-
   }
 
   def generateFullBlock(previousBlockHash: String,
                         previousBlockNumber: Long,
                         elementCount: Int = 250,
                         created: DateTime = DateTime.now
-                       ): FullBlock = {
+                       ): Future[FullBlock] = {
 
     val hashes = HashUtil.randomSha256Hashes(elementCount)
     hashes map (HashRequest(_)) foreach hashRouteUtil.hash
@@ -75,14 +73,19 @@ object BlockGenerator extends FeatureSpec {
     val currentBlockHash = BlockUtil.blockHash(hashes, previousBlockHash)
     val fullBlock = FullBlock(currentBlockHash, created, version = "1.0", previousBlockHash, previousBlockNumber + 1, Some(hashes))
 
-    ChainStorageServiceClient.upsertFullBlock(fullBlock)
-    waitUntilBlockPersisted(currentBlockHash)
+    for {
+      fullBlock <- ChainStorageServiceClient.upsertFullBlock(fullBlock)
+    } yield {
 
-    fullBlock
+      waitUntilBlockPersisted(currentBlockHash)
+      fullBlock.get
+
+    }
+
 
   }
 
-  private def waitUntilGenesisBlockPersisted(): Unit = {
+  def waitUntilGenesisBlockPersisted(): Unit = {
 
     ChainStorageServiceClient.getGenesisBlock map {
 
@@ -96,7 +99,7 @@ object BlockGenerator extends FeatureSpec {
 
   }
 
-  private def waitUntilBlockPersisted(hash: String): Unit = {
+  def waitUntilBlockPersisted(hash: String): Unit = {
 
     ChainStorageServiceClient.getBlockInfo(HashedData(hash)) map {
 

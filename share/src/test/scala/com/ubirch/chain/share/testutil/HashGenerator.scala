@@ -8,6 +8,7 @@ import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.Random
 
 /**
@@ -45,6 +46,17 @@ object HashGenerator extends UnitSpec {
   }
 
   /**
+    * Creates enough random hashes to trigger mining based on the total size of all unmined hashes.
+    *
+    * Hashes are persisted and this method waits until we can query them from the storage. This means that once this
+    * method has finished you can continue with your tests without delay.
+    *
+    * @param sizeCheckResultsInTrue true if size will trigger mining when checked
+    * @return size of created hashes in byte
+    */
+  def createUnminedHashesFuture(sizeCheckResultsInTrue: Boolean): Future[Long] = Future(createUnminedHashes(sizeCheckResultsInTrue))
+
+  /**
     * Creates n random hashes, persists them and waits until we can query them from the storage. This means that once
     * this method has finished you can continue with your tests without delay.
     *
@@ -70,6 +82,15 @@ object HashGenerator extends UnitSpec {
     size
 
   }
+
+  /**
+    * Creates n random hashes, persists them and waits until we can query them from the storage. This means that once
+    * this method has finished you can continue with your tests without delay.
+    *
+    * @param count how many hashes to create
+    * @return size of created hashes in byte
+    */
+  def createXManyUnminedHashesFuture(count: Int): Future[Long] = Future(createXManyUnminedHashes(count))
 
   /**
     * Convenience method generating n many random hashes (useful for tests).

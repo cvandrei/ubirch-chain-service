@@ -77,15 +77,19 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
 
     scenario("query known block hash") {
 
-      BlockGenerator.createGenesisBlock()
-      val hash = BlockGenerator.generateMinedBlock().hash
-
       for {
-        block <- chainExplorerUtil.blockInfo(hash)
+
+      // prepare
+        genesis <- BlockGenerator.createGenesisBlock()
+        minedBlock <- BlockGenerator.generateMinedBlock()
+
+        // test
+        block <- chainExplorerUtil.blockInfo(minedBlock.hash)
+
       } yield {
 
         block shouldNot be(None)
-        block.get.hash shouldEqual hash
+        block.get.hash shouldEqual minedBlock.hash
 
       }
     }
@@ -110,11 +114,15 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
 
     scenario("query known block hash") {
 
-      BlockGenerator.createGenesisBlock()
-      val fullBlock = BlockGenerator.generateMinedBlock()
-
       for {
+
+      // prepare
+        genesis <- BlockGenerator.createGenesisBlock()
+        fullBlock <- BlockGenerator.generateMinedBlock()
+
+        // test
         block <- chainExplorerUtil.blockInfoByPreviousBlockHash(fullBlock.previousBlockHash)
+
       } yield {
 
         block shouldNot be(None)
@@ -144,15 +152,20 @@ class ChainExplorerRouteUtilSpec extends ElasticSearchSpec {
 
     scenario("query known block hash") {
 
-      BlockGenerator.createGenesisBlock()
-      val hash = BlockGenerator.generateMinedBlock().hash
 
       for {
-        block <- chainExplorerUtil.fullBlock(hash)
+
+      // prepare
+        genesis <- BlockGenerator.createGenesisBlock()
+        minedBlock <- BlockGenerator.generateMinedBlock()
+
+        // test
+        block <- chainExplorerUtil.fullBlock(minedBlock.hash)
+
       } yield {
 
         block shouldNot be(None)
-        block.get.hash shouldEqual hash
+        block.get.hash shouldEqual minedBlock.hash
 
       }
 
