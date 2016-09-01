@@ -45,6 +45,7 @@ lazy val core = project
   .settings(
     libraryDependencies ++= depCore,
     resolvers ++= Seq(
+      resolverSeebergerJson,
       resolverHasher,
       resolverBeeClient
     )
