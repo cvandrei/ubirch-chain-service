@@ -1,7 +1,10 @@
 package com.ubirch.chain.test.base
 
-import akka.http.scaladsl.testkit.ScalatestRouteTest
+import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
 import com.ubirch.util.json.MyJsonProtocol
+
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 /**
   * author: cvandrei
@@ -10,5 +13,7 @@ import com.ubirch.util.json.MyJsonProtocol
 trait RouteSpec extends ElasticSearchSpec
   with ScalatestRouteTest
   with MyJsonProtocol {
+
+  implicit val timeout = RouteTestTimeout(10 seconds)
 
 }
