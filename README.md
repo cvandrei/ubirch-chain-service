@@ -1,5 +1,9 @@
 # ubirch Chain Server
 
+## General Information
+
+TODO
+
 ## Scala Dependencies
 
 ### `config`
