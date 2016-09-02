@@ -19,6 +19,7 @@ class GenesisUtil extends LazyLogging {
       case None =>
         val genesisBlock = BlockUtil.genesisBlock()
         ChainStorageServiceClient.saveGenesisBlock(genesisBlock)
+        // TODO wait till genesis block has been indexed
 
       case Some(genesisBlock) => logger.info(s"genesisBlock already exists: hash=${genesisBlock.hash}")
 
