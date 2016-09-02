@@ -124,3 +124,18 @@ Configures the Akka-Http Server.
 ## Automated Tests
 
 Some of the existing automated tests depend on an ElasticSearch instance running on localhost.
+
+## Local Setup
+
+The service comes with a configuration tailored to running everything on `localhost`.
+ 
+First download, install and start ElasticSearch (version 2.3.3 works).
+
+Open a terminal and run the following command to run the Chain Service:
+
+    sbt server/run
+
+To get random data into the server (resulting in unminded hashes and blocks that you can query) run the following shell
+script (in root folder of this project):
+
+    ./hash_random_input.sh
