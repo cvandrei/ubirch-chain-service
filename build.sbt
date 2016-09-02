@@ -36,8 +36,12 @@ lazy val chainService = (project in file("."))
 lazy val server = project
   .settings(commonSettings: _*)
   .settings(mergeStrategy: _*)
-  .settings(libraryDependencies ++= depServer)
   .dependsOn(share, core, testBase, config)
+  .settings(
+    libraryDependencies ++= depServer,
+    fork in run := true,
+    mainClass in(Compile, run) := Some("com.ubirch.chain.backend.Boot")
+  )
 
 lazy val core = project
   .settings(commonSettings: _*)
