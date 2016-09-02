@@ -135,7 +135,8 @@ Open a terminal and run the following command to run the Chain Service:
 
     sbt server/run
 
-To get random data into the server (resulting in unminded hashes and blocks that you can query) run the following shell
-script (in root folder of this project):
+To get random data into the server (resulting in unmined hashes and blocks that you can query) a shell script is
+provided in the root folder of this project. It will run until you manually stop it. You can run as many parallel
+instances of it as needed to create even more data. Open a terminal to run the script:
 
     ./hash_random_input.sh
