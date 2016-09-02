@@ -46,6 +46,7 @@ object Boot extends App with LazyLogging {
   }
 
   val bindingFuture = start()
+  logGeneralMiningInfo()
   scheduleMiningRelatedJobs()
 
   Runtime.getRuntime.addShutdownHook(new Thread() {
@@ -66,20 +67,40 @@ object Boot extends App with LazyLogging {
 
   }
 
-  private def scheduleMiningRelatedJobs(): Unit = {
+  private def logGeneralMiningInfo(): Unit = {
 
     val mineEveryXSeconds = Config.mineEveryXSeconds
     val maxBlockSize = Config.blockMaxSizeKB
-    val anchorInterval = Config.anchorInterval
-    logger.info(s"block mining params: $mineEveryXSeconds s; $maxBlockSize kb; anchor every $anchorInterval seconds")
+    logger.info(s"block mining params: $mineEveryXSeconds s; $maxBlockSize kb")
 
-    val scheduler = system.scheduler
+  }
+
+  private def scheduleMiningRelatedJobs(): Unit = {
+    scheduleMining()
+    scheduleAnchoring()
+  }
+
+  private def scheduleMining(): Unit = {
+
     val miningInitialDelay = 2
     logger.info(s"schedule next block check (${ConfigKeys.BLOCK_CHECK_INTERVAL}) to run in $miningInitialDelay seconds")
-    scheduler.scheduleOnce(miningInitialDelay seconds, miningActor, new BlockCheck())
+    system.scheduler.scheduleOnce(miningInitialDelay seconds, miningActor, new BlockCheck())
 
-    logger.info(s"schedule anchoring (${ConfigKeys.ANCHOR_INTERVAL}) to run every $anchorInterval seconds")
-    scheduler.schedule(10 seconds, anchorInterval seconds, anchorActor, new AnchorNow())
+  }
+
+  private def scheduleAnchoring(): Unit = {
+
+    Config.anchorEnabled match {
+
+      case true =>
+        val anchorInterval = Config.anchorInterval
+        logger.info(s"schedule anchoring (${ConfigKeys.ANCHOR_INTERVAL}) to run every $anchorInterval seconds")
+        system.scheduler.schedule(10 seconds, anchorInterval seconds, anchorActor, new AnchorNow())
+
+      case false =>
+        logger.info(s"anchoring is disabled in configuration")
+
+    }
 
   }
 

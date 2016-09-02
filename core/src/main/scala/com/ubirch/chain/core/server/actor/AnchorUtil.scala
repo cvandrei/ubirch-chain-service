@@ -2,11 +2,11 @@ package com.ubirch.chain.core.server.actor
 
 import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.backend.chain.model.{Anchor, AnchorType}
-import com.ubirch.chain.config.Config
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.notary.client.NotaryClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * author: cvandrei
@@ -14,36 +14,35 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 class AnchorUtil extends LazyLogging {
 
-  def anchorNow(): Unit = {
+  def anchorNow(): Future[Boolean] = {
 
-    Config.anchorEnabled match {
+    // TODO write automated tests
+    ChainStorageServiceClient.mostRecentBlock() map {
 
-      case false => logger.info(s"anchoring is disabled in configuration")
+      case None =>
+        logger.error("found no most recent block")
+        false
 
-      case true =>
+      case Some(block) => block.anchors.isEmpty match {
 
-        ChainStorageServiceClient.mostRecentBlock() map {
+        case false =>
+          logger.info("most recent block has been anchored already")
+          false
 
-          case None => logger.error("found no most recent block")
+        case true =>
+          anchor(block.hash) match {
 
-          case Some(block) => block.anchors.isEmpty match {
+            case Some(anchor) =>
+              block.anchors :+ anchor
+              ChainStorageServiceClient.upsertBlock(block)
+              // TODO wait till upsert has been indexed --> otherwise we might anchor more than once
+              true
 
-            case false => logger.info("most recent block has been anchored already")
-
-            case true =>
-              anchor(block.hash) match {
-
-                case Some(anchor) =>
-                  block.anchors :+ anchor
-                  ChainStorageServiceClient.upsertBlock(block)
-
-                case _ => // do nothing
-
-              }
+            case _ => false // do nothing
 
           }
 
-        }
+      }
 
     }
 
