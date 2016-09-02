@@ -11,6 +11,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
+  * This class is a collection of util methods relevant for mining blocks. As the most important one #blockCheck
+  * triggers all others being called.
+  * The other methods are public as well in case you have to do something special (assuming you know what you do!) but
+  * mostly to allow writing automated tests for them. Using access modifiers instead could be the goal of a refactoring.
+  *
   * author: cvandrei
   * since: 2016-08-16
   */
