@@ -1,6 +1,6 @@
 package com.ubirch.chain.test.util
 
-import com.ubirch.backend.chain.model.{FullBlock, GenesisBlock, HashRequest, HashedData}
+import com.ubirch.backend.chain.model.{FullBlock, GenesisBlock, HashRequest}
 import com.ubirch.chain.config.Config
 import com.ubirch.chain.share.merkle.BlockUtil
 import com.ubirch.chain.share.util.{HashRouteUtil, MiningUtil}
@@ -49,14 +49,10 @@ object BlockGenerator extends FeatureSpec {
   def generateMinedBlock(elementCount: Int = 250): Future[FullBlock] = {
 
     HashGenerator.createXManyUnminedHashes(elementCount)
+
     miningUtil.mine() map {
-
       case None => fail("failed to generate a mined block")
-
-      case Some(block) =>
-        waitUntilBlockPersisted(block.hash)
-        block
-
+      case Some(block) => block
     }
 
   }
@@ -73,12 +69,11 @@ object BlockGenerator extends FeatureSpec {
     val currentBlockHash = BlockUtil.blockHash(hashes, previousBlockHash)
     val fullBlock = FullBlock(currentBlockHash, created, version = "1.0", previousBlockHash, previousBlockNumber + 1, Some(hashes))
 
-    for {
-      fullBlock <- ChainStorageServiceClient.upsertFullBlock(fullBlock)
-    } yield {
+    ChainStorageServiceClient.upsertFullBlock(fullBlock) flatMap { fullBlock =>
 
-      waitUntilBlockPersisted(currentBlockHash)
-      fullBlock.get
+      miningUtil.waitUntilBlockIndexed(currentBlockHash) map { blockIndexDone =>
+        fullBlock.get
+      }
 
     }
 
@@ -92,20 +87,6 @@ object BlockGenerator extends FeatureSpec {
       case None =>
         Thread.sleep(100)
         waitUntilGenesisBlockPersisted()
-
-      case Some(block) => // done
-
-    }
-
-  }
-
-  def waitUntilBlockPersisted(hash: String): Unit = {
-
-    ChainStorageServiceClient.getBlockInfo(HashedData(hash)) map {
-
-      case None =>
-        Thread.sleep(100)
-        waitUntilBlockPersisted(hash)
 
       case Some(block) => // done
 

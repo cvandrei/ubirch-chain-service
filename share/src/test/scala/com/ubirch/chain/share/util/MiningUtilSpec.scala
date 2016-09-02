@@ -124,6 +124,31 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     }
 
+    scenario("mine 10 blocks in a row to make sure their numbers are correctly incremented") {
+
+      BlockGenerator.createGenesisBlock() map { genesis =>
+
+        // TODO FIXME: loop is not executed
+        for (i <- 1 to 10) {
+          logger.info(s"mine block: number $i")
+          HashGenerator.createXManyUnminedHashesFuture(5000) map { sizeUnminedHashes =>
+
+            // test
+            miningUtil.mine() map {
+
+              // verify
+              case None => fail("mining did not result in a new block")
+              case Some(block) => block.number should be(i)
+
+            }
+
+          }
+        }
+
+      }
+
+    }
+
   }
 
   feature("MiningUtil.checkMiningTriggers") {

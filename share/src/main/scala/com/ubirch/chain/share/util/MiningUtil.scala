@@ -60,25 +60,29 @@ class MiningUtil extends LazyLogging {
           val blockHash = newBlock.hash
           logger.info(s"new block: hash=$blockHash, number=$newNumber (${hashes.size} hashes; ${BlockUtil.size(hashes) / 1000} kb)")
 
-          ChainStorageServiceClient.upsertFullBlock(newBlock) flatMap {
+          val resultingBlock = ChainStorageServiceClient.upsertFullBlock(newBlock) flatMap {
 
             case None =>
               logger.error("failed to insert new block")
               Future(None)
 
             case Some(upsertedBlock) =>
-              // TODO FIXME switch to Seq instead of Set !!!
-              ChainStorageServiceClient.deleteHashes(hashes.toSet) map {
+              waitUntilBlockIndexed(upsertedBlock.hash) flatMap { blockIndexDone =>
+                ChainStorageServiceClient.deleteHashes(hashes.toSet) map {
 
-                case true => Some(upsertedBlock)
+                  case true =>
+                    // TODO prevent double mining of blocks: wait till all hashes have been deleted
+                    Some(upsertedBlock)
 
-                case false =>
-                  logger.error(s"failed to delete newly mined hashes from unmined list: newBlock.hash=${upsertedBlock.hash}")
-                  Some(upsertedBlock)
+                  case false =>
+                    logger.error(s"failed to delete newly mined hashes from unmined list: newBlock.hash=${upsertedBlock.hash}")
+                    Some(upsertedBlock)
 
+                }
               }
 
           }
+          resultingBlock
 
         }
 
@@ -183,6 +187,21 @@ class MiningUtil extends LazyLogging {
         }
 
       case Some(block) => Future(Some(BaseBlockInfo(block.hash, block.number, block.created, block.version)))
+
+    }
+
+  }
+
+  def waitUntilBlockIndexed(hash: String): Future[Boolean] = {
+
+    // TODO automated tests
+    ChainStorageServiceClient.mostRecentBlock() flatMap {
+
+      case Some(block) if block.hash == hash => Future(true) // done
+
+      case _ =>
+        Thread.sleep(100)
+        waitUntilBlockIndexed(hash)
 
     }
 
