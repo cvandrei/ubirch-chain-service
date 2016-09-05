@@ -52,37 +52,45 @@ class MiningUtil extends LazyLogging {
 
         ChainStorageServiceClient.unminedHashes() flatMap { unmined =>
 
-          val previousBlockHash = mostRecentBlock.hash
-          val hashes = unmined.hashes
-          val newNumber = mostRecentBlock.number + 1
+          unmined.hashes.isEmpty match {
 
-          val newBlock = BlockUtil.newBlock(previousBlockHash, newNumber, hashes)
-          val blockHash = newBlock.hash
-          logger.info(s"new block: hash=$blockHash, number=$newNumber (${hashes.size} hashes; ${BlockUtil.size(hashes) / 1000} kb)")
+            case true => Future(None)
 
-          val resultingBlock = ChainStorageServiceClient.upsertFullBlock(newBlock) flatMap {
+            case false =>
 
-            case None =>
-              logger.error("failed to insert new block")
-              Future(None)
+              val previousBlockHash = mostRecentBlock.hash
+              val hashes = unmined.hashes
+              val newNumber = mostRecentBlock.number + 1
 
-            case Some(upsertedBlock) =>
-              waitUntilBlockIndexed(upsertedBlock.hash) flatMap { blockIndexDone =>
-                ChainStorageServiceClient.deleteHashes(hashes.toSet) map {
+              val newBlock = BlockUtil.newBlock(previousBlockHash, newNumber, hashes)
+              val blockHash = newBlock.hash
+              logger.info(s"new block: hash=$blockHash, number=$newNumber (${hashes.size} hashes; ${BlockUtil.size(hashes) / 1000} kb)")
 
-                  case true =>
-                    // TODO prevent double mining of blocks: wait till all hashes have been deleted
-                    Some(upsertedBlock)
+              val resultingBlock = ChainStorageServiceClient.upsertFullBlock(newBlock) flatMap {
 
-                  case false =>
-                    logger.error(s"failed to delete newly mined hashes from unmined list: newBlock.hash=${upsertedBlock.hash}")
-                    Some(upsertedBlock)
+                case None =>
+                  logger.error("failed to insert new block")
+                  Future(None)
 
-                }
+                case Some(upsertedBlock) =>
+                  waitUntilBlockIndexed(upsertedBlock.hash) flatMap { blockIndexDone =>
+                    ChainStorageServiceClient.deleteHashes(hashes.toSet) map {
+
+                      case true =>
+                        // TODO prevent double mining of blocks: wait till all hashes have been deleted
+                        Some(upsertedBlock)
+
+                      case false =>
+                        logger.error(s"failed to delete newly mined hashes from unmined list: newBlock.hash=${upsertedBlock.hash}")
+                        Some(upsertedBlock)
+
+                    }
+                  }
+
               }
+              resultingBlock
 
           }
-          resultingBlock
 
         }
 
