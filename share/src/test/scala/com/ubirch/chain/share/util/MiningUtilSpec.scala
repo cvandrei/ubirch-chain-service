@@ -4,9 +4,13 @@ import com.ubirch.chain.config.Config
 import com.ubirch.chain.share.testutil.{BlockGenerator, HashGenerator}
 import com.ubirch.chain.test.base.ElasticSearchSpec
 import com.ubirch.client.storage.ChainStorageServiceClient
-import org.joda.time.DateTime
+import com.ubirch.util.date.DateUtil
+import org.joda.time.{DateTime, DateTimeZone}
 
+import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 /**
   * author: cvandrei
@@ -14,12 +18,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 class MiningUtilSpec extends ElasticSearchSpec {
 
+  private val timeout = 120 seconds
   private val miningUtil = new MiningUtil
 
   feature("MiningUtil.blockCheck") {
 
     scenario("trigger = false") {
 
+      Await.result(
       for {
         mostRecent <- miningUtil.mostRecentBlock()
         blockCheck <- miningUtil.blockCheck() // test
@@ -29,11 +35,13 @@ class MiningUtilSpec extends ElasticSearchSpec {
         blockCheck shouldBe None // verify
 
       }
+        , timeout)
 
     }
 
     scenario("trigger = true") {
 
+      Await.result(
       for {
 
       // prepare
@@ -54,6 +62,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
         blockCheck.get.previousBlockHash shouldBe genesis.hash
 
       }
+        , timeout)
 
     }
 
@@ -63,6 +72,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("most recent block does not exist") {
 
+      Await.result(
       for {
         mostRecent <- miningUtil.mostRecentBlock() // prepare
         minedBlock <- miningUtil.mine() // test
@@ -75,11 +85,13 @@ class MiningUtilSpec extends ElasticSearchSpec {
         minedBlock shouldBe None
 
       }
+        , timeout)
 
     }
 
     scenario("most recent block exists but unmined hashes is empty") {
 
+      Await.result(
       for {
 
       // prepare
@@ -97,35 +109,42 @@ class MiningUtilSpec extends ElasticSearchSpec {
         // verify
         minedBlock shouldBe None
       }
+        , timeout)
 
     }
 
     scenario("most recent block exists and there's unmined hashes") {
 
-      for {
+      logger.info("begin test")
+      Await.result(
+        for {
 
-      // prepare
-        genesis <- BlockGenerator.createGenesisBlock()
-        mostRecent <- miningUtil.mostRecentBlock()
-        unminedHashesSize <- HashGenerator.createXManyUnminedHashesFuture(100)
+        // prepare
+          genesis <- BlockGenerator.createGenesisBlock()
+          mostRecent <- miningUtil.mostRecentBlock()
+          unminedHashesSize <- HashGenerator.createXManyUnminedHashesFuture(100)
 
-        // test
-        minedBlock <- miningUtil.mine()
+          // test
+          minedBlock <- miningUtil.mine()
 
-      } yield {
+        } yield {
 
-        // verify preparation
-        mostRecent shouldBe 'isDefined
+          // verify preparation
+          mostRecent shouldBe 'isDefined
+          logger.info("verify preparation")
 
-        // verify
-        minedBlock shouldBe None
+          // verify
+          minedBlock shouldBe None
+          logger.info("finished test")
 
-      }
+        }
+        , timeout)
 
     }
 
     scenario("mine 10 blocks in a row to make sure their numbers are correctly incremented") {
 
+      Await.result(
       BlockGenerator.createGenesisBlock() map { genesis =>
 
         // TODO FIXME: loop is not executed
@@ -146,6 +165,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
         }
 
       }
+        , timeout)
 
     }
 
@@ -155,6 +175,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("sizeCheck: false; ageCheck: false") {
 
+      Await.result(
       for {
 
       // prepare
@@ -175,11 +196,13 @@ class MiningUtilSpec extends ElasticSearchSpec {
         checkTriggers shouldBe false
 
       }
+        , timeout)
 
     }
 
     scenario("sizeCheck: true; ageCheck: false") {
 
+      Await.result(
       for {
 
       // prepare
@@ -201,12 +224,14 @@ class MiningUtilSpec extends ElasticSearchSpec {
         checkTriggers shouldBe true
 
       }
+        , timeout)
 
 
     }
 
     scenario("sizeCheck: false; ageCheck: true") {
 
+      Await.result(
       for {
 
       // prepare
@@ -228,11 +253,13 @@ class MiningUtilSpec extends ElasticSearchSpec {
         checkTriggers shouldBe true
 
       }
+        , timeout)
 
     }
 
     scenario("sizeCheck: true; ageCheck: true") {
 
+      Await.result(
       for {
 
       // prepare
@@ -254,6 +281,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
         checkTriggers shouldBe true
 
       }
+        , timeout)
 
     }
 
@@ -263,6 +291,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("no unmined hashes") {
 
+      Await.result(
       for {
         currentUnmined <- ChainStorageServiceClient.unminedHashes() // prepare
         sizeCheck <- miningUtil.sizeCheck() // test
@@ -275,6 +304,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
         sizeCheck shouldBe false
 
       }
+        , timeout)
 
     }
 
@@ -282,11 +312,13 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
       HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = false)
 
+      Await.result(
       for {
         sizeCheck <- miningUtil.sizeCheck()
       } yield {
         sizeCheck shouldBe true
       }
+      , timeout)
 
     }
 
@@ -294,11 +326,13 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
       HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = true)
 
+      Await.result(
       for {
         sizeCheck <- miningUtil.sizeCheck()
       } yield {
         sizeCheck shouldBe false
       }
+      , timeout)
 
     }
 
@@ -308,6 +342,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("no blocks, not even the genesis block") {
 
+      Await.result(
       for {
         genesis <- ChainStorageServiceClient.getGenesisBlock // prepare
         ageCheck <- miningUtil.ageCheck() // test
@@ -317,33 +352,39 @@ class MiningUtilSpec extends ElasticSearchSpec {
         ageCheck shouldBe false // verify
 
       }
+        , timeout)
 
     }
 
     scenario("has only a genesis block (too new)") {
 
+      Await.result(
       for {
         genesis <- BlockGenerator.createGenesisBlock() // prepare
         ageCheck <- miningUtil.ageCheck() // test
       } yield {
         ageCheck shouldBe false
       }
+        , timeout)
 
     }
 
     scenario("has only a genesis block (old enough)") {
 
+      Await.result(
       for {
         genesis <- BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true) // prepare
         ageCheck <- miningUtil.ageCheck() // test
       } yield {
         ageCheck shouldBe true
       }
+        , timeout)
 
     }
 
     scenario("has genesis block and one regular block (too new)") {
 
+      Await.result(
       for {
 
       // prepare
@@ -356,6 +397,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
       } yield {
         ageCheck shouldBe false
       }
+        , timeout)
 
     }
 
@@ -364,6 +406,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
       val mineEveryXSeconds = Config.mineEveryXSeconds
       val createdBlock = DateTime.now.minusSeconds(mineEveryXSeconds)
 
+      Await.result(
       for {
 
       // prepare
@@ -377,6 +420,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
         // verify
         ageCheck shouldBe true
       }
+        , timeout)
 
     }
 
@@ -386,6 +430,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("no blocks, not even the genesis block") {
 
+      Await.result(
       for {
         genesis <- ChainStorageServiceClient.getGenesisBlock // prepare
         mostRecent <- miningUtil.mostRecentBlock() // test
@@ -395,12 +440,18 @@ class MiningUtilSpec extends ElasticSearchSpec {
         mostRecent shouldBe None // verify
 
       }
+        , timeout)
 
+    }
+
+    scenario("DateTime time zone test") {
+      val now = DateUtil.nowUTC
+      now.getZone should be(DateTimeZone.forID("Europe/Berlin"))
     }
 
     scenario("has only a genesis block") {
 
-
+      Await.result(
       for {
 
       // prepare
@@ -419,11 +470,13 @@ class MiningUtilSpec extends ElasticSearchSpec {
         mostRecent shouldBe expected
 
       }
+        , timeout)
 
     }
 
     scenario("has genesis block and one regular block") {
 
+      Await.result(
       for {
 
       // prepare
@@ -443,6 +496,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
         mostRecent shouldBe expected
 
       }
+        , timeout)
 
     }
 

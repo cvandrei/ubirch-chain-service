@@ -68,6 +68,9 @@ lazy val testUtil = (project in file("test-util"))
     name := "test-util",
     resolvers ++= Seq(
       resolverHasher
+    ),
+    libraryDependencies ++= Seq(
+      ubirchUtilDate
     )
   )
 
@@ -142,6 +145,7 @@ lazy val depTestBase = Seq(
 lazy val depShare = Seq(
   typesafeScalaLogging,
   ubirchUtilCrypto,
+  ubirchUtilDate,
   ubirchStorageClient
 ) ++ json4s
 
@@ -162,6 +166,7 @@ lazy val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % akkaV
 lazy val typesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
 
 lazy val ubirchUtilConfig = "com.ubirch.util" %% "config" % "0.1-SNAPSHOT"
+lazy val ubirchUtilDate = "com.ubirch.util" %% "date" % "0.1-SNAPSHOT"
 lazy val ubirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
 lazy val ubirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServiceV
 lazy val ubirchStorageTestUtil = "com.ubirch.backend.storage" %% "test-util" % storageServiceV

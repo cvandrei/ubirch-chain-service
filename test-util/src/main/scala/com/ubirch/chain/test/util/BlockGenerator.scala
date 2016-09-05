@@ -6,6 +6,7 @@ import com.ubirch.chain.share.merkle.BlockUtil
 import com.ubirch.chain.share.util.{HashRouteUtil, MiningUtil}
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
+import com.ubirch.util.date.DateUtil
 import org.joda.time.DateTime
 import org.scalatest.FeatureSpec
 
@@ -28,7 +29,7 @@ object BlockGenerator extends FeatureSpec {
     val genesisToPersist = ageCheckResultsInTrue match {
 
       case true =>
-        val created = DateTime.now.minusSeconds(Config.mineEveryXSeconds + 10)
+        val created = DateUtil.nowUTC.minusSeconds(Config.mineEveryXSeconds + 10)
         genesisTemplate.copy(created = created)
 
       case false => genesisTemplate
@@ -60,7 +61,7 @@ object BlockGenerator extends FeatureSpec {
   def generateFullBlock(previousBlockHash: String,
                         previousBlockNumber: Long,
                         elementCount: Int = 250,
-                        created: DateTime = DateTime.now
+                        created: DateTime = DateUtil.nowUTC
                        ): Future[FullBlock] = {
 
     val hashes = HashUtil.randomSha256Hashes(elementCount)
