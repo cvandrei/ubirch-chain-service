@@ -4,8 +4,7 @@ import com.ubirch.chain.config.Config
 import com.ubirch.chain.share.testutil.{BlockGenerator, HashGenerator}
 import com.ubirch.chain.test.base.ElasticSearchSpec
 import com.ubirch.client.storage.ChainStorageServiceClient
-import com.ubirch.util.date.DateUtil
-import org.joda.time.{DateTime, DateTimeZone}
+import org.joda.time.DateTime
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -18,7 +17,7 @@ import scala.language.postfixOps
   */
 class MiningUtilSpec extends ElasticSearchSpec {
 
-  private val timeout = 120 seconds
+  private val timeout = 60 seconds
   private val miningUtil = new MiningUtil
 
   feature("MiningUtil.blockCheck") {
@@ -316,7 +315,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
       for {
         sizeCheck <- miningUtil.sizeCheck()
       } yield {
-        sizeCheck shouldBe true
+        sizeCheck shouldBe false
       }
       , timeout)
 
@@ -330,7 +329,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
       for {
         sizeCheck <- miningUtil.sizeCheck()
       } yield {
-        sizeCheck shouldBe false
+        sizeCheck shouldBe true
       }
       , timeout)
 
@@ -442,11 +441,6 @@ class MiningUtilSpec extends ElasticSearchSpec {
       }
         , timeout)
 
-    }
-
-    scenario("DateTime time zone test") {
-      val now = DateUtil.nowUTC
-      now.getZone should be(DateTimeZone.forID("Europe/Berlin"))
     }
 
     scenario("has only a genesis block") {
