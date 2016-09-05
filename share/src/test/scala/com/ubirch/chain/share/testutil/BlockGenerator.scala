@@ -1,10 +1,10 @@
 package com.ubirch.chain.share.testutil
 
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.backend.chain.model.{FullBlock, GenesisBlock, HashRequest, HashedData}
+import com.ubirch.backend.chain.model.{FullBlock, GenesisBlock, HashRequest}
 import com.ubirch.chain.config.Config
 import com.ubirch.chain.share.merkle.BlockUtil
-import com.ubirch.chain.share.util.{HashRouteUtil, MiningUtil}
+import com.ubirch.chain.share.util.{GenesisUtil, HashRouteUtil, MiningUtil}
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
 import com.ubirch.util.date.DateUtil
@@ -23,6 +23,9 @@ object BlockGenerator extends FeatureSpec
 
   private val miningUtil = new MiningUtil
   private val hashRouteUtil = new HashRouteUtil
+  private val genesisUtil = new GenesisUtil
+
+  private val defaultEventsInBlock: Int = 100
 
   def createGenesisBlock(ageCheckResultsInTrue: Boolean = false): Future[GenesisBlock] = {
 
@@ -42,14 +45,14 @@ object BlockGenerator extends FeatureSpec
       genesisCreated <- ChainStorageServiceClient.saveGenesisBlock(genesisToPersist)
     } yield {
 
-      waitUntilGenesisBlockPersisted()
+      genesisUtil.waitUntilGenesisIndexed()
       genesisCreated.get
 
     }
 
   }
 
-  def generateMinedBlock(elementCount: Int = 250): Future[FullBlock] = {
+  def generateMinedBlock(elementCount: Int = defaultEventsInBlock): Future[FullBlock] = {
 
     HashGenerator.createXManyUnminedHashes(elementCount)
     miningUtil.mine() map {
@@ -57,7 +60,7 @@ object BlockGenerator extends FeatureSpec
       case None => fail("failed to generate a mined block")
 
       case Some(block) =>
-        waitUntilBlockPersisted(block.hash)
+        miningUtil.waitUntilBlockIndexed(block.hash)
         block
 
     }
@@ -66,7 +69,7 @@ object BlockGenerator extends FeatureSpec
 
   def generateFullBlock(previousBlockHash: String,
                         previousBlockNumber: Long,
-                        elementCount: Int = 250,
+                        elementCount: Int = defaultEventsInBlock,
                         created: DateTime = DateUtil.nowUTC
                        ): Future[FullBlock] = {
 
@@ -80,41 +83,11 @@ object BlockGenerator extends FeatureSpec
       persisted <- ChainStorageServiceClient.upsertFullBlock(block)
     } yield {
 
-      waitUntilBlockPersisted(currentBlockHash)
+      miningUtil.waitUntilBlockIndexed(currentBlockHash)
       persisted.get
 
     }
 
-
-  }
-
-  def waitUntilGenesisBlockPersisted(): Unit = {
-
-    ChainStorageServiceClient.getGenesisBlock map {
-
-      case None =>
-        logger.info("genesis block has not been indexed yet...keep waiting")
-        Thread.sleep(100)
-        waitUntilGenesisBlockPersisted()
-
-      case Some(block) => logger.info("genesis block has been indexed")
-
-    }
-
-  }
-
-  def waitUntilBlockPersisted(hash: String): Unit = {
-
-    ChainStorageServiceClient.getBlockInfo(HashedData(hash)) map {
-
-      case None =>
-        logger.info("block has not been indexed yet...keep waiting")
-        Thread.sleep(100)
-        waitUntilBlockPersisted(hash)
-
-      case Some(block) => logger.info("block has been indexed")
-
-    }
 
   }
 

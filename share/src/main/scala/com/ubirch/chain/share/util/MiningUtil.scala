@@ -8,7 +8,9 @@ import com.ubirch.client.storage.ChainStorageServiceClient
 import org.joda.time.DateTime
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
+import scala.language.postfixOps
 
 /**
   * This class is a collection of util methods relevant for mining blocks. As the most important one #blockCheck
@@ -54,7 +56,9 @@ class MiningUtil extends LazyLogging {
 
           unmined.hashes.isEmpty match {
 
-            case true => Future(None)
+            case true =>
+              logger.error("unable to mine block without unmined hashes")
+              Future(None)
 
             case false =>
 
@@ -203,15 +207,17 @@ class MiningUtil extends LazyLogging {
   def waitUntilBlockIndexed(hash: String): Future[Boolean] = {
 
     // TODO automated tests
-    ChainStorageServiceClient.mostRecentBlock() flatMap {
+    var blockOpt = Await.result(ChainStorageServiceClient.mostRecentBlock(), 10 seconds)
+    while (blockOpt.isEmpty) {
 
-      case Some(block) if block.hash == hash => Future(true) // done
-
-      case _ =>
-        Thread.sleep(100)
-        waitUntilBlockIndexed(hash)
+      logger.debug("block indexing...still waiting")
+      Thread.sleep(100)
+      blockOpt = Await.result(ChainStorageServiceClient.mostRecentBlock(), 10 seconds)
 
     }
+
+    logger.info("block indexing...done")
+    Future(true)
 
   }
 

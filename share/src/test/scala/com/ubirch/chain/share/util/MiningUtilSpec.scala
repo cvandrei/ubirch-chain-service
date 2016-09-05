@@ -120,7 +120,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
           minedBlock <- miningUtil.mine() // test
         } yield {
 
-          minedBlock shouldBe None // verify
+          minedBlock shouldNot be(None) // verify
 
         }, timeout)
 

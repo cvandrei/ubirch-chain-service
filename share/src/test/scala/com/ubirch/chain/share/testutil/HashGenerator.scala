@@ -9,7 +9,9 @@ import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
+import scala.language.postfixOps
 import scala.util.Random
 
 /**
@@ -21,6 +23,8 @@ object HashGenerator extends UnitSpec
 
   /** defines which hash algorithm to use when creating event hashes */
   private val hashAlgorithm = "SHA-512"
+
+  private val timeout = 10 seconds
 
   /**
     * Creates enough random hashes to trigger mining based on the total size of all unmined hashes.
@@ -110,18 +114,16 @@ object HashGenerator extends UnitSpec
 
   private def waitUntilHashesPersisted(expectedSize: Long): Unit = {
 
-    ChainStorageServiceClient.unminedHashes.map { unmined =>
-      isUnminedSizeReached(expectedSize, unmined.hashes) match {
+    var unmined = Await.result(ChainStorageServiceClient.unminedHashes, timeout)
+    while (!isUnminedSizeReached(expectedSize, unmined.hashes)) {
 
-        case true => logger.info("unmined hashes have indexed...done")
+      logger.info("not all unmined hashes have been indexed yet...keep waiting")
+      Thread.sleep(100)
+      unmined = Await.result(ChainStorageServiceClient.unminedHashes, timeout)
 
-        case false =>
-          logger.info("not all unmined hashes have indexed yet...keep waiting")
-          Thread.sleep(100)
-          waitUntilHashesPersisted(expectedSize)
-
-      }
     }
+
+    logger.info("all unmined hashes have been indexed yet...done")
 
   }
 

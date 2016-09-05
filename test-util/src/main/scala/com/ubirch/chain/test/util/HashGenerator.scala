@@ -1,5 +1,6 @@
 package com.ubirch.chain.test.util
 
+import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.backend.chain.model.HashedData
 import com.ubirch.chain.config.Config
 import com.ubirch.chain.share.merkle.BlockUtil
@@ -7,7 +8,8 @@ import com.ubirch.chain.test.base.UnitSpec
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Await
+import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.Random
 
@@ -15,10 +17,13 @@ import scala.util.Random
   * author: cvandrei
   * since: 2016-08-30
   */
-object HashGenerator extends UnitSpec {
+object HashGenerator extends UnitSpec
+  with LazyLogging {
 
   /** defines which hash algorithm to use when creating event hashes */
   private val hashAlgorithm = "SHA-512"
+
+  private val timeout = 10 seconds
 
   /**
     * Creates enough random hashes to trigger mining based on the total size of all unmined hashes.
@@ -88,17 +93,15 @@ object HashGenerator extends UnitSpec {
 
   private def waitUntilHashesPersisted(expectedSize: Long): Unit = {
 
-    ChainStorageServiceClient.unminedHashes.map { unmined =>
-      isUnminedSizeReached(expectedSize, unmined.hashes) match {
+    var unmined = Await.result(ChainStorageServiceClient.unminedHashes, timeout)
 
-        case true => // done
-
-        case false =>
-          Thread.sleep(100)
-          waitUntilHashesPersisted(expectedSize)
-
-      }
+    while (!isUnminedSizeReached(expectedSize, unmined.hashes)) {
+      logger.info("not all unmined hashes have been indexed yet...keep waiting")
+      Thread.sleep(100)
+      unmined = Await.result(ChainStorageServiceClient.unminedHashes, timeout)
     }
+
+    logger.info("all unmined hashes have been indexed yet...done")
 
   }
 

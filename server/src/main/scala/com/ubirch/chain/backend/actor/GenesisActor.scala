@@ -1,7 +1,7 @@
 package com.ubirch.chain.backend.actor
 
 import akka.actor.Actor
-import com.ubirch.chain.core.server.actor.GenesisUtil
+import com.ubirch.chain.share.util.GenesisUtil
 
 /**
   * author: cvandrei

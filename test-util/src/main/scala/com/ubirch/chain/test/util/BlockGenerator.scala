@@ -1,9 +1,10 @@
 package com.ubirch.chain.test.util
 
+import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.backend.chain.model.{FullBlock, GenesisBlock, HashRequest}
 import com.ubirch.chain.config.Config
 import com.ubirch.chain.share.merkle.BlockUtil
-import com.ubirch.chain.share.util.{HashRouteUtil, MiningUtil}
+import com.ubirch.chain.share.util.{GenesisUtil, HashRouteUtil, MiningUtil}
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
 import com.ubirch.util.date.DateUtil
@@ -17,10 +18,12 @@ import scala.concurrent.Future
   * author: cvandrei
   * since: 2016-08-22
   */
-object BlockGenerator extends FeatureSpec {
+object BlockGenerator extends FeatureSpec
+  with LazyLogging {
 
   private val miningUtil = new MiningUtil
   private val hashRouteUtil = new HashRouteUtil
+  private val genesisUtil = new GenesisUtil
 
   def createGenesisBlock(ageCheckResultsInTrue: Boolean = false): Future[GenesisBlock] = {
 
@@ -40,7 +43,7 @@ object BlockGenerator extends FeatureSpec {
       genesisCreated <- ChainStorageServiceClient.saveGenesisBlock(genesisToPersist)
     } yield {
 
-      waitUntilGenesisBlockPersisted()
+      genesisUtil.waitUntilGenesisIndexed()
       genesisCreated.get
 
     }
@@ -75,21 +78,6 @@ object BlockGenerator extends FeatureSpec {
       miningUtil.waitUntilBlockIndexed(currentBlockHash) map { blockIndexDone =>
         fullBlock.get
       }
-
-    }
-
-
-  }
-
-  def waitUntilGenesisBlockPersisted(): Unit = {
-
-    ChainStorageServiceClient.getGenesisBlock map {
-
-      case None =>
-        Thread.sleep(100)
-        waitUntilGenesisBlockPersisted()
-
-      case Some(block) => // done
 
     }
 
