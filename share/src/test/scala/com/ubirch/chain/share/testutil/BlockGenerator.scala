@@ -1,5 +1,6 @@
 package com.ubirch.chain.share.testutil
 
+import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.backend.chain.model.{FullBlock, GenesisBlock, HashRequest, HashedData}
 import com.ubirch.chain.config.Config
 import com.ubirch.chain.share.merkle.BlockUtil
@@ -17,7 +18,8 @@ import scala.concurrent.Future
   * author: cvandrei
   * since: 2016-08-30
   */
-object BlockGenerator extends FeatureSpec {
+object BlockGenerator extends FeatureSpec
+  with LazyLogging {
 
   private val miningUtil = new MiningUtil
   private val hashRouteUtil = new HashRouteUtil
@@ -29,7 +31,7 @@ object BlockGenerator extends FeatureSpec {
     val genesisToPersist = ageCheckResultsInTrue match {
 
       case true =>
-        val created = DateUtil.nowUTC.minusSeconds(Config.mineEveryXSeconds + 10)
+        val created = DateUtil.nowUTC.minusSeconds(Config.mineEveryXSeconds).minusSeconds(10)
         genesisTemplate.copy(created = created)
 
       case false => genesisTemplate
@@ -72,14 +74,14 @@ object BlockGenerator extends FeatureSpec {
     hashes map (HashRequest(_)) foreach hashRouteUtil.hash
 
     val currentBlockHash = BlockUtil.blockHash(hashes, previousBlockHash)
-    val fullBlock = FullBlock(currentBlockHash, created, version = "1.0", previousBlockHash, previousBlockNumber + 1, Some(hashes))
+    val block = FullBlock(currentBlockHash, created, version = "1.0", previousBlockHash, previousBlockNumber + 1, Some(hashes))
 
     for {
-      fullBlock <- ChainStorageServiceClient.upsertFullBlock(fullBlock)
+      persisted <- ChainStorageServiceClient.upsertFullBlock(block)
     } yield {
 
       waitUntilBlockPersisted(currentBlockHash)
-      fullBlock.get
+      persisted.get
 
     }
 
@@ -91,10 +93,11 @@ object BlockGenerator extends FeatureSpec {
     ChainStorageServiceClient.getGenesisBlock map {
 
       case None =>
+        logger.info("genesis block has not been indexed yet...keep waiting")
         Thread.sleep(100)
         waitUntilGenesisBlockPersisted()
 
-      case Some(block) => // done
+      case Some(block) => logger.info("genesis block has been indexed")
 
     }
 
@@ -105,10 +108,11 @@ object BlockGenerator extends FeatureSpec {
     ChainStorageServiceClient.getBlockInfo(HashedData(hash)) map {
 
       case None =>
+        logger.info("block has not been indexed yet...keep waiting")
         Thread.sleep(100)
         waitUntilBlockPersisted(hash)
 
-      case Some(block) => // done
+      case Some(block) => logger.info("block has been indexed")
 
     }
 

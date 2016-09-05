@@ -1,5 +1,6 @@
 package com.ubirch.chain.share.testutil
 
+import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.backend.chain.model.HashedData
 import com.ubirch.chain.config.Config
 import com.ubirch.chain.share.merkle.BlockUtil
@@ -15,7 +16,8 @@ import scala.util.Random
   * author: cvandrei
   * since: 2016-08-30
   */
-object HashGenerator extends UnitSpec {
+object HashGenerator extends UnitSpec
+  with LazyLogging {
 
   /** defines which hash algorithm to use when creating event hashes */
   private val hashAlgorithm = "SHA-512"
@@ -111,9 +113,10 @@ object HashGenerator extends UnitSpec {
     ChainStorageServiceClient.unminedHashes.map { unmined =>
       isUnminedSizeReached(expectedSize, unmined.hashes) match {
 
-        case true => // done
+        case true => logger.info("unmined hashes have indexed...done")
 
         case false =>
+          logger.info("not all unmined hashes have indexed yet...keep waiting")
           Thread.sleep(100)
           waitUntilHashesPersisted(expectedSize)
 
