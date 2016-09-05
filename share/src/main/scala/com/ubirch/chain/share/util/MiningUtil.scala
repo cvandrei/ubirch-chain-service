@@ -133,14 +133,16 @@ class MiningUtil extends LazyLogging {
     ChainStorageServiceClient.unminedHashes() map { hashes =>
 
       val size = BlockUtil.size(hashes.hashes)
+      val sizeKb = size / 1000
       size >= maxBlockSizeBytes match {
 
         case true =>
-          val sizeKb = size / 1000
           logger.info(s"trigger mining of new block (size) -- ${hashes.hashes.length} hashes ($sizeKb kb)")
           true
 
-        case false => false
+        case false =>
+          logger.info(s"do not trigger mining of new block (size) -- ${hashes.hashes.length} hashes ($sizeKb kb)")
+          false
 
       }
 
