@@ -141,7 +141,7 @@ class MiningUtil extends LazyLogging {
           true
 
         case false =>
-          logger.info(s"do not trigger mining of new block (size) -- ${hashes.hashes.length} hashes ($sizeKb kb)")
+          logger.debug(s"do not trigger mining of new block (size) -- ${hashes.hashes.length} hashes ($sizeKb kb)")
           false
 
       }
