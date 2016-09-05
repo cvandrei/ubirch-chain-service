@@ -25,43 +25,43 @@ class MiningUtilSpec extends ElasticSearchSpec {
     scenario("trigger = false") {
 
       Await.result(
-      for {
-        mostRecent <- miningUtil.mostRecentBlock()
-        blockCheck <- miningUtil.blockCheck() // test
-      } yield {
+        for {
+          mostRecent <- miningUtil.mostRecentBlock()
+          blockCheck <- miningUtil.blockCheck() // test
+        } yield {
 
-        mostRecent shouldBe None // verify preparation
-        blockCheck shouldBe None // verify
+          mostRecent shouldBe None // verify preparation
+          blockCheck shouldBe None // verify
 
-      }
-        , timeout)
+        }, timeout)
 
     }
 
     scenario("trigger = true") {
 
-      Await.result(
-      for {
-
       // prepare
-        genesis <- BlockGenerator.createGenesisBlock()
-        minedHashesSize <- HashGenerator.createUnminedHashesFuture(sizeCheckResultsInTrue = true)
-        mostRecent <- miningUtil.mostRecentBlock()
+      val genesis = Await.result(
+        for {
+          genesis <- BlockGenerator.createGenesisBlock()
+          unminedHashesSize <- HashGenerator.createUnminedHashesFuture(sizeCheckResultsInTrue = true)
+        } yield {
 
-        // test
-        blockCheck <- miningUtil.blockCheck()
+          val mostRecent = Await.result(miningUtil.mostRecentBlock(), timeout)
+          mostRecent.get.hash shouldBe genesis.hash
+          genesis
 
-      } yield {
+        }, timeout)
 
-        // verify preparation
-        mostRecent.get.hash shouldBe genesis.hash
+      Await.result(
+        for {
+          blockCheck <- miningUtil.blockCheck() // test
+        } yield {
 
-        // verify
-        blockCheck shouldBe Some
-        blockCheck.get.previousBlockHash shouldBe genesis.hash
+          // verify
+          blockCheck shouldBe Some
+          blockCheck.get.previousBlockHash shouldBe genesis.hash
 
-      }
-        , timeout)
+        }, timeout)
 
     }
 
@@ -71,100 +71,83 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("most recent block does not exist") {
 
+      // prepare
+      val mostRecent = Await.result(miningUtil.mostRecentBlock(), timeout)
+      mostRecent shouldBe None
+
       Await.result(
-      for {
-        mostRecent <- miningUtil.mostRecentBlock() // prepare
-        minedBlock <- miningUtil.mine() // test
-      } yield {
+        for {
+          minedBlock <- miningUtil.mine() // test
+        } yield {
 
-        // verify preparation
-        mostRecent shouldBe None
+          minedBlock shouldBe None // verify
 
-        // verify
-        minedBlock shouldBe None
-
-      }
+        }
         , timeout)
 
     }
 
     scenario("most recent block exists but unmined hashes is empty") {
 
-      Await.result(
-      for {
-
       // prepare
-        genesis <- BlockGenerator.createGenesisBlock()
-        mostRecent <- miningUtil.mostRecentBlock()
+      Await.result(BlockGenerator.createGenesisBlock(), timeout)
+      val mostRecent = Await.result(miningUtil.mostRecentBlock(), timeout)
+      mostRecent shouldBe 'isDefined
+      val unmined = Await.result(ChainStorageServiceClient.unminedHashes(), timeout)
+      unmined.hashes shouldBe 'isEmpty
 
-        // test
-        minedBlock <- miningUtil.mine()
+      Await.result(
+        for {
+          minedBlock <- miningUtil.mine() // test
+        } yield {
 
-      } yield {
+          minedBlock shouldBe None // verify
 
-        // verify preparation
-        mostRecent shouldBe 'isDefined
-
-        // verify
-        minedBlock shouldBe None
-      }
-        , timeout)
+        }, timeout)
 
     }
 
     scenario("most recent block exists and there's unmined hashes") {
 
-      logger.info("begin test")
+      // prepare
+      Await.result(BlockGenerator.createGenesisBlock(), timeout)
+      val mostRecent = Await.result(miningUtil.mostRecentBlock(), timeout)
+      mostRecent shouldBe 'isDefined
+      Await.result(HashGenerator.createXManyUnminedHashesFuture(100), timeout)
+
       Await.result(
         for {
-
-        // prepare
-          genesis <- BlockGenerator.createGenesisBlock()
-          mostRecent <- miningUtil.mostRecentBlock()
-          unminedHashesSize <- HashGenerator.createXManyUnminedHashesFuture(100)
-
-          // test
-          minedBlock <- miningUtil.mine()
-
+          minedBlock <- miningUtil.mine() // test
         } yield {
 
-          // verify preparation
-          mostRecent shouldBe 'isDefined
-          logger.info("verify preparation")
+          minedBlock shouldBe None // verify
 
-          // verify
-          minedBlock shouldBe None
-          logger.info("finished test")
-
-        }
-        , timeout)
+        }, timeout)
 
     }
 
     scenario("mine 10 blocks in a row to make sure their numbers are correctly incremented") {
 
       Await.result(
-      BlockGenerator.createGenesisBlock() map { genesis =>
+        BlockGenerator.createGenesisBlock() map { genesis =>
 
-        // TODO FIXME: loop is not executed
-        for (i <- 1 to 10) {
-          logger.info(s"mine block: number $i")
-          HashGenerator.createXManyUnminedHashesFuture(5000) map { sizeUnminedHashes =>
+          for (i <- 1 to 10) {
+            logger.info(s"mine block: number $i")
+            HashGenerator.createXManyUnminedHashesFuture(1000) map { sizeUnminedHashes =>
 
-            // test
-            miningUtil.mine() map {
+              // test
+              miningUtil.mine() map {
 
-              // verify
-              case None => fail("mining did not result in a new block")
-              case Some(block) => block.number should be(i)
+                // verify
+                case None => fail("mining did not result in a new block")
+                case Some(block) => block.number should be(i)
+
+              }
 
             }
-
           }
-        }
 
-      }
-        , timeout)
+        }, timeout)
 
     }
 
@@ -174,113 +157,97 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("sizeCheck: false; ageCheck: false") {
 
-      Await.result(
-      for {
-
       // prepare
-        genesis <- BlockGenerator.createGenesisBlock()
-        sizeCheck <- miningUtil.sizeCheck()
-        ageCheck <- miningUtil.ageCheck()
+      Await.result(BlockGenerator.createGenesisBlock(), timeout)
+      val sizeCheck = Await.result(miningUtil.sizeCheck(), timeout)
+      sizeCheck shouldBe false
+      val ageCheck = Await.result(miningUtil.ageCheck(), timeout)
+      ageCheck shouldBe false
 
-        // test
-        checkTriggers <- miningUtil.checkMiningTriggers()
+      Await.result(
+        for {
+          checkTriggers <- miningUtil.checkMiningTriggers() // test
+        } yield {
 
-      } yield {
+          checkTriggers shouldBe false // verify
 
-        // verify preparation
-        sizeCheck shouldBe false
-        ageCheck shouldBe false
-
-        // verify
-        checkTriggers shouldBe false
-
-      }
-        , timeout)
+        }, timeout)
 
     }
 
     scenario("sizeCheck: true; ageCheck: false") {
 
-      Await.result(
-      for {
-
       // prepare
-        genesis <- BlockGenerator.createGenesisBlock()
-        unminedHashesSize <- HashGenerator.createUnminedHashesFuture(sizeCheckResultsInTrue = true)
-        sizeCheck <- miningUtil.sizeCheck()
-        ageCheck <- miningUtil.ageCheck()
+      Await.result(BlockGenerator.createGenesisBlock(), timeout)
+      Await.result(HashGenerator.createUnminedHashesFuture(sizeCheckResultsInTrue = true), timeout)
+      val sizeCheck = Await.result(miningUtil.sizeCheck(), timeout)
+      sizeCheck shouldBe true
+      val ageCheck = Await.result(miningUtil.ageCheck(), timeout)
+      ageCheck shouldBe false
 
-        // test
-        checkTriggers <- miningUtil.checkMiningTriggers()
+      Await.result(
+        for {
+          checkTriggers <- miningUtil.checkMiningTriggers() // test
+        } yield {
 
-      } yield {
+          checkTriggers shouldBe true // verify
 
-        // verify preparation
-        sizeCheck shouldBe true
-        ageCheck shouldBe false
-
-        // verify
-        checkTriggers shouldBe true
-
-      }
-        , timeout)
+        }, timeout)
 
 
     }
 
     scenario("sizeCheck: false; ageCheck: true") {
 
-      Await.result(
-      for {
-
       // prepare
-        genesis <- BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
-        unminedHashesSize <- HashGenerator.createUnminedHashesFuture(sizeCheckResultsInTrue = false)
-        sizeCheck <- miningUtil.sizeCheck()
-        ageCheck <- miningUtil.ageCheck()
+      Await.result(
+        for {
+          genesis <- BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
+          unminedHashesSize <- HashGenerator.createUnminedHashesFuture(sizeCheckResultsInTrue = false)
+        } yield {
 
-        // test
-        checkTriggers <- miningUtil.checkMiningTriggers()
+          val sizeCheck = Await.result(miningUtil.sizeCheck(), timeout)
+          sizeCheck shouldBe false
+          val ageCheck = Await.result(miningUtil.ageCheck(), timeout)
+          ageCheck shouldBe true
 
-      } yield {
+        }, timeout)
 
-        // verify preparation
-        sizeCheck shouldBe false
-        ageCheck shouldBe true
+      Await.result(
+        for {
+          checkTriggers <- miningUtil.checkMiningTriggers() // test
+        } yield {
 
-        // verify
-        checkTriggers shouldBe true
+          checkTriggers shouldBe true // verify
 
-      }
-        , timeout)
+        }, timeout)
 
     }
 
     scenario("sizeCheck: true; ageCheck: true") {
 
-      Await.result(
-      for {
-
       // prepare
-        genesis <- BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
-        unminedHashesSize <- HashGenerator.createUnminedHashesFuture(sizeCheckResultsInTrue = true)
-        sizeCheck <- miningUtil.sizeCheck()
-        ageCheck <- miningUtil.ageCheck()
+      Await.result(
+        for {
+          genesis <- BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
+          unminedHashesSize <- HashGenerator.createUnminedHashesFuture(sizeCheckResultsInTrue = true)
+        } yield {
 
-        // test
-        checkTriggers <- miningUtil.checkMiningTriggers()
+          val sizeCheck = Await.result(miningUtil.sizeCheck(), timeout)
+          sizeCheck shouldBe true
+          val ageCheck = Await.result(miningUtil.ageCheck(), timeout)
+          ageCheck shouldBe true
 
-      } yield {
+        }, timeout)
 
-        // verify preparation
-        sizeCheck shouldBe true
-        ageCheck shouldBe true
+      Await.result(
+        for {
+          checkTriggers <- miningUtil.checkMiningTriggers() // test
+        } yield {
 
-        // verify
-        checkTriggers shouldBe true
+          checkTriggers shouldBe true // verify
 
-      }
-        , timeout)
+        }, timeout)
 
     }
 
@@ -290,20 +257,18 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("no unmined hashes") {
 
+      // prepare
+      val currentUnmined = Await.result(ChainStorageServiceClient.unminedHashes(), timeout)
+      currentUnmined.hashes shouldBe 'isEmpty
+
       Await.result(
-      for {
-        currentUnmined <- ChainStorageServiceClient.unminedHashes() // prepare
-        sizeCheck <- miningUtil.sizeCheck() // test
-      } yield {
+        for {
+          sizeCheck <- miningUtil.sizeCheck() // test
+        } yield {
 
-        // verify prepare
-        currentUnmined.hashes shouldBe 'isEmpty
+          sizeCheck shouldBe false // verify
 
-        // verify
-        sizeCheck shouldBe false
-
-      }
-        , timeout)
+        }, timeout)
 
     }
 
@@ -312,12 +277,13 @@ class MiningUtilSpec extends ElasticSearchSpec {
       HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = false)
 
       Await.result(
-      for {
-        sizeCheck <- miningUtil.sizeCheck()
-      } yield {
-        sizeCheck shouldBe false
-      }
-      , timeout)
+        for {
+          sizeCheck <- miningUtil.sizeCheck()
+        } yield {
+
+          sizeCheck shouldBe false
+
+        }, timeout)
 
     }
 
@@ -326,12 +292,13 @@ class MiningUtilSpec extends ElasticSearchSpec {
       HashGenerator.createUnminedHashes(sizeCheckResultsInTrue = true)
 
       Await.result(
-      for {
-        sizeCheck <- miningUtil.sizeCheck()
-      } yield {
-        sizeCheck shouldBe true
-      }
-      , timeout)
+        for {
+          sizeCheck <- miningUtil.sizeCheck()
+        } yield {
+
+          sizeCheck shouldBe true
+
+        }, timeout)
 
     }
 
@@ -342,84 +309,84 @@ class MiningUtilSpec extends ElasticSearchSpec {
     scenario("no blocks, not even the genesis block") {
 
       Await.result(
-      for {
-        genesis <- ChainStorageServiceClient.getGenesisBlock // prepare
-        ageCheck <- miningUtil.ageCheck() // test
-      } yield {
+        for {
+          genesis <- ChainStorageServiceClient.getGenesisBlock // prepare
+          ageCheck <- miningUtil.ageCheck() // test
+        } yield {
 
-        genesis shouldBe None // verify prepare
-        ageCheck shouldBe false // verify
+          genesis shouldBe None // verify prepare
+          ageCheck shouldBe false // verify
 
-      }
-        , timeout)
+        }, timeout)
 
     }
 
     scenario("has only a genesis block (too new)") {
 
+      // prepare
+      Await.result(BlockGenerator.createGenesisBlock(), timeout)
+
       Await.result(
-      for {
-        genesis <- BlockGenerator.createGenesisBlock() // prepare
-        ageCheck <- miningUtil.ageCheck() // test
-      } yield {
-        ageCheck shouldBe false
-      }
-        , timeout)
+        for {
+          ageCheck <- miningUtil.ageCheck() // test
+        } yield {
+
+          ageCheck shouldBe false // verify
+
+        }, timeout)
 
     }
 
     scenario("has only a genesis block (old enough)") {
 
+      // prepare
+      Await.result(BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true), timeout)
+
       Await.result(
-      for {
-        genesis <- BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true) // prepare
-        ageCheck <- miningUtil.ageCheck() // test
-      } yield {
-        ageCheck shouldBe true
-      }
-        , timeout)
+        for {
+          ageCheck <- miningUtil.ageCheck() // test
+        } yield {
+
+          ageCheck shouldBe true // verify
+
+        }, timeout)
 
     }
 
     scenario("has genesis block and one regular block (too new)") {
 
-      Await.result(
-      for {
-
       // prepare
-        genesis <- BlockGenerator.createGenesisBlock()
-        fullBlock <- BlockGenerator.generateMinedBlock()
+      Await.result(BlockGenerator.createGenesisBlock(), timeout)
+      Await.result(BlockGenerator.generateMinedBlock(), timeout)
 
-        // test
-        ageCheck <- miningUtil.ageCheck()
+      Await.result(
+        for {
+          ageCheck <- miningUtil.ageCheck() // test
+        } yield {
 
-      } yield {
-        ageCheck shouldBe false
-      }
-        , timeout)
+          ageCheck shouldBe false // verify
+
+        }, timeout)
 
     }
 
     scenario("has genesis block and one regular block (old enough)") {
 
+      // prepare
       val mineEveryXSeconds = Config.mineEveryXSeconds
       val createdBlock = DateUtil.nowUTC.minusSeconds(mineEveryXSeconds)
 
+      val genesis = Await.result(BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true), timeout)
+      Await.result(BlockGenerator.generateFullBlock(genesis.hash, genesis.number, created = createdBlock), timeout)
+
       Await.result(
-      for {
+        for {
+          ageCheck <- miningUtil.ageCheck() // test
+        } yield {
 
-      // prepare
-        genesis <- BlockGenerator.createGenesisBlock(ageCheckResultsInTrue = true)
-        fullBlock <- BlockGenerator.generateFullBlock(genesis.hash, genesis.number, created = createdBlock)
+          ageCheck shouldBe true // verify
 
-        // test
-        ageCheck <- miningUtil.ageCheck()
-
-      } yield {
-        // verify
-        ageCheck shouldBe true
-      }
-        , timeout)
+        }, timeout)
 
     }
 
@@ -429,68 +396,60 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
     scenario("no blocks, not even the genesis block") {
 
+      val genesis = Await.result(ChainStorageServiceClient.getGenesisBlock, timeout)
+      genesis shouldBe None
+
       Await.result(
-      for {
-        genesis <- ChainStorageServiceClient.getGenesisBlock // prepare
-        mostRecent <- miningUtil.mostRecentBlock() // test
-      } yield {
+        for {
+          mostRecent <- miningUtil.mostRecentBlock() // test
+        } yield {
 
-        genesis shouldBe None // verify preparation
-        mostRecent shouldBe None // verify
+          mostRecent shouldBe None // verify
 
-      }
-        , timeout)
+        }, timeout)
 
     }
 
     scenario("has only a genesis block") {
 
-      Await.result(
-      for {
-
       // prepare
-        genesis <- BlockGenerator.createGenesisBlock()
+      val genesis = Await.result(BlockGenerator.createGenesisBlock(), timeout)
 
-        // test
-        mostRecentOpt <- miningUtil.mostRecentBlock()
+      Await.result(
+        for {
+          mostRecentOpt <- miningUtil.mostRecentBlock() // test
+        } yield {
 
-      } yield {
+          // verify
+          mostRecentOpt.isDefined shouldBe true
 
-        // verify
-        mostRecentOpt.isDefined shouldBe true
+          val mostRecent = mostRecentOpt.get
+          val expected = BaseBlockInfo(genesis.hash, genesis.number, genesis.created, genesis.version)
+          mostRecent shouldBe expected
 
-        val mostRecent = mostRecentOpt.get
-        val expected = BaseBlockInfo(genesis.hash, genesis.number, genesis.created, genesis.version)
-        mostRecent shouldBe expected
-
-      }
-        , timeout)
+        }, timeout)
 
     }
 
     scenario("has genesis block and one regular block") {
 
-      Await.result(
-      for {
-
       // prepare
-        genesis <- BlockGenerator.createGenesisBlock()
-        block <- BlockGenerator.generateMinedBlock()
+      Await.result(BlockGenerator.createGenesisBlock(), timeout)
+      val block = Await.result(BlockGenerator.generateMinedBlock(), timeout)
 
-        // test
-        mostRecentOpt <- miningUtil.mostRecentBlock()
+      Await.result(
+        for {
+          mostRecentOpt <- miningUtil.mostRecentBlock() // test
+        } yield {
 
-      } yield {
+          // verify
+          mostRecentOpt.isDefined shouldBe true
 
-        // verify
-        mostRecentOpt.isDefined shouldBe true
+          val mostRecent = mostRecentOpt.get
+          val expected = BaseBlockInfo(block.hash, block.number, block.created, block.version)
+          mostRecent shouldBe expected
 
-        val mostRecent = mostRecentOpt.get
-        val expected = BaseBlockInfo(block.hash, block.number, block.created, block.version)
-        mostRecent shouldBe expected
-
-      }
-        , timeout)
+        }, timeout)
 
     }
 
