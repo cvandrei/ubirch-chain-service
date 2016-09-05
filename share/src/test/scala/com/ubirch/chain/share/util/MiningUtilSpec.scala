@@ -4,7 +4,7 @@ import com.ubirch.chain.config.Config
 import com.ubirch.chain.share.testutil.{BlockGenerator, HashGenerator}
 import com.ubirch.chain.test.base.ElasticSearchSpec
 import com.ubirch.client.storage.ChainStorageServiceClient
-import org.joda.time.DateTime
+import com.ubirch.util.date.DateUtil
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -403,7 +403,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
     scenario("has genesis block and one regular block (old enough)") {
 
       val mineEveryXSeconds = Config.mineEveryXSeconds
-      val createdBlock = DateTime.now.minusSeconds(mineEveryXSeconds)
+      val createdBlock = DateUtil.nowUTC.minusSeconds(mineEveryXSeconds)
 
       Await.result(
       for {

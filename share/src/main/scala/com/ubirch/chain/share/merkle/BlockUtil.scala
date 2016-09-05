@@ -4,6 +4,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.ubirch.backend.chain.model.{FullBlock, GenesisBlock}
 import com.ubirch.util.crypto.hash.HashUtil
 import com.ubirch.util.crypto.hash.HashUtil._
+import com.ubirch.util.date.DateUtil
 import org.joda.time.DateTime
 
 /**
@@ -64,7 +65,7 @@ object BlockUtil extends LazyLogging {
 
     val hash = blockHash(hashes, previousBlockHash)
     FullBlock(hash,
-      DateTime.now,
+      DateUtil.nowUTC,
       "1.0",
       previousBlockHash,
       number,
@@ -75,7 +76,7 @@ object BlockUtil extends LazyLogging {
 
   def genesisBlock(): GenesisBlock = {
 
-    val now = DateTime.now
+    val now = DateUtil.nowUTC
     val hashes = HashUtil.randomSha256Hashes(500) :+ (now.getMillis + "ubirchChainService")
     val hash = BlockUtil.toMerkleTree(hashes).hash()
 
