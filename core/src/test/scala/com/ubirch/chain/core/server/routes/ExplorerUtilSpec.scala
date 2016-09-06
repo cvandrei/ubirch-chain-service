@@ -25,11 +25,8 @@ class ExplorerUtilSpec extends ElasticSearchSpec {
 
     scenario("query unknown hash") {
 
-      Await.result(for {
-        res <- explorerUtil.eventHash("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff")
-      } yield {
-        res should be(None)
-      }, timeoutFullTest)
+      val res = Await.result(explorerUtil.eventHash("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"), timeout)
+      res should be(None)
 
     }
 
@@ -66,14 +63,8 @@ class ExplorerUtilSpec extends ElasticSearchSpec {
 
     scenario("query unknown hash") {
 
-      Await.result(for {
-        res <- explorerUtil.blockInfo("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff") // test
-      } yield {
-
-        // verify
-        res should be(None)
-
-      }, timeoutFullTest)
+      val res = Await.result(explorerUtil.blockInfo("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"), timeout)
+      res should be(None)
 
     }
 
@@ -83,15 +74,12 @@ class ExplorerUtilSpec extends ElasticSearchSpec {
       Await.result(BlockGenerator.createGenesisBlock(), timeout)
       val minedBlock = Await.result(BlockGenerator.generateMinedBlock(), timeout)
 
-      Await.result(for {
-        block <- explorerUtil.blockInfo(minedBlock.hash) // test
-      } yield {
+      // test
+      val block = Await.result(explorerUtil.blockInfo(minedBlock.hash), timeout)
 
-        // verify
-        block shouldNot be(None)
-        block.get.hash shouldEqual minedBlock.hash
-
-      }, timeoutFullTest)
+      // verify
+      block shouldNot be(None)
+      block.get.hash shouldEqual minedBlock.hash
 
     }
 
@@ -101,15 +89,8 @@ class ExplorerUtilSpec extends ElasticSearchSpec {
 
     scenario("query unknown hash") {
 
-      // test
-      Await.result(for {
-        res <- explorerUtil.blockInfoByPreviousBlockHash("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff")
-      } yield {
-
-        // verify
-        res should be(None)
-
-      }, timeoutFullTest)
+      val res = Await.result(explorerUtil.blockInfoByPreviousBlockHash("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"), timeout)
+      res should be(None)
 
     }
 
@@ -119,17 +100,14 @@ class ExplorerUtilSpec extends ElasticSearchSpec {
       Await.result(BlockGenerator.createGenesisBlock(), timeout)
       val fullBlock = Await.result(BlockGenerator.generateMinedBlock(), timeout)
 
-      Await.result(for {
-        blockOpt <- explorerUtil.blockInfoByPreviousBlockHash(fullBlock.previousBlockHash) // test
-      } yield {
+      // test
+      val blockOpt = Await.result(explorerUtil.blockInfoByPreviousBlockHash(fullBlock.previousBlockHash), timeout)
 
-        // verify
-        blockOpt shouldBe 'isDefined
-        val block = blockOpt.get
-        block.hash shouldEqual fullBlock.hash
-        block.previousBlockHash shouldEqual fullBlock.previousBlockHash
-
-      }, timeoutFullTest)
+      // verify
+      blockOpt shouldBe 'isDefined
+      val block = blockOpt.get
+      block.hash shouldEqual fullBlock.hash
+      block.previousBlockHash shouldEqual fullBlock.previousBlockHash
 
     }
 
@@ -139,15 +117,8 @@ class ExplorerUtilSpec extends ElasticSearchSpec {
 
     scenario("query unknown hash") {
 
-      Await.result(for {
-      // test
-        res <- explorerUtil.fullBlock("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff")
-      } yield {
-
-        // verify
-        res should be(None)
-
-      }, timeoutFullTest)
+      val res = Await.result(explorerUtil.fullBlock("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"), timeout)
+      res should be(None)
 
     }
 
@@ -159,22 +130,18 @@ class ExplorerUtilSpec extends ElasticSearchSpec {
       minedBlock.hashes shouldBe 'isDefined
       minedBlock.hashes.get.isEmpty shouldBe false
 
-      Await.result(
-        for {
-          blockOpt <- explorerUtil.fullBlock(minedBlock.hash) // test
-        } yield {
+      // test
+      val blockOpt = Await.result(explorerUtil.fullBlock(minedBlock.hash), timeout)
 
-          // verify
-          blockOpt shouldBe 'isDefined
-          val block = blockOpt.get
+      // verify
+      blockOpt shouldBe 'isDefined
+      val block = blockOpt.get
 
-          block.hash shouldEqual minedBlock.hash
-          block.hashes shouldBe 'isDefined
-          block.anchors shouldBe 'isEmpty
-          block.hashes shouldBe 'isDefined
-          block.hashes.get shouldEqual minedBlock.hashes.get
-
-        }, timeoutFullTest)
+      block.hash shouldEqual minedBlock.hash
+      block.hashes shouldBe 'isDefined
+      block.anchors shouldBe 'isEmpty
+      block.hashes shouldBe 'isDefined
+      block.hashes.get shouldEqual minedBlock.hashes.get
 
     }
 
