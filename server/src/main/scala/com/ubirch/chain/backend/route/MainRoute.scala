@@ -13,7 +13,7 @@ class MainRoute {
 
   val hash = new HashRoute {}
 
-  val chainExplorer = new ChainExplorerRoute {}
+  val explorer = new ExplorerRoute {}
 
   val welcome = new WelcomeRoute {}
 
@@ -24,7 +24,7 @@ class MainRoute {
         pathPrefix(chainService) {
 
           hash.route ~
-            chainExplorer.route
+            explorer.route
 
         }
       }

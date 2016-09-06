@@ -9,7 +9,7 @@ import scala.concurrent.Future
   * author: cvandrei
   * since: 2016-08-17
   */
-class ChainExplorerRouteUtil {
+class ExplorerUtil {
 
   /**
     * Gives us the BlockInfo an eventHash is included in.

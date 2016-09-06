@@ -13,7 +13,7 @@ import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
   * author: cvandrei
   * since: 2016-08-22
   */
-class ChainExplorerRouteSpec extends RouteSpec {
+class ExplorerRouteSpec extends RouteSpec {
 
   private val routes = (new MainRoute).myRoute
   private val hashRouteUtil = new HashRouteUtil
