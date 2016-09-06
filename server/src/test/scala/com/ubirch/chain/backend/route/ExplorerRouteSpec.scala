@@ -58,7 +58,7 @@ class ExplorerRouteSpec extends RouteSpec {
       Get(RouteConstants.urlExplorerEventHash(hash)) ~> routes ~> check {
         // verify
         status shouldEqual OK
-        responseAs[HashInfo].hash shouldEqual hash
+        responseAs[BlockInfo].hash shouldEqual blockOpt.get.hash
       }
 
     }
