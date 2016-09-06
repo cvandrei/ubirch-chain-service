@@ -2,18 +2,19 @@ package com.ubirch.chain.backend.route
 
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.model.{HttpEntity, HttpResponse}
-import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.ubirch.chain.core.server.routes.ChainExplorerRouteUtil
 import com.ubirch.chain.core.server.util.RouteConstants
 import com.ubirch.util.json.MyJsonProtocol
+import com.ubirch.util.rest.akka.directives.CORSDirective
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
 /**
   * author: cvandrei
   * since: 2016-07-28
   */
-trait ChainExplorerRoute extends MyJsonProtocol {
+trait ChainExplorerRoute extends MyJsonProtocol
+  with CORSDirective {
 
   private val chainExplorerRouteUtil = new ChainExplorerRouteUtil
 
@@ -22,34 +23,38 @@ trait ChainExplorerRoute extends MyJsonProtocol {
 
   val route: Route = {
 
-    (get & pathPrefix(RouteConstants.explorer)) {
+    respondWithCORS {
 
-      pathPrefix(RouteConstants.eventHash / Segment) { hash =>
+      (get & pathPrefix(RouteConstants.explorer)) {
 
-        onSuccess(chainExplorerRouteUtil.eventHash(hash)) {
-          case None => complete(unknownEventHash)
-          case Some(hashInfo) => complete(hashInfo)
-        }
+        pathPrefix(RouteConstants.eventHash / Segment) { hash =>
 
-      } ~ path(RouteConstants.blockInfo / Segment) { hash =>
+          onSuccess(chainExplorerRouteUtil.eventHash(hash)) {
+            case None => complete(unknownEventHash)
+            case Some(hashInfo) => complete(hashInfo)
+          }
 
-        onSuccess(chainExplorerRouteUtil.blockInfo(hash)) {
-          case None => complete(unknownBlockHash)
-          case Some(blockInfo) => complete(blockInfo)
-        }
+        } ~ path(RouteConstants.blockInfo / Segment) { hash =>
 
-      } ~ path(RouteConstants.blockInfoByPrevious / Segment) { hash =>
+          onSuccess(chainExplorerRouteUtil.blockInfo(hash)) {
+            case None => complete(unknownBlockHash)
+            case Some(blockInfo) => complete(blockInfo)
+          }
 
-        onSuccess(chainExplorerRouteUtil.blockInfoByPreviousBlockHash(hash)) {
-          case None => complete(unknownBlockHash)
-          case Some(blockInfo) => complete(blockInfo)
-        }
+        } ~ path(RouteConstants.blockInfoByPrevious / Segment) { hash =>
 
-      } ~ path(RouteConstants.fullBlock / Segment) { hash =>
+          onSuccess(chainExplorerRouteUtil.blockInfoByPreviousBlockHash(hash)) {
+            case None => complete(unknownBlockHash)
+            case Some(blockInfo) => complete(blockInfo)
+          }
 
-        onSuccess(chainExplorerRouteUtil.fullBlock(hash)) {
-          case None => complete(unknownBlockHash)
-          case Some(fullBlock) => complete(fullBlock)
+        } ~ path(RouteConstants.fullBlock / Segment) { hash =>
+
+          onSuccess(chainExplorerRouteUtil.fullBlock(hash)) {
+            case None => complete(unknownBlockHash)
+            case Some(fullBlock) => complete(fullBlock)
+          }
+
         }
 
       }

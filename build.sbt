@@ -29,6 +29,10 @@ lazy val commonSettings = Seq(
 
 )
 
+/*
+ * MODULES
+ ********************************************************/
+
 lazy val chainService = (project in file("."))
   .settings(commonSettings: _*)
   .aggregate(server, core, config, testUtil, testBase, share)
@@ -95,14 +99,9 @@ lazy val share = project
     )
   )
 
-val akkaV = "2.4.9-RC2"
-val scalaTestV = "3.0.0"
-val json4sV = "3.4.0"
-val configV = "1.3.0"
-val notaryServiceV = "0.3.0-SNAPSHOT"
-val storageServiceV = "0.0.1-SNAPSHOT"
-val ubirchUtilCryptoV = "0.2-SNAPSHOT"
-val ubirchUtilJsonAutoConvertV = "0.1-SNAPSHOT"
+/*
+ * MODULE DEPENDENCIES
+ ********************************************************/
 
 lazy val depServer = Seq(
 
@@ -121,7 +120,8 @@ lazy val depServer = Seq(
   "ch.qos.logback" % "logback-core" % "1.1.3",
   "org.slf4j" % "slf4j-api" % "1.7.12",
 
-  ubirchUtilJsonAutoConvert
+  ubirchUtilJsonAutoConvert,
+  ubirchUtilRestAkkaHttp
 
 )
 
@@ -149,6 +149,19 @@ lazy val depShare = Seq(
   ubirchStorageClient
 ) ++ json4s
 
+/*
+ * DEPENDENCIES
+ ********************************************************/
+
+val akkaV = "2.4.9-RC2"
+val scalaTestV = "3.0.0"
+val json4sV = "3.4.0"
+val configV = "1.3.0"
+val notaryServiceV = "0.3.0-SNAPSHOT"
+val storageServiceV = "0.0.1-SNAPSHOT"
+val ubirchUtilCryptoV = "0.2-SNAPSHOT"
+val ubirchUtilJsonAutoConvertV = "0.1-SNAPSHOT"
+
 lazy val json4s = Seq(
   json4sCore,
   json4sJackson,
@@ -167,6 +180,7 @@ lazy val typesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-logging" 
 
 lazy val ubirchUtilConfig = "com.ubirch.util" %% "config" % "0.1-SNAPSHOT"
 lazy val ubirchUtilDate = "com.ubirch.util" %% "date" % "0.1-SNAPSHOT"
+lazy val ubirchUtilRestAkkaHttp = "com.ubirch.util" %% "rest-akka-http" % "0.1-SNAPSHOT"
 lazy val ubirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
 lazy val ubirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServiceV
 lazy val ubirchStorageTestUtil = "com.ubirch.backend.storage" %% "test-util" % storageServiceV
@@ -174,9 +188,17 @@ lazy val ubirchStorageModel = "com.ubirch.backend.storage" %% "model" % storageS
 lazy val ubirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
 lazy val ubirchUtilJsonAutoConvert = "com.ubirch.util" %% "json-auto-convert" % ubirchUtilJsonAutoConvertV
 
+/*
+ * RESOLVER
+ ********************************************************/
+
 lazy val resolverSeebergerJson = Resolver.bintrayRepo("hseeberger", "maven")
 lazy val resolverHasher = "RoundEights" at "http://maven.spikemark.net/roundeights"
 lazy val resolverBeeClient = Resolver.bintrayRepo("rick-beton", "maven")
+
+/*
+ * MISC
+ ********************************************************/
 
 lazy val mergeStrategy = Seq(
   assemblyMergeStrategy in assembly := {
