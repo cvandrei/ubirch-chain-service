@@ -17,7 +17,8 @@ import scala.language.postfixOps
   */
 class MiningUtilSpec extends ElasticSearchSpec {
 
-  private val timeout = 60 seconds
+  private val timeout = 30 seconds
+  private val timeoutLong = 120 seconds
   private val miningUtil = new MiningUtil
 
   feature("MiningUtil.blockCheck") {
@@ -179,11 +180,9 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
       // prepare
       Await.result(BlockGenerator.createGenesisBlock(), timeout)
-      Await.result(HashGenerator.createUnminedHashesFuture(sizeCheckResultsInTrue = true), timeout)
-      val sizeCheck = Await.result(miningUtil.sizeCheck(), timeout)
-      sizeCheck shouldBe true
-      val ageCheck = Await.result(miningUtil.ageCheck(), timeout)
-      ageCheck shouldBe false
+      Await.result(HashGenerator.createUnminedHashesFuture(sizeCheckResultsInTrue = true), timeoutLong)
+      Await.result(miningUtil.sizeCheck(), timeout) shouldBe true
+      Await.result(miningUtil.ageCheck(), timeout) shouldBe false
 
       Await.result(
         for {
@@ -193,7 +192,6 @@ class MiningUtilSpec extends ElasticSearchSpec {
           checkTriggers shouldBe true // verify
 
         }, timeout)
-
 
     }
 
