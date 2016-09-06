@@ -24,7 +24,7 @@ object HashGenerator extends UnitSpec
   /** defines which hash algorithm to use when creating event hashes */
   private val hashAlgorithm = "SHA-512"
 
-  private val timeout = 30 seconds
+  private val timeout = 60 seconds
 
   /**
     * Creates enough random hashes to trigger mining based on the total size of all unmined hashes.
