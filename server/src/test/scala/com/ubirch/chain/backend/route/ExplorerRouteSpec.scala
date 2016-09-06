@@ -9,6 +9,10 @@ import com.ubirch.chain.test.base.RouteSpec
 import com.ubirch.chain.test.util.BlockGenerator
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import scala.language.postfixOps
+
 /**
   * author: cvandrei
   * since: 2016-08-22
@@ -17,6 +21,7 @@ class ExplorerRouteSpec extends RouteSpec {
 
   private val routes = (new MainRoute).myRoute
   private val hashRouteUtil = new HashRouteUtil
+  private val testTimeout = 120 seconds
 
   feature(s"call hash explorer route: ${RouteConstants.urlExplorerEventHashPrefix}/:hash") {
 
@@ -37,7 +42,7 @@ class ExplorerRouteSpec extends RouteSpec {
 
       // prepare
       val data = HashRequest("""{"foo": {"bar": 42}}""")
-      for {
+      Await.result(for {
         hashRes <- hashRouteUtil.hash(data)
       } yield {
 
@@ -51,7 +56,7 @@ class ExplorerRouteSpec extends RouteSpec {
           status shouldEqual OK
           responseAs[HashInfo].hash shouldEqual hash
         }
-      }
+      }, testTimeout)
 
     }
 
@@ -75,7 +80,7 @@ class ExplorerRouteSpec extends RouteSpec {
     scenario("GET known hash") {
 
       // prepare
-      for {
+      Await.result(for {
         genesis <- BlockGenerator.createGenesisBlock()
         block <- BlockGenerator.generateMinedBlock()
       } yield {
@@ -89,7 +94,7 @@ class ExplorerRouteSpec extends RouteSpec {
           responseAs[BlockInfo].hash shouldEqual hash
         }
 
-      }
+      }, testTimeout)
 
     }
 
@@ -113,7 +118,7 @@ class ExplorerRouteSpec extends RouteSpec {
     scenario("GET known hash") {
 
       // prepare
-      for {
+      Await.result(for {
         genesis <- BlockGenerator.createGenesisBlock()
         fullBlock <- BlockGenerator.generateMinedBlock()
       } yield {
@@ -129,7 +134,7 @@ class ExplorerRouteSpec extends RouteSpec {
 
         }
 
-      }
+      }, testTimeout)
 
     }
 
@@ -153,7 +158,7 @@ class ExplorerRouteSpec extends RouteSpec {
     scenario("GET known hash") {
 
       // prepare
-      for {
+      Await.result(for {
 
         genesis <- BlockGenerator.createGenesisBlock()
         block <- BlockGenerator.generateMinedBlock()
@@ -173,7 +178,7 @@ class ExplorerRouteSpec extends RouteSpec {
 
         }
 
-      }
+      }, testTimeout)
 
     }
 
