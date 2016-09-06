@@ -58,7 +58,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
         } yield {
 
           // verify
-          blockCheck shouldBe Some
+          blockCheck shouldBe 'isDefined
           blockCheck.get.previousBlockHash shouldBe genesis.hash
 
         }, timeout)
