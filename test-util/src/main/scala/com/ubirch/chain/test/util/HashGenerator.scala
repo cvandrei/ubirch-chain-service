@@ -70,6 +70,7 @@ object HashGenerator extends UnitSpec
     val hashedData = randomHashes map (HashedData(_))
     hashedData foreach ChainStorageServiceClient.storeHash
 
+    // TODO add previously existing hashes to expected size
     val size = BlockUtil.size(randomHashes)
     waitUntilHashesPersisted(size)
 
