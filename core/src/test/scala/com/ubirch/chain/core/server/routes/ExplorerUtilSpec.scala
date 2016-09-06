@@ -116,11 +116,11 @@ class ExplorerUtilSpec extends ElasticSearchSpec {
     scenario("query known block hash") {
 
       // prepare
-      val genesis = Await.result(BlockGenerator.createGenesisBlock(), timeout)
+      Await.result(BlockGenerator.createGenesisBlock(), timeout)
       val fullBlock = Await.result(BlockGenerator.generateMinedBlock(), timeout)
 
       Await.result(for {
-        blockOpt <- explorerUtil.blockInfoByPreviousBlockHash(genesis.hash) // test
+        blockOpt <- explorerUtil.blockInfoByPreviousBlockHash(fullBlock.previousBlockHash) // test
       } yield {
 
         // verify
