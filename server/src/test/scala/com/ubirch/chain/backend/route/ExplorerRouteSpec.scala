@@ -56,7 +56,7 @@ class ExplorerRouteSpec extends RouteSpec {
 
   }
 
-  feature(s"call hash explorer route: ${RouteConstants.urlExplorerBlockInfoPrefix}/:hash") {
+  feature(s"call blockInfo explorer route: ${RouteConstants.urlExplorerBlockInfoPrefix}/:hash") {
 
     scenario("GET without hash in address") {
       Get(RouteConstants.urlExplorerBlockInfo("")) ~> Route.seal(routes) ~> check {
@@ -91,7 +91,7 @@ class ExplorerRouteSpec extends RouteSpec {
 
   }
 
-  feature(s"call hash explorer route: ${RouteConstants.urlExplorerBlockInfoByPreviousPrefix}/:hash") {
+  feature(s"call byPreviousBlockHash explorer route: ${RouteConstants.urlExplorerBlockInfoByPreviousPrefix}/:hash") {
 
     scenario("GET without hash in address") {
       Get(RouteConstants.urlExplorerBlockInfoByPrevious("")) ~> Route.seal(routes) ~> check {
@@ -126,7 +126,7 @@ class ExplorerRouteSpec extends RouteSpec {
 
   }
 
-  feature(s"call hash explorer route: ${RouteConstants.urlExplorerFullBlockPrefix}/:hash") {
+  feature(s"call fullBlock explorer route: ${RouteConstants.urlExplorerFullBlockPrefix}/:hash") {
 
     scenario("GET without hash in address") {
       Get(RouteConstants.urlExplorerFullBlock("")) ~> Route.seal(routes) ~> check {
