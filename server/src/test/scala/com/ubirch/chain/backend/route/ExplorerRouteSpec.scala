@@ -47,6 +47,7 @@ class ExplorerRouteSpec extends RouteSpec {
 
         // test
         Get(RouteConstants.urlExplorerEventHash(hash)) ~> routes ~> check {
+          // verify
           status shouldEqual OK
           responseAs[HashInfo].hash shouldEqual hash
         }
@@ -73,6 +74,7 @@ class ExplorerRouteSpec extends RouteSpec {
 
     scenario("GET known hash") {
 
+      // prepare
       for {
         genesis <- BlockGenerator.createGenesisBlock()
         block <- BlockGenerator.generateMinedBlock()
@@ -80,7 +82,9 @@ class ExplorerRouteSpec extends RouteSpec {
 
         val hash = block.hash
 
+        // test
         Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
+          // verify
           status shouldEqual OK
           responseAs[BlockInfo].hash shouldEqual hash
         }
@@ -108,16 +112,21 @@ class ExplorerRouteSpec extends RouteSpec {
 
     scenario("GET known hash") {
 
+      // prepare
       for {
         genesis <- BlockGenerator.createGenesisBlock()
         fullBlock <- BlockGenerator.generateMinedBlock()
       } yield {
 
+        // test
         Get(RouteConstants.urlExplorerBlockInfoByPrevious(fullBlock.previousBlockHash)) ~> routes ~> check {
+
+          // verify
           status shouldEqual OK
           val resBlock = responseAs[BlockInfo]
           resBlock.hash shouldEqual fullBlock.hash
           resBlock.previousBlockHash shouldEqual fullBlock.previousBlockHash
+
         }
 
       }
@@ -143,6 +152,7 @@ class ExplorerRouteSpec extends RouteSpec {
 
     scenario("GET known hash") {
 
+      // prepare
       for {
 
         genesis <- BlockGenerator.createGenesisBlock()
@@ -152,11 +162,15 @@ class ExplorerRouteSpec extends RouteSpec {
 
         val hash = block.hash
 
+        // test
         Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
+
+          // verify
           status shouldEqual OK
           val fullBlock = responseAs[FullBlock]
           fullBlock.hash shouldEqual hash
-          fullBlock.hashes.get contains block.hashes.get.head
+          fullBlock.hashes.get shouldEqual block.hashes.get
+
         }
 
       }
