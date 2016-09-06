@@ -4,9 +4,9 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Route
 import com.ubirch.backend.chain.model.{BlockInfo, FullBlock, HashInfo, HashRequest}
 import com.ubirch.chain.core.server.util.RouteConstants
-import com.ubirch.chain.share.util.HashRouteUtil
+import com.ubirch.chain.share.util.{HashRouteUtil, MiningUtil}
 import com.ubirch.chain.test.base.RouteSpec
-import com.ubirch.chain.test.util.BlockGenerator
+import com.ubirch.chain.test.util.{BlockGenerator, HashGenerator}
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
 import scala.concurrent.Await
@@ -21,7 +21,9 @@ class ExplorerRouteSpec extends RouteSpec {
 
   private val routes = (new MainRoute).myRoute
   private val hashRouteUtil = new HashRouteUtil
-  private val testTimeout = 120 seconds
+  private val miningUtil = new MiningUtil
+
+  private val timeoutShort = 10 seconds
 
   feature(s"call hash explorer route: ${RouteConstants.urlExplorerEventHashPrefix}/:hash") {
 
@@ -42,21 +44,22 @@ class ExplorerRouteSpec extends RouteSpec {
 
       // prepare
       val data = HashRequest("""{"foo": {"bar": 42}}""")
-      Await.result(for {
-        hashRes <- hashRouteUtil.hash(data)
-      } yield {
+      val hashRes = Await.result(hashRouteUtil.hash(data), timeoutShort)
+      hashRes shouldNot be(None)
+      val hash = hashRes.get.hash
 
-        hashRes shouldNot be(None)
-        val hash = hashRes.get.hash
-        Thread.sleep(500)
+      HashGenerator.createXManyUnminedHashes(200)
+      Await.result(BlockGenerator.createGenesisBlock(), timeoutShort)
 
-        // test
-        Get(RouteConstants.urlExplorerEventHash(hash)) ~> routes ~> check {
-          // verify
-          status shouldEqual OK
-          responseAs[HashInfo].hash shouldEqual hash
-        }
-      }, testTimeout)
+      val blockOpt = Await.result(miningUtil.mine(), timeoutShort)
+      Await.result(miningUtil.waitUntilBlockIndexed(blockOpt.get.hash), timeoutShort)
+
+      // test
+      Get(RouteConstants.urlExplorerEventHash(hash)) ~> routes ~> check {
+        // verify
+        status shouldEqual OK
+        responseAs[HashInfo].hash shouldEqual hash
+      }
 
     }
 
@@ -80,21 +83,17 @@ class ExplorerRouteSpec extends RouteSpec {
     scenario("GET known hash") {
 
       // prepare
-      Await.result(for {
-        genesis <- BlockGenerator.createGenesisBlock()
-        block <- BlockGenerator.generateMinedBlock()
-      } yield {
+      Await.result(BlockGenerator.createGenesisBlock(), timeoutShort)
+      val minedBlock = Await.result(BlockGenerator.generateMinedBlock(), timeoutShort)
 
-        val hash = block.hash
+      val hash = minedBlock.hash
 
-        // test
-        Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
-          // verify
-          status shouldEqual OK
-          responseAs[BlockInfo].hash shouldEqual hash
-        }
-
-      }, testTimeout)
+      // test
+      Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
+        // verify
+        status shouldEqual OK
+        responseAs[BlockInfo].hash shouldEqual hash
+      }
 
     }
 
@@ -118,23 +117,19 @@ class ExplorerRouteSpec extends RouteSpec {
     scenario("GET known hash") {
 
       // prepare
-      Await.result(for {
-        genesis <- BlockGenerator.createGenesisBlock()
-        fullBlock <- BlockGenerator.generateMinedBlock()
-      } yield {
+      Await.result(BlockGenerator.createGenesisBlock(), timeoutShort)
+      val minedBlock = Await.result(BlockGenerator.generateMinedBlock(), timeoutShort)
 
-        // test
-        Get(RouteConstants.urlExplorerBlockInfoByPrevious(fullBlock.previousBlockHash)) ~> routes ~> check {
+      // test
+      Get(RouteConstants.urlExplorerBlockInfoByPrevious(minedBlock.previousBlockHash)) ~> routes ~> check {
 
-          // verify
-          status shouldEqual OK
-          val resBlock = responseAs[BlockInfo]
-          resBlock.hash shouldEqual fullBlock.hash
-          resBlock.previousBlockHash shouldEqual fullBlock.previousBlockHash
+        // verify
+        status shouldEqual OK
+        val resBlock = responseAs[BlockInfo]
+        resBlock.hash shouldEqual minedBlock.hash
+        resBlock.previousBlockHash shouldEqual minedBlock.previousBlockHash
 
-        }
-
-      }, testTimeout)
+      }
 
     }
 
@@ -158,27 +153,21 @@ class ExplorerRouteSpec extends RouteSpec {
     scenario("GET known hash") {
 
       // prepare
-      Await.result(for {
+      Await.result(BlockGenerator.createGenesisBlock(), timeoutShort)
+      val minedBlock = Await.result(BlockGenerator.generateMinedBlock(), timeoutShort)
 
-        genesis <- BlockGenerator.createGenesisBlock()
-        block <- BlockGenerator.generateMinedBlock()
+      val hash = minedBlock.hash
 
-      } yield {
+      // test
+      Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
 
-        val hash = block.hash
+        // verify
+        status shouldEqual OK
+        val fullBlock = responseAs[FullBlock]
+        fullBlock.hash shouldEqual hash
+        fullBlock.hashes.get shouldEqual minedBlock.hashes.get
 
-        // test
-        Get(RouteConstants.urlExplorerFullBlock(hash)) ~> routes ~> check {
-
-          // verify
-          status shouldEqual OK
-          val fullBlock = responseAs[FullBlock]
-          fullBlock.hash shouldEqual hash
-          fullBlock.hashes.get shouldEqual block.hashes.get
-
-        }
-
-      }, testTimeout)
+      }
 
     }
 
