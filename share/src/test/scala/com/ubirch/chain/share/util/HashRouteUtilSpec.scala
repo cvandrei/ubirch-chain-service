@@ -5,7 +5,9 @@ import com.ubirch.chain.test.base.ElasticSearchSpec
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.util.crypto.hash.HashUtil
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 /**
   * author: cvandrei
@@ -15,20 +17,21 @@ class HashRouteUtilSpec extends ElasticSearchSpec {
 
   private val hashRouteUtil = new HashRouteUtil
 
+  private val timeout = 10 seconds
+
   feature("HashRouteUtil.hash") {
 
     scenario("invalid input: empty string") {
 
       // test
-      val hashResponse = hashRouteUtil.hash(HashRequest(""))
+      val hashResponse = Await.result(hashRouteUtil.hash(HashRequest("")), timeout)
 
       // verify
       hashResponse map (_ shouldBe None)
       Thread.sleep(500)
 
-      ChainStorageServiceClient.unminedHashes() map { unmined =>
-        unmined.hashes shouldBe 'isEmpty
-      }
+      val unmined = Await.result(ChainStorageServiceClient.unminedHashes(), timeout)
+      unmined.hashes shouldBe 'isEmpty
 
     }
 
@@ -37,56 +40,43 @@ class HashRouteUtilSpec extends ElasticSearchSpec {
       // prepare
       val input = HashRequest("""{"foo": {"bar": 42}}""")
 
-      for {
-        // test
-        res <- hashRouteUtil.hash(input)
-      } yield {
+      val res = Await.result(hashRouteUtil.hash(input), timeout)
+      Thread.sleep(1000)
 
-        // verify
-        Thread.sleep(500)
-        val expectedHash = HashUtil.sha256HexString(input.data)
-        res shouldBe Some(HashRequest(expectedHash))
+      // verify
+      val expectedHash = HashUtil.sha256HexString(input.data)
+      res.get.hash shouldBe expectedHash
 
-        ChainStorageServiceClient.unminedHashes() map { unmined =>
-          val hashes = unmined.hashes
-          hashes should have length 1
-          hashes should contain(expectedHash)
-        }
-
-      }
+      val unmined = Await.result(ChainStorageServiceClient.unminedHashes(), timeout)
+      val hashes = unmined.hashes
+      hashes should have length 1
+      hashes should contain(expectedHash)
 
     }
 
-    scenario("send same input twice -> same hash stored twice") {
+  }
 
-      // prepare
-      val input = HashRequest("""{"foo": {"bar": 42}}""")
+  scenario("send same input twice -> same hash stored once") {
 
-      for {
-        // test: send input: 1st time
-        res1 <- hashRouteUtil.hash(input)
-        // test: send input: 2nd time
-        res2 <- hashRouteUtil.hash(input)
-      } yield {
+    // prepare
+    val input = HashRequest("""{"foo": {"bar": 42}}""")
 
-        // verify
-        val expectedHash = HashUtil.sha256HexString(input.data)
-        res1 shouldBe Some(HashRequest(expectedHash))
-        res2 shouldBe Some(HashRequest(expectedHash))
+    // test: send input: 1st time
+    val res1 = Await.result(hashRouteUtil.hash(input), timeout)
+    // test: send input: 2nd time
+    val res2 = Await.result(hashRouteUtil.hash(input), timeout)
 
-        Thread.sleep(500)
-        ChainStorageServiceClient.unminedHashes() map { unmined =>
+    // verify
+    val expectedHash = HashUtil.sha256HexString(input.data)
+    res1.get.hash shouldBe expectedHash
+    res2.get.hash shouldBe expectedHash
 
-          val hashes = unmined.hashes
-          hashes should have length 2
-          hashes.head should be(expectedHash)
-          hashes(1) should be(expectedHash)
+    Thread.sleep(1000)
+    val unmined = Await.result(ChainStorageServiceClient.unminedHashes(), timeout)
 
-        }
-
-      }
-
-    }
+    val hashes = unmined.hashes
+    hashes should have length 1
+    hashes.head should be(expectedHash)
 
   }
 
