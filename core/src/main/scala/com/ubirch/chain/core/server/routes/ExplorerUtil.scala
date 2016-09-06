@@ -28,12 +28,12 @@ class ExplorerUtil {
   def blockInfo(blockHash: String): Future[Option[BlockInfo]] = ChainStorageServiceClient.getBlockInfo(HashedData(blockHash))
 
   /**
-    * Gives us the BlockInfo based on the previous block's hash.
+    * Gives us the next BlockInfo for a blockHash.
     *
     * @param blockHash blockHash to search with
     * @return None if no block with given blockHash exists; a BlockInfo otherwise
     */
-  def blockInfoByPreviousBlockHash(blockHash: String): Future[Option[BlockInfo]] = ChainStorageServiceClient.getBlockInfoByPreviousBlockHash(HashedData(blockHash))
+  def nextBlockInfo(blockHash: String): Future[Option[BlockInfo]] = ChainStorageServiceClient.getBlockInfoByPreviousBlockHash(HashedData(blockHash))
 
   /**
     * Gives us the FullBlock for the given blockHash.

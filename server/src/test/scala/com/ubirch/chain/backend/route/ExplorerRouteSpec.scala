@@ -99,17 +99,17 @@ class ExplorerRouteSpec extends RouteSpec {
 
   }
 
-  feature(s"call byPreviousBlockHash explorer route: ${RouteConstants.urlExplorerBlockInfoByPreviousPrefix}/:hash") {
+  feature(s"call byPreviousBlockHash explorer route: ${RouteConstants.urlExplorerNextBlockInfoPrefix}/:hash") {
 
     scenario("GET without hash in address") {
-      Get(RouteConstants.urlExplorerBlockInfoByPrevious("")) ~> Route.seal(routes) ~> check {
+      Get(RouteConstants.urlExplorerNextBlockInfo("")) ~> Route.seal(routes) ~> check {
         status shouldEqual NotFound
       }
     }
 
     scenario("GET unknown hash") {
       val hash = "1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"
-      Get(RouteConstants.urlExplorerBlockInfoByPrevious(hash)) ~> Route.seal(routes) ~> check {
+      Get(RouteConstants.urlExplorerNextBlockInfo(hash)) ~> Route.seal(routes) ~> check {
         status shouldEqual NotFound
       }
     }
@@ -121,7 +121,7 @@ class ExplorerRouteSpec extends RouteSpec {
       val minedBlock = Await.result(BlockGenerator.generateMinedBlock(), timeoutShort)
 
       // test
-      Get(RouteConstants.urlExplorerBlockInfoByPrevious(minedBlock.previousBlockHash)) ~> routes ~> check {
+      Get(RouteConstants.urlExplorerNextBlockInfo(minedBlock.previousBlockHash)) ~> routes ~> check {
 
         // verify
         status shouldEqual OK

@@ -41,9 +41,9 @@ trait ExplorerRoute extends MyJsonProtocol
             case Some(blockInfo) => complete(blockInfo)
           }
 
-        } ~ path(RouteConstants.blockInfoByPrevious / Segment) { hash =>
+        } ~ path(RouteConstants.nextBlockInfo / Segment) { hash =>
 
-          onSuccess(explorerUtil.blockInfoByPreviousBlockHash(hash)) {
+          onSuccess(explorerUtil.nextBlockInfo(hash)) {
             case None => complete(unknownBlockHash)
             case Some(blockInfo) => complete(blockInfo)
           }

@@ -85,9 +85,9 @@ Query a block's info based on a block hash:
 
     curl -i localhost:8080/api/v1/chainService/explorer/blockInfo/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
 
-Query a block's info based on the previous block's hash:
+Query a the next block info to a given blockHash:
 
-    curl -i localhost:8080/api/v1/chainService/explorer/blockInfoByPrevious/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
+    curl -i localhost:8080/api/v1/chainService/explorer/nextBlockInfo/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
 
 Query a full block based on a block hash:
 

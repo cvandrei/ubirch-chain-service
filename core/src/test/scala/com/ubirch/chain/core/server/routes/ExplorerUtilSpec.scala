@@ -85,11 +85,11 @@ class ExplorerUtilSpec extends ElasticSearchSpec {
 
   }
 
-  feature("ChainExplorerRouteUtil.blockInfoByPrevious") {
+  feature("ChainExplorerRouteUtil.nextBlockInfo") {
 
     scenario("query unknown hash") {
 
-      val res = Await.result(explorerUtil.blockInfoByPreviousBlockHash("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"), timeout)
+      val res = Await.result(explorerUtil.nextBlockInfo("1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"), timeout)
       res should be(None)
 
     }
@@ -97,11 +97,11 @@ class ExplorerUtilSpec extends ElasticSearchSpec {
     scenario("query known block hash") {
 
       // prepare
-      Await.result(BlockGenerator.createGenesisBlock(), timeout)
+      val genesis = Await.result(BlockGenerator.createGenesisBlock(), timeout)
       val fullBlock = Await.result(BlockGenerator.generateMinedBlock(), timeout)
 
       // test
-      val blockOpt = Await.result(explorerUtil.blockInfoByPreviousBlockHash(fullBlock.previousBlockHash), timeout)
+      val blockOpt = Await.result(explorerUtil.nextBlockInfo(genesis.hash), timeout)
 
       // verify
       blockOpt shouldBe 'isDefined

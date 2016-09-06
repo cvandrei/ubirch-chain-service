@@ -13,7 +13,7 @@ object RouteConstants {
   val explorer = "explorer"
   val eventHash = "eventHash"
   val blockInfo = "blockInfo"
-  val blockInfoByPrevious = "blockInfoByPrevious"
+  val nextBlockInfo = "nextBlockInfo"
   val fullBlock = "fullBlock"
 
   val urlPrefix = s"/$api/$v1/$chainService"
@@ -27,8 +27,8 @@ object RouteConstants {
   val urlExplorerBlockInfoPrefix = s"$urlExplorerPrefix/$blockInfo"
   def urlExplorerBlockInfo(blockHash: String) = s"$urlExplorerBlockInfoPrefix/$blockHash"
 
-  val urlExplorerBlockInfoByPreviousPrefix = s"$urlExplorerPrefix/$blockInfoByPrevious"
-  def urlExplorerBlockInfoByPrevious(blockHash: String) = s"$urlExplorerBlockInfoByPreviousPrefix/$blockHash"
+  val urlExplorerNextBlockInfoPrefix = s"$urlExplorerPrefix/$nextBlockInfo"
+  def urlExplorerNextBlockInfo(blockHash: String) = s"$urlExplorerNextBlockInfoPrefix/$blockHash"
 
   val urlExplorerFullBlockPrefix = s"$urlExplorerPrefix/$fullBlock"
   def urlExplorerFullBlock(blockHash: String) = s"$urlExplorerFullBlockPrefix/$blockHash"
