@@ -117,17 +117,17 @@ class ExplorerRouteSpec extends RouteSpec {
     scenario("GET known hash") {
 
       // prepare
-      Await.result(BlockGenerator.createGenesisBlock(), timeoutShort)
+      val genesis = Await.result(BlockGenerator.createGenesisBlock(), timeoutShort)
       val minedBlock = Await.result(BlockGenerator.generateMinedBlock(), timeoutShort)
 
       // test
-      Get(RouteConstants.urlExplorerNextBlockInfo(minedBlock.previousBlockHash)) ~> routes ~> check {
+      Get(RouteConstants.urlExplorerNextBlockInfo(genesis.hash)) ~> routes ~> check {
 
         // verify
         status shouldEqual OK
         val resBlock = responseAs[BlockInfo]
         resBlock.hash shouldEqual minedBlock.hash
-        resBlock.previousBlockHash shouldEqual minedBlock.previousBlockHash
+        resBlock.previousBlockHash shouldEqual genesis.hash
 
       }
 

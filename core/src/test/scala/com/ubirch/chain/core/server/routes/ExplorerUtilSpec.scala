@@ -107,7 +107,8 @@ class ExplorerUtilSpec extends ElasticSearchSpec {
       blockOpt shouldBe 'isDefined
       val block = blockOpt.get
       block.hash shouldEqual fullBlock.hash
-      block.previousBlockHash shouldEqual fullBlock.previousBlockHash
+      block.previousBlockHash shouldEqual genesis.hash
+      block.number shouldEqual genesis.number + 1
 
     }
 
