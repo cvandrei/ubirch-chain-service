@@ -1,5 +1,6 @@
 package com.ubirch.chain.backend.route
 
+import akka.http.scaladsl.model.ContentTypes._
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Route
 import com.ubirch.backend.chain.model.{BlockInfo, FullBlock, HashRequest}
@@ -37,6 +38,7 @@ class ExplorerRouteSpec extends RouteSpec {
       val hash = "1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"
       Get(RouteConstants.urlExplorerEventHash(hash)) ~> routes ~> check {
         status shouldEqual NotFound
+        responseEntity.contentType should be(`text/plain(UTF-8)`)
       }
     }
 
@@ -58,6 +60,7 @@ class ExplorerRouteSpec extends RouteSpec {
       Get(RouteConstants.urlExplorerEventHash(hash)) ~> routes ~> check {
         // verify
         status shouldEqual OK
+        responseEntity.contentType should be(`application/json`)
         responseAs[BlockInfo].hash shouldEqual blockOpt.get.hash
       }
 
@@ -77,6 +80,7 @@ class ExplorerRouteSpec extends RouteSpec {
       val hash = "1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"
       Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> Route.seal(routes) ~> check {
         status shouldEqual NotFound
+        responseEntity.contentType should be(`text/plain(UTF-8)`)
       }
     }
 
@@ -92,6 +96,7 @@ class ExplorerRouteSpec extends RouteSpec {
       Get(RouteConstants.urlExplorerBlockInfo(hash)) ~> routes ~> check {
         // verify
         status shouldEqual OK
+        responseEntity.contentType should be(`application/json`)
         responseAs[BlockInfo].hash shouldEqual hash
       }
 
@@ -111,6 +116,7 @@ class ExplorerRouteSpec extends RouteSpec {
       val hash = "1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"
       Get(RouteConstants.urlExplorerNextBlockInfo(hash)) ~> Route.seal(routes) ~> check {
         status shouldEqual NotFound
+        responseEntity.contentType should be(`text/plain(UTF-8)`)
       }
     }
 
@@ -125,6 +131,7 @@ class ExplorerRouteSpec extends RouteSpec {
 
         // verify
         status shouldEqual OK
+        responseEntity.contentType should be(`application/json`)
         val resBlock = responseAs[BlockInfo]
         resBlock.hash shouldEqual minedBlock.hash
         resBlock.previousBlockHash shouldEqual genesis.hash
@@ -147,6 +154,7 @@ class ExplorerRouteSpec extends RouteSpec {
       val hash = "1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff"
       Get(RouteConstants.urlExplorerFullBlock(hash)) ~> Route.seal(routes) ~> check {
         status shouldEqual NotFound
+        responseEntity.contentType should be(`text/plain(UTF-8)`)
       }
     }
 
@@ -163,6 +171,7 @@ class ExplorerRouteSpec extends RouteSpec {
 
         // verify
         status shouldEqual OK
+        responseEntity.contentType should be(`application/json`)
         val fullBlock = responseAs[FullBlock]
         fullBlock.hash shouldEqual hash
         fullBlock.hashes.get shouldEqual minedBlock.hashes.get

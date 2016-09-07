@@ -1,5 +1,6 @@
 package com.ubirch.chain.backend.route
 
+import akka.http.scaladsl.model.ContentTypes._
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
@@ -24,6 +25,7 @@ class WelcomeRouteSpec extends FeatureSpec
     scenario("GET /") {
       Get() ~> routes ~> check {
         status shouldEqual OK
+        responseEntity.contentType should be(`application/json`)
         responseAs[Welcome] shouldEqual Welcome(message = "Welcome to the ubirchChainServer")
       }
     }

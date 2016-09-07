@@ -1,7 +1,7 @@
 package com.ubirch.chain.backend.route
 
 import akka.http.scaladsl.model.StatusCodes._
-import akka.http.scaladsl.model.{HttpEntity, HttpResponse}
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse}
 import akka.http.scaladsl.server.Route
 import com.ubirch.chain.core.server.routes.ExplorerUtil
 import com.ubirch.chain.core.server.util.RouteConstants
@@ -18,8 +18,8 @@ trait ExplorerRoute extends MyJsonProtocol
 
   private val explorerUtil = new ExplorerUtil
 
-  private val unknownEventHash = HttpResponse(NotFound, entity = HttpEntity("hash is unknown or has not been mined yet"))
-  private val unknownBlockHash = HttpResponse(NotFound, entity = HttpEntity("hash is unknown"))
+  private val unknownEventHash = HttpResponse(NotFound, entity = HttpEntity(ContentTypes.`text/plain(UTF-8)`, "hash is unknown or has not been mined yet"))
+  private val unknownBlockHash = HttpResponse(NotFound, entity = HttpEntity(ContentTypes.`text/plain(UTF-8)`, "hash is unknown"))
 
   val route: Route = {
 
