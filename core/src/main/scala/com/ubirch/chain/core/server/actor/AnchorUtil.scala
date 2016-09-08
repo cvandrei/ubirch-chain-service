@@ -41,7 +41,7 @@ class AnchorUtil extends LazyLogging {
                   fullBlock.anchors :+ anchor
                   ChainStorageServiceClient.upsertFullBlock(fullBlock)
                   // TODO wait till upsert has been indexed --> otherwise we might anchor more than once
-                  anchorPreviousBlocks(fullBlock)
+                  addAnchorToPreviousBlocks(fullBlock)
 
               }
               true
@@ -75,19 +75,17 @@ class AnchorUtil extends LazyLogging {
 
   }
 
-  def anchorPreviousBlocks(block: FullBlock) = {
-
+  def addAnchorToPreviousBlocks(block: FullBlock) = {
     // TODO tests
     val previousBlocks = loadPreviousWithoutAnchor(block)
-    addAnchorToPreviousBlocks(previousBlocks, block.anchors)
-
+    updatePreviousBlocksWithAnchor(previousBlocks, block.anchors)
   }
 
 
-  def loadPreviousWithoutAnchor(block: FullBlock, list: Seq[FullBlock] = Seq.empty): Future[Seq[FullBlock]] = {
+  def loadPreviousWithoutAnchor(block: FullBlock, list: Future[Seq[FullBlock]] = Future(Seq.empty)): Future[Seq[FullBlock]] = {
 
     // TODO tests
-    ChainStorageServiceClient.getFullBlock(block.previousBlockHash) map {
+    ChainStorageServiceClient.getFullBlock(block.previousBlockHash) flatMap {
 
       case None => list
 
@@ -95,14 +93,15 @@ class AnchorUtil extends LazyLogging {
         previous.anchors.isEmpty match {
           case true => list
           case false =>
-            loadPreviousWithoutAnchor(previous, list :+ previous)
+            val newList = list map(_ :+ previous)
+            loadPreviousWithoutAnchor(previous, newList)
         }
 
     }
 
   }
 
-  private def addAnchorToPreviousBlocks(blocksWithoutAnchor: Future[Seq[FullBlock]], anchors: Seq[Anchor]): Unit = {
+  def updatePreviousBlocksWithAnchor(blocksWithoutAnchor: Future[Seq[FullBlock]], anchors: Seq[Anchor]): Unit = {
 
     // TODO tests
     blocksWithoutAnchor map { seq =>
