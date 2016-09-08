@@ -43,7 +43,7 @@ class AnchorUtil extends LazyLogging {
                 case Some(fullBlock) =>
                   fullBlock.anchors :+ anchor
                   ChainStorageServiceClient.upsertFullBlock(fullBlock)
-                  // TODO wait till upsert has been indexed --> otherwise we might anchor more than once
+                  waitUntilNewAnchorIndexed(fullBlock.hash, anchor)
                   addAnchorToPreviousBlocks(fullBlock)
 
               }
@@ -118,6 +118,26 @@ class AnchorUtil extends LazyLogging {
       Some(block)
 
     }
+
+  }
+
+  def waitUntilNewAnchorIndexed(hash: String, anchor: Anchor): Future[Boolean] = {
+
+    // TODO automated tests
+    var blockOpt = Await.result(ChainStorageServiceClient.mostRecentBlock(), 10 seconds)
+    while (
+      blockOpt.isEmpty ||
+        blockOpt.isDefined && !blockOpt.get.anchors.contains(anchor)
+    ) {
+
+      logger.debug("block anchor indexing...still waiting")
+      Thread.sleep(100)
+      blockOpt = Await.result(ChainStorageServiceClient.mostRecentBlock(), 10 seconds)
+
+    }
+
+    logger.info("block anchor indexing...done")
+    Future(true)
 
   }
 
