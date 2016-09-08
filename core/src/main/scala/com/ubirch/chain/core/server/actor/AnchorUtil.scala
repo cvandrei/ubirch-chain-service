@@ -5,8 +5,11 @@ import com.ubirch.backend.chain.model.{Anchor, AnchorType, FullBlock}
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.notary.client.NotaryClient
 
+import scala.annotation.tailrec
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
+import scala.language.postfixOps
 
 /**
   * author: cvandrei
@@ -75,44 +78,44 @@ class AnchorUtil extends LazyLogging {
 
   }
 
-  def addAnchorToPreviousBlocks(block: FullBlock) = {
+  def addAnchorToPreviousBlocks(block: FullBlock): Unit = {
     // TODO tests
     val previousBlocks = loadPreviousWithoutAnchor(block)
     updatePreviousBlocksWithAnchor(previousBlocks, block.anchors)
   }
 
+  // TODO tests
+  def loadPreviousWithoutAnchor(currentBlock: FullBlock): Seq[FullBlock] = addPreviousBlocks(Seq(currentBlock)).tail
 
-  def loadPreviousWithoutAnchor(block: FullBlock, list: Future[Seq[FullBlock]] = Future(Seq.empty)): Future[Seq[FullBlock]] = {
+  @tailrec
+  private def addPreviousBlocks(blockList: Seq[FullBlock]): Seq[FullBlock] = {
 
-    // TODO tests
-    ChainStorageServiceClient.getFullBlock(block.previousBlockHash) flatMap {
+    val lastBlockHash = blockList.last.hash
+    // TODO refactor to not needing Await.result()
+    val newListOpt = Await.result(ChainStorageServiceClient.getFullBlock(lastBlockHash), 10 seconds) match {
 
-      case None => list
+      case Some(previous) if previous.anchors.isEmpty =>
+        Some(blockList :+ previous)
 
-      case Some(previous) =>
-        previous.anchors.isEmpty match {
-          case true => list
-          case false =>
-            val newList = list map(_ :+ previous)
-            loadPreviousWithoutAnchor(previous, newList)
-        }
+      case _ => None
 
+    }
+
+    newListOpt match {
+      case None => blockList
+      case Some(list) => addPreviousBlocks(list)
     }
 
   }
 
-  def updatePreviousBlocksWithAnchor(blocksWithoutAnchor: Future[Seq[FullBlock]], anchors: Seq[Anchor]): Unit = {
+  def updatePreviousBlocksWithAnchor(blocksWithoutAnchor: Seq[FullBlock], anchors: Seq[Anchor]): Unit = {
 
     // TODO tests
-    blocksWithoutAnchor map { seq =>
+    blocksWithoutAnchor foreach { block =>
 
-      seq foreach { block =>
-
-        block.anchors ++ anchors
-        ChainStorageServiceClient.upsertFullBlock(block)
-        Some(block)
-
-      }
+      block.anchors ++ anchors
+      ChainStorageServiceClient.upsertFullBlock(block)
+      Some(block)
 
     }
 
