@@ -1,7 +1,7 @@
 package com.ubirch.chain.core.server.actor
 
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.backend.chain.model.{Anchor, AnchorType, FullBlock}
+import com.ubirch.backend.chain.model.{BaseBlockInfo, Anchor, AnchorType, BlockInfo, FullBlock}
 import com.ubirch.client.storage.ChainStorageServiceClient
 import com.ubirch.notary.client.NotaryClient
 
@@ -33,7 +33,7 @@ class AnchorUtil extends LazyLogging {
           false
 
         case true =>
-          anchor(blockInfo.hash) match {
+          anchor(blockInfo) match {
 
             case Some(anchor) =>
               ChainStorageServiceClient.getFullBlock(blockInfo.hash) map {
@@ -41,10 +41,11 @@ class AnchorUtil extends LazyLogging {
                 case None =>
 
                 case Some(fullBlock) =>
-                  fullBlock.anchors :+ anchor
-                  ChainStorageServiceClient.upsertFullBlock(fullBlock)
-                  waitUntilNewAnchorIndexed(fullBlock.hash, anchor)
-                  addAnchorToPreviousBlocks(fullBlock)
+                  val withUpdatedAnchors = fullBlock.copy(anchors = fullBlock.anchors :+ anchor)
+                  logger.debug(s"new anchor list (${withUpdatedAnchors.number} - ${withUpdatedAnchors.hash}: ${withUpdatedAnchors.anchors}")
+                  ChainStorageServiceClient.upsertFullBlock(withUpdatedAnchors)
+                  waitUntilNewAnchorIndexed(withUpdatedAnchors.hash, anchor)
+                  addAnchorToPreviousBlocks(withUpdatedAnchors)
 
               }
               true
@@ -59,18 +60,21 @@ class AnchorUtil extends LazyLogging {
 
   }
 
-  def anchor(blockHash: String): Option[Anchor] = {
+  def anchor(blockInfo: BlockInfo): Option[Anchor] = {
 
     // TODO tests
+    val blockHash = blockInfo.hash
     logger.info(s"anchoring most recent blockHash: $blockHash")
 
     NotaryClient.notarize(blockHash, dataIsHash = true) match {
 
       case Some(notarizeResponse) =>
+
         val anchorHash = notarizeResponse.hash
         val anchorType = AnchorType.bitcoin
+        val baseBlockInfo = Some(BaseBlockInfo(hash = blockInfo.hash, number = blockInfo.number, created = blockInfo.created, version = blockInfo.version))
         logger.info(s"anchoring was successful: blockHash=$blockHash, anchorType=$anchorType, anchorHash=$anchorHash")
-        Some(Anchor(anchorType, anchorHash))
+        Some(Anchor(anchorType, hash = anchorHash, block = baseBlockInfo))
 
       case None => None
 
