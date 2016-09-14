@@ -1,7 +1,7 @@
 package com.ubirch.chain.share.util
 
 import com.typesafe.scalalogging.LazyLogging
-import com.ubirch.backend.chain.model.FullBlock
+import com.ubirch.backend.chain.model.{BlockInfo, FullBlock}
 import com.ubirch.chain.config.{Config, ConfigKeys}
 import com.ubirch.chain.share.merkle.BlockUtil
 import com.ubirch.client.storage.ChainStorageServiceClient
@@ -44,7 +44,7 @@ class MiningUtil extends LazyLogging {
     */
   def mine(): Future[Option[FullBlock]] = {
 
-    mostRecentBlock() flatMap {
+    nextBlock() flatMap {
 
       case None =>
         logger.error("found no most recent block")
@@ -158,7 +158,7 @@ class MiningUtil extends LazyLogging {
     */
   def ageCheck(): Future[Boolean] = {
 
-    mostRecentBlock() map {
+    nextBlock() map {
 
       case None =>
 
@@ -189,26 +189,13 @@ class MiningUtil extends LazyLogging {
     *
     * @return most recent block infos if one exists; None otherwise
     */
-  def mostRecentBlock(): Future[Option[BaseBlockInfo]] = {
-
-    ChainStorageServiceClient.mostRecentBlock() flatMap {
-
-      case None =>
-
-        ChainStorageServiceClient.getGenesisBlock map {
-          case None => None
-          case Some(genesis) => Some(BaseBlockInfo(genesis.hash, genesis.number, genesis.created, genesis.version))
-        }
-
-      case Some(block) => Future(Some(BaseBlockInfo(block.hash, block.number, block.created, block.version)))
-
-    }
-
-  }
+  def nextBlock(): Future[Option[BlockInfo]] =
+    // TODO switch to loading nextBlock
+    ChainStorageServiceClient.mostRecentBlock()
 
   def waitUntilBlockIndexed(hash: String): Future[Boolean] = {
 
-    // TODO automated tests
+    // TODO delete wait after switch to Neo4J
     var blockOpt = Await.result(ChainStorageServiceClient.mostRecentBlock(), 10 seconds)
     while (blockOpt.isEmpty) {
 

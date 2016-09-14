@@ -27,7 +27,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
       Await.result(
         for {
-          mostRecent <- miningUtil.mostRecentBlock()
+          mostRecent <- miningUtil.nextBlock()
           blockCheck <- miningUtil.blockCheck() // test
         } yield {
 
@@ -47,7 +47,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
           unminedHashesSize <- HashGenerator.createUnminedHashesFuture(sizeCheckResultsInTrue = true)
         } yield {
 
-          val mostRecent = Await.result(miningUtil.mostRecentBlock(), timeout)
+          val mostRecent = Await.result(miningUtil.nextBlock(), timeout)
           mostRecent.get.hash shouldBe genesis.hash
           genesis
 
@@ -73,7 +73,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
     scenario("most recent block does not exist") {
 
       // prepare
-      val mostRecent = Await.result(miningUtil.mostRecentBlock(), timeout)
+      val mostRecent = Await.result(miningUtil.nextBlock(), timeout)
       mostRecent shouldBe None
 
       Await.result(
@@ -92,7 +92,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
       // prepare
       Await.result(BlockGenerator.createGenesisBlock(), timeout)
-      val mostRecent = Await.result(miningUtil.mostRecentBlock(), timeout)
+      val mostRecent = Await.result(miningUtil.nextBlock(), timeout)
       mostRecent shouldBe 'isDefined
       val unmined = Await.result(ChainStorageServiceClient.unminedHashes(), timeout)
       unmined.hashes shouldBe 'isEmpty
@@ -112,7 +112,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
       // prepare
       Await.result(BlockGenerator.createGenesisBlock(), timeout)
-      val mostRecent = Await.result(miningUtil.mostRecentBlock(), timeout)
+      val mostRecent = Await.result(miningUtil.nextBlock(), timeout)
       mostRecent shouldBe 'isDefined
       Await.result(HashGenerator.createXManyUnminedHashesFuture(100), timeout)
 
@@ -399,7 +399,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
       Await.result(
         for {
-          mostRecent <- miningUtil.mostRecentBlock() // test
+          mostRecent <- miningUtil.nextBlock() // test
         } yield {
 
           mostRecent shouldBe None // verify
@@ -415,7 +415,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
       Await.result(
         for {
-          mostRecentOpt <- miningUtil.mostRecentBlock() // test
+          mostRecentOpt <- miningUtil.nextBlock() // test
         } yield {
 
           // verify
@@ -437,7 +437,7 @@ class MiningUtilSpec extends ElasticSearchSpec {
 
       Await.result(
         for {
-          mostRecentOpt <- miningUtil.mostRecentBlock() // test
+          mostRecentOpt <- miningUtil.nextBlock() // test
         } yield {
 
           // verify

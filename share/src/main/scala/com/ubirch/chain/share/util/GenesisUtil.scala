@@ -24,7 +24,8 @@ class GenesisUtil extends LazyLogging {
       case None =>
         val genesisBlock = BlockUtil.genesisBlock()
         ChainStorageServiceClient.saveGenesisBlock(genesisBlock)
-        waitUntilGenesisIndexed()
+        // TODO create next block as empty
+        waitUntilGenesisIndexed() // TODO delete wait after switch to Neo4J
 
       case Some(genesisBlock) => logger.info(s"genesisBlock already exists: hash=${genesisBlock.hash}")
 
