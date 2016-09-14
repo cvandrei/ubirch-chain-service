@@ -12,7 +12,7 @@ TODO
       Resolver.sonatypeRepo("snapshots")
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "config" % "0.1-SNAPSHOT"
+      "com.ubirch.chain" %% "config" % "0.1"
     )
 
 ### `core`
@@ -23,7 +23,7 @@ TODO
       Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "core" % "0.1-SNAPSHOT"
+      "com.ubirch.chain" %% "core" % "0.1"
     )
         
 ### `server`
@@ -32,7 +32,7 @@ TODO
       Resolver.sonatypeRepo("snapshots")
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "server" % "0.1-SNAPSHOT"
+      "com.ubirch.chain" %% "server" % "0.1"
     )
 
 ### `share`
@@ -43,7 +43,7 @@ TODO
       Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "share" % "0.1-SNAPSHOT"
+      "com.ubirch.chain" %% "share" % "0.1"
     )
 
 ### `test-base`
@@ -52,7 +52,7 @@ TODO
       Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "test-base" % "0.1-SNAPSHOT"
+      "com.ubirch.chain" %% "test-base" % "0.1"
     )
 
 ### `test-util`
@@ -62,7 +62,7 @@ TODO
       "RoundEights" at "http://maven.spikemark.net/roundeights" // Hasher
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "test-util" % "0.1-SNAPSHOT"
+      "com.ubirch.chain" %% "test-util" % "0.1"
     )
 
 ## REST Methods
