@@ -18,7 +18,7 @@ lazy val commonSettings = Seq(
     url("https://gitlab.com/ubirch/ubirchChainService"),
     "scm:git:https://gitlab.com/ubirch/ubirchChainService.git"
   )),
-  version := "0.1-SNAPSHOT",
+  version := "0.1",
   test in assembly := {},
   resolvers ++= Seq(
     resolverSeebergerJson,
