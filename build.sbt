@@ -21,8 +21,9 @@ lazy val commonSettings = Seq(
   version := "0.2-SNAPSHOT",
   test in assembly := {},
   resolvers ++= Seq(
-    resolverSeebergerJson,
-    Resolver.sonatypeRepo("snapshots")
+    Resolver.sonatypeRepo("releases"),
+    Resolver.sonatypeRepo("snapshots"),
+    resolverSeebergerJson
   )
 
   //javaOptions in Test += testConfiguration
@@ -180,7 +181,7 @@ lazy val typesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-logging" 
 
 lazy val ubirchUtilConfig = "com.ubirch.util" %% "config" % "0.1-SNAPSHOT"
 lazy val ubirchUtilDate = "com.ubirch.util" %% "date" % "0.1-SNAPSHOT"
-lazy val ubirchUtilRestAkkaHttp = "com.ubirch.util" %% "rest-akka-http" % "0.1-SNAPSHOT"
+lazy val ubirchUtilRestAkkaHttp = "com.ubirch.util" %% "rest-akka-http" % "0.1"
 lazy val ubirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
 lazy val ubirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServiceV
 lazy val ubirchStorageTestUtil = "com.ubirch.backend.storage" %% "test-util" % storageServiceV
