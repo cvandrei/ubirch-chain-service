@@ -15,8 +15,8 @@ lazy val commonSettings = Seq(
 
   homepage := Some(url("http://ubirch.com")),
   scmInfo := Some(ScmInfo(
-    url("https://gitlab.com/ubirch/ubirchChainService"),
-    "scm:git:https://gitlab.com/ubirch/ubirchChainService.git"
+    url("https://github.com/ubirch/ubirch-chain-service"),
+    "scm:git:git@github.com:ubirch/ubirch-chain-service.git"
   )),
   version := "0.2-SNAPSHOT",
   test in assembly := {},
