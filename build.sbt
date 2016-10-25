@@ -159,7 +159,7 @@ val scalaTestV = "3.0.0"
 val json4sV = "3.4.0"
 val configV = "1.3.0"
 val notaryServiceV = "0.3.0-SNAPSHOT"
-val storageServiceV = "0.0.1-SNAPSHOT"
+val storageServiceV = "0.0.1"
 val ubirchUtilCryptoV = "0.2"
 val ubirchUtilJsonAutoConvertV = "0.1"
 
