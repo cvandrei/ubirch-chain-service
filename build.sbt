@@ -160,8 +160,8 @@ val json4sV = "3.4.0"
 val configV = "1.3.0"
 val notaryServiceV = "0.3.0-SNAPSHOT"
 val storageServiceV = "0.0.1-SNAPSHOT"
-val ubirchUtilCryptoV = "0.2-SNAPSHOT"
-val ubirchUtilJsonAutoConvertV = "0.1-SNAPSHOT"
+val ubirchUtilCryptoV = "0.2"
+val ubirchUtilJsonAutoConvertV = "0.1"
 
 lazy val json4s = Seq(
   json4sCore,
@@ -179,8 +179,8 @@ lazy val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % akkaV
 
 lazy val typesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
 
-lazy val ubirchUtilConfig = "com.ubirch.util" %% "config" % "0.1-SNAPSHOT"
-lazy val ubirchUtilDate = "com.ubirch.util" %% "date" % "0.1-SNAPSHOT"
+lazy val ubirchUtilConfig = "com.ubirch.util" %% "config" % "0.1"
+lazy val ubirchUtilDate = "com.ubirch.util" %% "date" % "0.1"
 lazy val ubirchUtilRestAkkaHttp = "com.ubirch.util" %% "rest-akka-http" % "0.1"
 lazy val ubirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
 lazy val ubirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServiceV
