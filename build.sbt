@@ -183,9 +183,9 @@ lazy val ubirchUtilConfig = "com.ubirch.util" %% "config" % "0.1"
 lazy val ubirchUtilDate = "com.ubirch.util" %% "date" % "0.1"
 lazy val ubirchUtilRestAkkaHttp = "com.ubirch.util" %% "rest-akka-http" % "0.1"
 lazy val ubirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
-lazy val ubirchStorageClient = "com.ubirch.backend.storage" %% "client" % storageServiceV
-lazy val ubirchStorageTestUtil = "com.ubirch.backend.storage" %% "test-util" % storageServiceV
-lazy val ubirchStorageModel = "com.ubirch.backend.storage" %% "model" % storageServiceV
+lazy val ubirchStorageClient = "com.ubirch.storage" %% "client" % storageServiceV
+lazy val ubirchStorageTestUtil = "com.ubirch.storage" %% "test-util" % storageServiceV
+lazy val ubirchStorageModel = "com.ubirch.storage" %% "model" % storageServiceV
 lazy val ubirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
 lazy val ubirchUtilJsonAutoConvert = "com.ubirch.util" %% "json-auto-convert" % ubirchUtilJsonAutoConvertV
 

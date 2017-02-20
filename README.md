@@ -65,6 +65,12 @@ TODO
       "com.ubirch.chain" %% "test-util" % "0.2-SNAPSHOT"
     )
 
+## Release Notes
+
+### 0.0.2 (tbd)
+
+* fix broken dependency: com.ubirch.~~backend.~~storage
+
 ## REST Methods
 
 ### Welcome / Health
