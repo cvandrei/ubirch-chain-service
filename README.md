@@ -70,6 +70,7 @@ TODO
 ### 0.0.2 (tbd)
 
 * fix broken dependency: com.ubirch.~~backend.~~storage
+* update `scalatest` from 3.0.0 to 3.0.1
 
 ## REST Methods
 
