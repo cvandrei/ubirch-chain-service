@@ -18,7 +18,7 @@ lazy val commonSettings = Seq(
     url("https://github.com/ubirch/ubirch-chain-service"),
     "scm:git:git@github.com:ubirch/ubirch-chain-service.git"
   )),
-  version := "0.2-SNAPSHOT",
+  version := "0.0.1-SNAPSHOT",
   test in assembly := {},
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),
@@ -158,7 +158,7 @@ val akkaV = "2.4.9-RC2"
 val scalaTestV = "3.0.1"
 val json4sV = "3.4.0"
 val configV = "1.3.0"
-val notaryServiceV = "0.3.0-SNAPSHOT"
+val notaryServiceV = "0.2.7"
 val storageServiceV = "0.0.1"
 val ubirchUtilCryptoV = "0.2"
 val ubirchUtilJsonAutoConvertV = "0.1"

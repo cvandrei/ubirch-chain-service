@@ -67,10 +67,12 @@ TODO
 
 ## Release Notes
 
-### 0.0.2 (tbd)
+### 0.0.1 (tbd)
 
 * fix broken dependency: com.ubirch.~~backend.~~storage
 * update `scalatest` from 3.0.0 to 3.0.1
+* update dependency `com.ubirch.notary:client` to 0.2.7
+* change version numbering scheme to major.minor.fix (new version is now 0.0.1-SNAPSHOT)
 
 ## REST Methods
 
