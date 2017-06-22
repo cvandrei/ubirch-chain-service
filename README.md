@@ -12,7 +12,7 @@ TODO
       Resolver.sonatypeRepo("snapshots")
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "config" % "0.2-SNAPSHOT"
+      "com.ubirch.chain" %% "config" % "0.0.1-SNAPSHOT"
     )
 
 ### `core`
@@ -23,7 +23,7 @@ TODO
       Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "core" % "0.2-SNAPSHOT"
+      "com.ubirch.chain" %% "core" % "0.0.1-SNAPSHOT"
     )
         
 ### `server`
@@ -32,7 +32,7 @@ TODO
       Resolver.sonatypeRepo("snapshots")
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "server" % "0.2-SNAPSHOT"
+      "com.ubirch.chain" %% "server" % "0.0.1-SNAPSHOT"
     )
 
 ### `share`
@@ -43,7 +43,7 @@ TODO
       Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "share" % "0.2-SNAPSHOT"
+      "com.ubirch.chain" %% "share" % "0.0.1-SNAPSHOT"
     )
 
 ### `test-base`
@@ -52,7 +52,7 @@ TODO
       Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "test-base" % "0.2-SNAPSHOT"
+      "com.ubirch.chain" %% "test-base" % "0.0.1-SNAPSHOT"
     )
 
 ### `test-util`
@@ -62,17 +62,14 @@ TODO
       "RoundEights" at "http://maven.spikemark.net/roundeights" // Hasher
     )
     libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "test-util" % "0.2-SNAPSHOT"
+      "com.ubirch.chain" %% "test-util" % "0.0.1-SNAPSHOT"
     )
 
 ## Release Notes
 
 ### 0.0.1 (tbd)
 
-* fix broken dependency: com.ubirch.~~backend.~~storage
-* update `scalatest` from 3.0.0 to 3.0.1
-* update dependency `com.ubirch.notary:client` to 0.2.7
-* change version numbering scheme to major.minor.fix (new version is now 0.0.1-SNAPSHOT)
+* initial release
 
 ## REST Methods
 
