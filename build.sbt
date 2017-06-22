@@ -107,22 +107,21 @@ lazy val share = project
 lazy val depServer = Seq(
 
   //akka
-  "com.typesafe.akka" %% "akka-actor" % akkaV,
-  "com.typesafe.akka" %% "akka-http-experimental" % akkaV,
+  akkaSlf4j,
+  akkaHttp,
+  ubirchRestAkkaHttp,
+  ubirchRestAkkaHttpTest % "test",
 
   //testing
   scalatest % "test",
-  "com.typesafe.akka" %% "akka-testkit" % akkaV % "test",
-  akkaHttpTestkit % "test",
 
   // logging
   typesafeScalaLogging,
   "ch.qos.logback" % "logback-classic" % "1.1.3",
   "ch.qos.logback" % "logback-core" % "1.1.3",
-  "org.slf4j" % "slf4j-api" % "1.7.12",
+  "org.slf4j" % "slf4j-api" % "1.7.12"
 
-  ubirchUtilJsonAutoConvert,
-  ubirchUtilRestAkkaHttp
+  //ubirchUtilJsonAutoConvert
 
 )
 
@@ -139,8 +138,8 @@ lazy val depCore = Seq(
 lazy val depTestBase = Seq(
   scalatest,
   akkaHttpTestkit,
-  ubirchStorageTestUtil,
-  ubirchUtilJsonAutoConvert
+  ubirchStorageTestUtil//,
+  //ubirchUtilJsonAutoConvert
 )
 
 lazy val depShare = Seq(
@@ -154,14 +153,38 @@ lazy val depShare = Seq(
  * DEPENDENCIES
  ********************************************************/
 
-val akkaV = "2.4.9-RC2"
+// VERSIONS
+val akkaV = "2.4.18"
+val akkaHttpV = "10.0.6"
 val scalaTestV = "3.0.1"
-val json4sV = "3.4.0"
+val json4sV = "3.5.2"
 val configV = "1.3.0"
 val notaryServiceV = "0.2.7"
 val storageServiceV = "0.0.1"
-val ubirchUtilCryptoV = "0.2"
-val ubirchUtilJsonAutoConvertV = "0.1"
+
+// GROUP NAMES
+val ubirchUtilG = "com.ubirch.util"
+val json4sG = "org.json4s"
+val akkaG = "com.typesafe.akka"
+
+lazy val scalaLogging = Seq(
+  "org.slf4j" % "slf4j-api" % "1.7.21",
+  "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2" exclude("org.slf4j", "slf4j-api"),
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0" exclude("org.slf4j", "slf4j-api"),
+  "ch.qos.logback" % "logback-core" % "1.1.7",
+  "ch.qos.logback" % "logback-classic" % "1.1.7",
+  "com.internetitem" % "logback-elasticsearch-appender" % "1.4"
+)
+
+lazy val akkaActor = akkaG %% "akka-actor" % akkaV
+lazy val akkaHttp = akkaG %% "akka-http" % akkaHttpV
+lazy val akkaSlf4j = akkaG %% "akka-slf4j" % akkaV
+
+lazy val excludedLoggers = Seq(
+  ExclusionRule(organization = "com.typesafe.scala-logging"),
+  ExclusionRule(organization = "org.slf4j"),
+  ExclusionRule(organization = "ch.qos.logback")
+)
 
 lazy val json4s = Seq(
   json4sCore,
@@ -169,25 +192,27 @@ lazy val json4s = Seq(
   json4sExt,
   seebergerJson4s
 )
-lazy val json4sJackson = "org.json4s" %% "json4s-jackson" % json4sV
-lazy val json4sCore = "org.json4s" %% "json4s-core" % json4sV
-lazy val json4sExt = "org.json4s" %% "json4s-ext" % json4sV
-lazy val seebergerJson4s = "de.heikoseeberger" %% "akka-http-json4s" % "1.8.0"
+lazy val json4sJackson = json4sG %% "json4s-jackson" % json4sV
+lazy val json4sCore = json4sG %% "json4s-core" % json4sV
+lazy val json4sExt = json4sG %% "json4s-ext" % json4sV
+lazy val seebergerJson4s = "de.heikoseeberger" %% "akka-http-json4s" % "1.14.0"
 
 lazy val scalatest = "org.scalatest" %% "scalatest" % scalaTestV
-lazy val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % akkaV
+lazy val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpV
 
 lazy val typesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
 
-lazy val ubirchUtilConfig = "com.ubirch.util" %% "config" % "0.1"
-lazy val ubirchUtilDate = "com.ubirch.util" %% "date" % "0.1"
-lazy val ubirchUtilRestAkkaHttp = "com.ubirch.util" %% "rest-akka-http" % "0.1"
-lazy val ubirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV
-lazy val ubirchStorageClient = "com.ubirch.storage" %% "client" % storageServiceV
-lazy val ubirchStorageTestUtil = "com.ubirch.storage" %% "test-util" % storageServiceV
-lazy val ubirchStorageModel = "com.ubirch.storage" %% "model" % storageServiceV
-lazy val ubirchUtilCrypto = "com.ubirch.util" %% "crypto" % ubirchUtilCryptoV
-lazy val ubirchUtilJsonAutoConvert = "com.ubirch.util" %% "json-auto-convert" % ubirchUtilJsonAutoConvertV
+//lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % ubirchUtilJsonAutoConvertV excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilConfig = ubirchUtilG %% "config" % "0.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.3.4" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilDate = ubirchUtilG %% "date" % "0.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.7" excludeAll(excludedLoggers: _*)
+lazy val ubirchRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.7" excludeAll(excludedLoggers: _*)
+
+lazy val ubirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV excludeAll(excludedLoggers: _*)
+lazy val ubirchStorageClient = "com.ubirch.storage" %% "client" % storageServiceV excludeAll(excludedLoggers: _*)
+lazy val ubirchStorageTestUtil = "com.ubirch.storage" %% "test-util" % storageServiceV excludeAll(excludedLoggers: _*)
+lazy val ubirchStorageModel = "com.ubirch.storage" %% "model" % storageServiceV excludeAll(excludedLoggers: _*)
 
 /*
  * RESOLVER

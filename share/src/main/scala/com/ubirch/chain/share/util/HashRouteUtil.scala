@@ -2,7 +2,7 @@ package com.ubirch.chain.share.util
 
 import com.ubirch.backend.chain.model.{HashRequest, HashedData}
 import com.ubirch.client.storage.ChainStorageServiceClient
-import com.ubirch.util.crypto.hash.HashUtil
+import com.ubirch.crypto.hash.HashUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
