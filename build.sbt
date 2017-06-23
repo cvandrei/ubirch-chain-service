@@ -1,7 +1,5 @@
 packagedArtifacts in file(".") := Map.empty // disable publishing of root/default project
 
-//lazy val testConfiguration = "-Dconfig.resource=" + Option(System.getProperty("test.config")).getOrElse("application.base.conf")
-
 // see http://www.scala-sbt.org/0.13/docs/Parallel-Execution.html for details
 concurrentRestrictions in Global := Seq(
   Tags.limit(Tags.Test, 1)
@@ -18,15 +16,11 @@ lazy val commonSettings = Seq(
     url("https://github.com/ubirch/ubirch-chain-service"),
     "scm:git:git@github.com:ubirch/ubirch-chain-service.git"
   )),
-  version := "0.0.1-SNAPSHOT",
+  version := "1.0.0",
   test in assembly := {},
   resolvers ++= Seq(
-    Resolver.sonatypeRepo("releases"),
-    Resolver.sonatypeRepo("snapshots"),
-    resolverSeebergerJson
+    Resolver.sonatypeRepo("releases")
   )
-
-  //javaOptions in Test += testConfiguration
 
 )
 
@@ -36,68 +30,86 @@ lazy val commonSettings = Seq(
 
 lazy val chainService = (project in file("."))
   .settings(commonSettings: _*)
-  .aggregate(server, core, config, testUtil, testBase, share)
-
-lazy val server = project
-  .settings(commonSettings: _*)
-  .settings(mergeStrategy: _*)
-  .dependsOn(share, core, testBase, config)
-  .settings(
-    libraryDependencies ++= depServer,
-    fork in run := true,
-    mainClass in(Compile, run) := Some("com.ubirch.chain.backend.Boot")
-  )
-
-lazy val core = project
-  .settings(commonSettings: _*)
-  .dependsOn(testBase, share, config, testUtil)
-  .settings(
-    libraryDependencies ++= depCore,
-    resolvers ++= Seq(
-      resolverSeebergerJson,
-      resolverHasher,
-      resolverBeeClient
-    )
+  .aggregate(
+    cmdtools,
+    config,
+    core,
+    modelDb,
+    modelRest,
+    server,
+    testTools,
+    util
   )
 
 lazy val config = project
   .settings(commonSettings: _*)
   .settings(
-    libraryDependencies += ubirchUtilConfig
+    description := "chain-service specific config and config tools",
+    libraryDependencies += ubirchConfig
   )
 
-lazy val testUtil = (project in file("test-util"))
+lazy val cmdtools = project
   .settings(commonSettings: _*)
-  .dependsOn(share)
+  .dependsOn(config, testTools)
   .settings(
-    name := "test-util",
+    description := "command line tools"
+  )
+
+lazy val core = project
+  .settings(commonSettings: _*)
+  .dependsOn(modelDb, util, testTools % "test")
+  .settings(
+    description := "business logic",
+    libraryDependencies ++= depCore
+  )
+
+lazy val modelDb = (project in file("model-db"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "model-db",
+    description := "Database models",
+    libraryDependencies ++= depModelDb
+  )
+
+lazy val modelRest = (project in file("model-rest"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "model-rest",
+    description := "JSON models",
+    libraryDependencies ++= depModelRest
+  )
+
+lazy val server = project
+  .settings(commonSettings: _*)
+  .settings(mergeStrategy: _*)
+  .dependsOn(config, core, modelDb, modelRest, util)
+  .enablePlugins(DockerPlugin)
+  .settings(
+    description := "REST interface and Akka HTTP specific code",
+    libraryDependencies ++= depServer,
+    fork in run := true,
     resolvers ++= Seq(
-      resolverHasher
+      resolverSeebergerJson
     ),
-    libraryDependencies ++= Seq(
-      ubirchUtilDate
-    )
+    mainClass in(Compile, run) := Some("com.ubirch.chain.server.Boot"),
+    resourceGenerators in Compile += Def.task {
+      generateDockerFile(baseDirectory.value / ".." / "Dockerfile.input", (assemblyOutputPath in assembly).value)
+    }.taskValue
   )
 
-lazy val testBase = (project in file("test-base"))
+lazy val testTools = (project in file("test-tools"))
   .settings(commonSettings: _*)
   .settings(
-    name := "test-base",
-    libraryDependencies ++= depTestBase,
-    resolvers ++= Seq(
-      resolverBeeClient
-    )
+    name := "test-tools",
+    description := "tools useful in automated tests",
+    libraryDependencies ++= depTestTools
   )
 
-lazy val share = project
+lazy val util = project
   .settings(commonSettings: _*)
-  .dependsOn(testBase, config)
   .settings(
-    libraryDependencies ++= depShare,
-    resolvers ++= Seq(
-      resolverHasher,
-      resolverBeeClient
-    )
+    description := "utils",
+    libraryDependencies ++= depUtils
   )
 
 /*
@@ -106,48 +118,46 @@ lazy val share = project
 
 lazy val depServer = Seq(
 
-  //akka
   akkaSlf4j,
   akkaHttp,
   ubirchRestAkkaHttp,
   ubirchRestAkkaHttpTest % "test",
 
-  //testing
-  scalatest % "test",
-
-  // logging
-  typesafeScalaLogging,
-  "ch.qos.logback" % "logback-classic" % "1.1.3",
-  "ch.qos.logback" % "logback-core" % "1.1.3",
-  "org.slf4j" % "slf4j-api" % "1.7.12"
-
-  //ubirchUtilJsonAutoConvert
+  ubirchResponse
 
 )
 
 lazy val depCore = Seq(
-  typesafeScalaLogging,
-  ubirchUtilCrypto,
-  ubirchStorageModel,
-  ubirchNotaryClient,
-  ubirchStorageClient,
-  scalatest % "test",
-  ubirchStorageTestUtil % "test"
+  akkaActor,
+  ubirchDeepCheckModel,
+  json4sNative,
+  ubirchJson,
+  scalatest % "test"
+) ++ scalaLogging
+
+lazy val depModelDb = Seq(
+  ubirchUuid,
+  ubirchDate
 )
 
-lazy val depTestBase = Seq(
-  scalatest,
-  akkaHttpTestkit,
-  ubirchStorageTestUtil//,
-  //ubirchUtilJsonAutoConvert
+lazy val depModelRest = Seq(
+  ubirchUuid,
+  ubirchDate
 )
 
-lazy val depShare = Seq(
-  typesafeScalaLogging,
-  ubirchUtilCrypto,
-  ubirchUtilDate,
-  ubirchStorageClient
-) ++ json4s
+lazy val depModel = Seq(
+  ubirchJson,
+  json4sNative
+)
+
+lazy val depTestTools = Seq(
+  json4sNative,
+  ubirchJson,
+  scalatest
+) ++ scalaLogging
+
+lazy val depUtils = Seq(
+)
 
 /*
  * DEPENDENCIES
@@ -156,16 +166,18 @@ lazy val depShare = Seq(
 // VERSIONS
 val akkaV = "2.4.18"
 val akkaHttpV = "10.0.6"
-val scalaTestV = "3.0.1"
 val json4sV = "3.5.2"
-val configV = "1.3.0"
-val notaryServiceV = "0.2.7"
-val storageServiceV = "0.0.1"
+
+val scalaTestV = "3.0.1"
 
 // GROUP NAMES
 val ubirchUtilG = "com.ubirch.util"
 val json4sG = "org.json4s"
 val akkaG = "com.typesafe.akka"
+
+lazy val scalatest = "org.scalatest" %% "scalatest" % scalaTestV
+
+lazy val json4sNative = json4sG %% "json4s-native" % json4sV
 
 lazy val scalaLogging = Seq(
   "org.slf4j" % "slf4j-api" % "1.7.21",
@@ -186,41 +198,20 @@ lazy val excludedLoggers = Seq(
   ExclusionRule(organization = "ch.qos.logback")
 )
 
-lazy val json4s = Seq(
-  json4sCore,
-  json4sJackson,
-  json4sExt,
-  seebergerJson4s
-)
-lazy val json4sJackson = json4sG %% "json4s-jackson" % json4sV
-lazy val json4sCore = json4sG %% "json4s-core" % json4sV
-lazy val json4sExt = json4sG %% "json4s-ext" % json4sV
-lazy val seebergerJson4s = "de.heikoseeberger" %% "akka-http-json4s" % "1.14.0"
-
-lazy val scalatest = "org.scalatest" %% "scalatest" % scalaTestV
-lazy val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpV
-
-lazy val typesafeScalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
-
-//lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % ubirchUtilJsonAutoConvertV excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilConfig = ubirchUtilG %% "config" % "0.1" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.3.4" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilDate = ubirchUtilG %% "date" % "0.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchConfig = ubirchUtilG %% "config" % "0.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchDate = ubirchUtilG %% "date" % "0.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchDeepCheckModel = ubirchUtilG %% "deep-check-model" % "0.1.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchJson = ubirchUtilG %% "json" % "0.4.1" excludeAll(excludedLoggers: _*)
 lazy val ubirchRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.7" excludeAll(excludedLoggers: _*)
 lazy val ubirchRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.7" excludeAll(excludedLoggers: _*)
-
-lazy val ubirchNotaryClient = "com.ubirch.notary" %% "client" % notaryServiceV excludeAll(excludedLoggers: _*)
-lazy val ubirchStorageClient = "com.ubirch.storage" %% "client" % storageServiceV excludeAll(excludedLoggers: _*)
-lazy val ubirchStorageTestUtil = "com.ubirch.storage" %% "test-util" % storageServiceV excludeAll(excludedLoggers: _*)
-lazy val ubirchStorageModel = "com.ubirch.storage" %% "model" % storageServiceV excludeAll(excludedLoggers: _*)
+lazy val ubirchResponse = ubirchUtilG %% "response-util" % "0.2.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchUuid = ubirchUtilG %% "uuid" % "0.1.1" excludeAll(excludedLoggers: _*)
 
 /*
  * RESOLVER
  ********************************************************/
 
 lazy val resolverSeebergerJson = Resolver.bintrayRepo("hseeberger", "maven")
-lazy val resolverHasher = "RoundEights" at "http://maven.spikemark.net/roundeights"
-lazy val resolverBeeClient = Resolver.bintrayRepo("rick-beton", "maven")
 
 /*
  * MISC
@@ -235,7 +226,17 @@ lazy val mergeStrategy = Seq(
     case m if m.toLowerCase.endsWith("application.dev.conf") => MergeStrategy.first
     case m if m.toLowerCase.endsWith("application.base.conf") => MergeStrategy.first
     case m if m.toLowerCase.endsWith("logback.xml") => MergeStrategy.first
+    case m if m.toLowerCase.endsWith("logback-test.xml") => MergeStrategy.discard
     case "reference.conf" => MergeStrategy.concat
     case _ => MergeStrategy.first
   }
 )
+
+def generateDockerFile(file: File, jarFile: sbt.File): Seq[File] = {
+  val contents =
+    s"""SOURCE=server/target/scala-2.11/${jarFile.getName}
+       |TARGET=${jarFile.getName}
+       |""".stripMargin
+  IO.write(file, contents)
+  Seq(file)
+}

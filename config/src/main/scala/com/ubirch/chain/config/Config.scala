@@ -4,7 +4,7 @@ import com.ubirch.util.config.ConfigBase
 
 /**
   * author: cvandrei
-  * since: 2016-07-27
+  * since: 2017-01-19
   */
 object Config extends ConfigBase {
 
@@ -22,35 +22,21 @@ object Config extends ConfigBase {
     */
   def port: Int = config.getInt(ConfigKeys.PORT)
 
+  def goPipelineName: String = config.getString(ConfigKeys.GO_PIPELINE_NAME)
+  def goPipelineLabel: String = config.getString(ConfigKeys.GO_PIPELINE_LABEL)
+  def goPipelineRevision: String = config.getString(ConfigKeys.GO_PIPELINE_REVISION)
+
+  /*
+   * Akka Related
+   ************************************************************************************************/
+
   /**
-    * Tells us how often we check if a new block may be mined
+    * Default actor timeout.
     *
-    * @return number of seconds
+    * @return timeout in seconds
     */
-  def blockCheckInterval: Int = config.getInt(ConfigKeys.BLOCK_CHECK_INTERVAL)
+  def actorTimeout: Int = config.getInt(ConfigKeys.ACTOR_TIMEOUT)
 
-  /**
-    * Maximum size of blocks in kilobytes.
-    *
-    * @return max block size in kilobytes
-    */
-  def blockMaxSizeKB: Long = config.getLong(ConfigKeys.BLOCK_MAX_SIZE)
-
-  def blockMaxSizeByte: Long = blockMaxSizeKB * 1000
-
-  /**
-    * @return maximum number of seconds after which we mine a block
-    */
-  def mineEveryXSeconds: Int = config.getInt(ConfigKeys.BLOCK_MINE_EVERY_X_SECONDS)
-
-  /**
-    * @return true if anchoring is enabled (which chains depends on Notary Service)
-    */
-  def anchorEnabled: Boolean = config.getBoolean(ConfigKeys.ANCHOR_ENABLED)
-
-  /**
-    * @return interval (in seconds) between two anchors
-    */
-  def anchorInterval: Int = config.getInt(ConfigKeys.ANCHOR_INTERVAL)
+  def akkaNumberOfWorkers: Int = config.getInt(ConfigKeys.AKKA_NUMBER_OF_WORKERS)
 
 }

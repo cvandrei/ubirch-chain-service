@@ -2,20 +2,30 @@ package com.ubirch.chain.config
 
 /**
   * author: cvandrei
-  * since: 2016-07-26
+  * since: 2017-01-19
   */
 object ConfigKeys {
 
-  private final val prefix = "ubirchChainService"
+  final val CONFIG_PREFIX = "ubirchChainService"
 
-  final val INTERFACE = s"$prefix.interface"
-  final val PORT = s"$prefix.port"
+  /*
+   * general server configs
+   *********************************************************************************************/
 
-  final val BLOCK_CHECK_INTERVAL = s"$prefix.block.checkInterval"
-  final val BLOCK_MAX_SIZE = s"$prefix.block.maxSize"
-  final val BLOCK_MINE_EVERY_X_SECONDS = s"$prefix.block.mineEveryXSeconds"
+  final val INTERFACE = s"$CONFIG_PREFIX.interface"
+  final val PORT = s"$CONFIG_PREFIX.port"
 
-  final val ANCHOR_ENABLED = s"$prefix.anchor.enabled"
-  final val ANCHOR_INTERVAL = s"$prefix.anchor.interval"
+  final val GO_PIPELINE_NAME = s"$CONFIG_PREFIX.gopipelinename"
+  final val GO_PIPELINE_LABEL = s"$CONFIG_PREFIX.gopipelinelabel"
+  final val GO_PIPELINE_REVISION = s"$CONFIG_PREFIX.gopipelinerev"
+
+  /*
+   * Akka related configs
+   *********************************************************************************************/
+
+  private val akkaPrefix = s"$CONFIG_PREFIX.akka"
+
+  final val ACTOR_TIMEOUT = s"$akkaPrefix.actorTimeout"
+  final val AKKA_NUMBER_OF_WORKERS = s"$akkaPrefix.numberOfWorkers"
 
 }

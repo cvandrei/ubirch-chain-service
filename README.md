@@ -1,152 +1,144 @@
-# ubirch Chain Server
+# ubirch-chain-service
 
 ## General Information
 
 TODO
 
-## Scala Dependencies
 
-### `config`
+## Release History
 
-    resolvers ++= Seq(
-      Resolver.sonatypeRepo("snapshots")
-    )
-    libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "config" % "0.0.1-SNAPSHOT"
-    )
-
-### `core`
-
-    resolvers ++= Seq(
-      Resolver.sonatypeRepo("snapshots"),
-      "RoundEights" at "http://maven.spikemark.net/roundeights", // Hasher
-      Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
-    )
-    libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "core" % "0.0.1-SNAPSHOT"
-    )
-        
-### `server`
-
-    resolvers ++= Seq(
-      Resolver.sonatypeRepo("snapshots")
-    )
-    libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "server" % "0.0.1-SNAPSHOT"
-    )
-
-### `share`
-
-    resolvers ++= Seq(
-      Resolver.sonatypeRepo("snapshots"),
-      "RoundEights" at "http://maven.spikemark.net/roundeights", // Hasher
-      Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
-    )
-    libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "share" % "0.0.1-SNAPSHOT"
-    )
-
-### `test-base`
-
-    resolvers ++= Seq(
-      Resolver.bintrayRepo("rick-beton", "maven") // BeeClient
-    )
-    libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "test-base" % "0.0.1-SNAPSHOT"
-    )
-
-### `test-util`
-
-    resolvers ++= Seq(
-      Resolver.sonatypeRepo("snapshots"),
-      "RoundEights" at "http://maven.spikemark.net/roundeights" // Hasher
-    )
-    libraryDependencies ++= Seq(
-      "com.ubirch.chain" %% "test-util" % "0.0.1-SNAPSHOT"
-    )
-
-## Release Notes
-
-### 0.0.1 (tbd)
+### Version 0.1.0 (tbd)
 
 * initial release
 
+
+## Scala Dependencies
+
+### `cmdtools`
+
+```scala
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("releases")
+)
+libraryDependencies ++= Seq(
+  "com.ubirch.chain" %% "cmdtools" % "0.1.0-SNAPSHOT"
+)
+```
+
+### `config`
+
+```scala
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("releases")
+)
+libraryDependencies ++= Seq(
+  "com.ubirch.chain" %% "config" % "0.1.0-SNAPSHOT"
+)
+```
+
+### `core`
+
+```scala
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("releases")
+)
+libraryDependencies ++= Seq(
+  "com.ubirch.chain" %% "core" % "0.1.0-SNAPSHOT"
+)
+```
+
+### `model`
+
+```scala
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("releases")
+)
+libraryDependencies ++= Seq(
+  "com.ubirch.chain" %% "model" % "0.1.0-SNAPSHOT"
+)
+```
+
+### `server`
+
+```scala
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("releases"),
+  Resolver.bintrayRepo("hseeberger", "maven")
+)
+libraryDependencies ++= Seq(
+  "com.ubirch.chain" %% "server" % "0.1.0-SNAPSHOT"
+)
+```
+
+### `util`
+
+```scala
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("releases")
+)
+libraryDependencies ++= Seq(
+  "com.ubirch.chain" %% "util" % "0.1.0-SNAPSHOT"
+)
+```
+
+
 ## REST Methods
 
-### Welcome / Health
+### Welcome / Health / Check
 
-    curl localhost:8080/
+    curl localhost:8100/
+    curl localhost:8100/api/chainService/v1
+    curl localhost:8100/api/chainService/v1/check
 
-### Hash
+If healthy the server response is:
 
-    curl -i -XPOST localhost:8080/api/v1/chainService/hash -H "Content-Type: application/json" -d '{"data": "ubirch-chain-test-2342"}'
+    200 {"version":"1.0","status":"OK","message":"Welcome to the ubirchChainService ( $GO_PIPELINE_NAME / $GO_PIPELINE_LABEL / $GO_PIPELINE_REVISION )"}
 
-### Chain Explorer
+If not healthy the server response is:
 
-Query a block's info based on an event hash:
+    400 {"version":"1.0","status":"NOK","message":"$ERROR_MESSAGE"}
 
-    curl -i localhost:8080/api/v1/chainService/explorer/eventHash/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
+### Deep Check / Server Health
 
-Query a block's info based on a block hash:
+    curl localhost:8100/api/chainService/v1/deepCheck
 
-    curl -i localhost:8080/api/v1/chainService/explorer/blockInfo/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
+If healthy the response is:
 
-Query a the next block info to a given blockHash:
+    200 {"status":true,"messages":[]}
 
-    curl -i localhost:8080/api/v1/chainService/explorer/nextBlockInfo/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
+If not healthy the status is `false` and the `messages` array not empty:
 
-Query a full block based on a block hash:
+    503 {"status":false,"messages":["unable to connect to the database"]}
 
-    curl -i localhost:8080/api/v1/chainService/explorer/fullBlock/e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86
 
 ## Configuration
 
-### akka.http
+TODO
 
-Configures the Akka-Http Server.
 
-### ubirchChainService
+## Deployment Notes
 
-    ubirchChainService {
-      interface
-      port
-      block {
-        maxBlockSize
-        sizeCheckInterval
-        blockInterval
-      }
-      anchoring {
-        enabled
-        url
-      }
-    }
-| Key                     | Description |
-| ----------------------- | ----------- |
-| interface               | network interface the service is connected to |
-| port                    | port on which service listens |
-| block.checkInterval     | how many seconds between checks if we may mine the next block |
-| block.maxSize           | maximum block size in kilobyte |
-| block.mineEveryXSeconds | number of seconds after which we mine a new block independent of it's size |
-| anchor.enabled          | true if blocks may be anchored into another blockchain |
-| anchor.url              | url of Notary Service to send notifications to when anchroing is enabled |
-| anchor.interval         | interval (in seconds) in which blocks are anchored |
+TODO
+
 
 ## Automated Tests
 
-Some of the existing automated tests depend on an ElasticSearch instance running on localhost.
+run all tests
+
+    ./sbt test
+
+### generate coverage report
+
+    ./sbt coverageReport
+
+more details here: https://github.com/scoverage/sbt-scoverage
+
 
 ## Local Setup
 
-The service comes with a configuration tailored to running everything on `localhost`.
- 
-First download, install and start ElasticSearch (version 2.3.3 works).
+TODO
 
-Open a terminal and run the following command to run the Chain Service:
 
-    sbt server/run
+## Create Docker Image
 
-To get random data into the server (resulting in unmined hashes and blocks that you can query) a shell script is
-provided in the root folder of this project. It will run until you manually stop it. You can run as many parallel
-instances of it as needed to create even more data. Open a terminal to run the script:
-
-    ./hash_random_input.sh
+    ./goBuild.sh assembly
