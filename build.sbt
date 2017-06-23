@@ -60,7 +60,10 @@ lazy val core = project
   .dependsOn(modelDb, util, testTools % "test")
   .settings(
     description := "business logic",
-    libraryDependencies ++= depCore
+    libraryDependencies ++= depCore,
+    resolvers ++= Seq(
+      resolverBeeClient
+    )
   )
 
 lazy val modelDb = (project in file("model-db"))
@@ -130,8 +133,9 @@ lazy val depServer = Seq(
 lazy val depCore = Seq(
   akkaActor,
   ubirchDeepCheckModel,
-  json4sNative,
+  ubirchNotaryClient,
   ubirchJson,
+  json4sNative,
   scalatest % "test"
 ) ++ scalaLogging
 
@@ -207,11 +211,14 @@ lazy val ubirchRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.7"
 lazy val ubirchResponse = ubirchUtilG %% "response-util" % "0.2.1" excludeAll(excludedLoggers: _*)
 lazy val ubirchUuid = ubirchUtilG %% "uuid" % "0.1.1" excludeAll(excludedLoggers: _*)
 
+lazy val ubirchNotaryClient = "com.ubirch.notary" %% "client" % "0.2.7" excludeAll(excludedLoggers: _*)
+
 /*
  * RESOLVER
  ********************************************************/
 
 lazy val resolverSeebergerJson = Resolver.bintrayRepo("hseeberger", "maven")
+lazy val resolverBeeClient = Resolver.bintrayRepo("rick-beton", "maven")
 
 /*
  * MISC
