@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit
 
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
-import com.ubirch.chain.config.Config
+import com.ubirch.chain.config.ChainConfig
 import com.ubirch.chain.server.route.MainRoute
 
 import akka.actor.ActorSystem
@@ -26,7 +26,7 @@ object Boot extends App with StrictLogging {
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
 
-  implicit val timeout = Timeout(Config.actorTimeout seconds)
+  implicit val timeout = Timeout(ChainConfig.actorTimeout seconds)
 
   val bindingFuture = start()
   registerShutdownHooks()
@@ -41,8 +41,8 @@ object Boot extends App with StrictLogging {
 
   def start(): Future[ServerBinding] = {
 
-    val interface = Config.interface
-    val port = Config.port
+    val interface = ChainConfig.interface
+    val port = ChainConfig.port
     implicit val timeout = Timeout(5, TimeUnit.SECONDS)
 
     logger.info(s"start http server on $interface:$port")

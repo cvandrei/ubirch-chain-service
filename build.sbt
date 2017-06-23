@@ -16,7 +16,7 @@ lazy val commonSettings = Seq(
     url("https://github.com/ubirch/ubirch-chain-service"),
     "scm:git:git@github.com:ubirch/ubirch-chain-service.git"
   )),
-  version := "1.0.0",
+  version := "0.1.0-SNAPSHOT",
   test in assembly := {},
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases")
@@ -57,11 +57,12 @@ lazy val cmdtools = project
 
 lazy val core = project
   .settings(commonSettings: _*)
-  .dependsOn(modelDb, util, testTools % "test")
+  .dependsOn(config, modelDb, modelRest, util, testTools % "test")
   .settings(
     description := "business logic",
     libraryDependencies ++= depCore,
     resolvers ++= Seq(
+      resolverSeebergerJson,
       resolverBeeClient
     )
   )
@@ -79,7 +80,10 @@ lazy val modelRest = (project in file("model-rest"))
   .settings(
     name := "model-rest",
     description := "JSON models",
-    libraryDependencies ++= depModelRest
+    libraryDependencies ++= depModelRest,
+    resolvers ++= Seq(
+      resolverSeebergerJson
+    )
   )
 
 lazy val server = project
@@ -105,7 +109,10 @@ lazy val testTools = (project in file("test-tools"))
   .settings(
     name := "test-tools",
     description := "tools useful in automated tests",
-    libraryDependencies ++= depTestTools
+    libraryDependencies ++= depTestTools,
+    resolvers ++= Seq(
+      resolverSeebergerJson
+    )
   )
 
 lazy val util = project
@@ -135,9 +142,8 @@ lazy val depCore = Seq(
   ubirchDeepCheckModel,
   ubirchNotaryClient,
   ubirchJson,
-  json4sNative,
   scalatest % "test"
-) ++ scalaLogging
+) ++ akkaCamel ++ scalaLogging
 
 lazy val depModelDb = Seq(
   ubirchUuid,
@@ -146,16 +152,11 @@ lazy val depModelDb = Seq(
 
 lazy val depModelRest = Seq(
   ubirchUuid,
-  ubirchDate
-)
-
-lazy val depModel = Seq(
-  ubirchJson,
-  json4sNative
+  ubirchDate,
+  ubirchJson
 )
 
 lazy val depTestTools = Seq(
-  json4sNative,
   ubirchJson,
   scalatest
 ) ++ scalaLogging
@@ -170,7 +171,7 @@ lazy val depUtils = Seq(
 // VERSIONS
 val akkaV = "2.4.18"
 val akkaHttpV = "10.0.6"
-val json4sV = "3.5.2"
+val camelV = "2.18.1"
 
 val scalaTestV = "3.0.1"
 
@@ -178,10 +179,9 @@ val scalaTestV = "3.0.1"
 val ubirchUtilG = "com.ubirch.util"
 val json4sG = "org.json4s"
 val akkaG = "com.typesafe.akka"
+val camelG = "org.apache.camel"
 
 lazy val scalatest = "org.scalatest" %% "scalatest" % scalaTestV
-
-lazy val json4sNative = json4sG %% "json4s-native" % json4sV
 
 lazy val scalaLogging = Seq(
   "org.slf4j" % "slf4j-api" % "1.7.21",
@@ -195,6 +195,14 @@ lazy val scalaLogging = Seq(
 lazy val akkaActor = akkaG %% "akka-actor" % akkaV
 lazy val akkaHttp = akkaG %% "akka-http" % akkaHttpV
 lazy val akkaSlf4j = akkaG %% "akka-slf4j" % akkaV
+
+lazy val akkaCamel = Seq(
+  camelG % "camel-core" % camelV,
+  camelG % "camel-aws" % camelV,
+  camelG % "camel-paho" % camelV,
+  camelG % "camel-mqtt" % camelV,
+  akkaG %% "akka-camel" % akkaV exclude("org.apache.camel", "camel-core")
+)
 
 lazy val excludedLoggers = Seq(
   ExclusionRule(organization = "com.typesafe.scala-logging"),

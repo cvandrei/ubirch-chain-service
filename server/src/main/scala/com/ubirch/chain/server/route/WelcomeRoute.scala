@@ -1,6 +1,6 @@
 package com.ubirch.chain.server.route
 
-import com.ubirch.chain.config.Config
+import com.ubirch.chain.config.ChainConfig
 import com.ubirch.util.json.MyJsonProtocol
 import com.ubirch.util.model.JsonResponse
 
@@ -19,8 +19,8 @@ trait WelcomeRoute extends MyJsonProtocol {
     get {
       complete {
 
-        val goInfo = s"${Config.goPipelineName} / ${Config.goPipelineLabel} / ${Config.goPipelineRevision}"
-        JsonResponse(message = s"Welcome to the ubirchUserService ( $goInfo )")
+        val goInfo = s"${ChainConfig.goPipelineName} / ${ChainConfig.goPipelineLabel} / ${ChainConfig.goPipelineRevision}"
+        JsonResponse(message = s"Welcome to the ubirchChainService ( $goInfo )")
 
       }
     }

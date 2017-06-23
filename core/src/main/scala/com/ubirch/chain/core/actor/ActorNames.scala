@@ -8,4 +8,6 @@ object ActorNames {
 
   final val DEEP_CHECK = "deep-check-actor"
 
+  final val BIGCHAIN = "bigchain-actor"
+
 }

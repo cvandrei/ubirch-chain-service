@@ -41,7 +41,8 @@ libraryDependencies ++= Seq(
 ```scala
 resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots"),
-  Resolver.bintrayRepo("rick-beton", "maven") // needed for the notary-client
+  Resolver.bintrayRepo("rick-beton", "maven"), // needed for the notary-client
+  Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
   "com.ubirch.chain" %% "core" % "0.1.0-SNAPSHOT"
@@ -63,7 +64,8 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("snapshots"),
+  Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
   "com.ubirch.chain" %% "model-rest" % "0.1.0-SNAPSHOT"
@@ -79,6 +81,18 @@ resolvers ++= Seq(
 )
 libraryDependencies ++= Seq(
   "com.ubirch.chain" %% "server" % "0.1.0-SNAPSHOT"
+)
+```
+
+### `test-tools`
+
+```scala
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("releases"),
+  Resolver.bintrayRepo("hseeberger", "maven")
+)
+libraryDependencies ++= Seq(
+  "com.ubirch.chain" %% "test-tools" % "0.1.0-SNAPSHOT"
 )
 ```
 
@@ -122,6 +136,18 @@ If not healthy the status is `false` and the `messages` array not empty:
 
     503 {"status":false,"messages":["unable to connect to the database"]}
 
+### Transaction
+
+Writes a message or hash to the blockchain.
+
+To write a message to the blockchain (where _msg_ is any valid JSON):
+
+    curl -i -XPOST localhost:8080/api/v1/chainService/tx -H "Content-Type: application/json" -d '{"msg": {"foo": "bar"}}'
+
+To write a hash to the blockchain:
+
+    curl -i -XPOST localhost:8080/api/v1/chainService/tx -H "Content-Type: application/json" -d '{"hash": "e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86"}'
+
 
 ## Configuration
 
@@ -148,7 +174,9 @@ more details here: https://github.com/scoverage/sbt-scoverage
 
 ## Local Setup
 
-TODO
+    export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
+    export AWS_SECRET_ACCESS_KEY={YOUR AWS SECRET KEY}
+    ./sbt server/run
 
 
 ## Create Docker Image

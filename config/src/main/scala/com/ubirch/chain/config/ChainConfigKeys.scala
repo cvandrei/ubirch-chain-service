@@ -4,7 +4,7 @@ package com.ubirch.chain.config
   * author: cvandrei
   * since: 2017-01-19
   */
-object ConfigKeys {
+object ChainConfigKeys {
 
   final val CONFIG_PREFIX = "ubirchChainService"
 
@@ -27,5 +27,14 @@ object ConfigKeys {
 
   final val ACTOR_TIMEOUT = s"$akkaPrefix.actorTimeout"
   final val AKKA_NUMBER_OF_WORKERS = s"$akkaPrefix.numberOfWorkers"
+
+  /*
+   * AWS related configs
+   *********************************************************************************************/
+
+  private val awsPrefix = s"$CONFIG_PREFIX.aws"
+
+  final val AWS_ACCESS_KEY = s"$awsPrefix.awsaccesskey"
+  final val AWS_SECRET_ACCESS_KEY = s"$awsPrefix.awssecretaccesskey"
 
 }
