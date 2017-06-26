@@ -3,7 +3,7 @@ package com.ubirch.chain.server.route
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.chain.config.ChainConfig
-import com.ubirch.chain.core.actor.BigchainActor
+import com.ubirch.chain.core.actor.{ActorNames, BigchainActor}
 import com.ubirch.chain.model.rest.Transaction
 import com.ubirch.chain.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
@@ -31,7 +31,7 @@ class TransactionRoute()(implicit _system: ActorSystem)
   implicit val executionContext: ExecutionContextExecutor = _system.dispatcher
   implicit val timeout = Timeout(ChainConfig.actorTimeout seconds)
 
-  private val bigchainActor = BigchainActor.actor()
+  private val bigchainActor = _system.actorOf(BigchainActor.props(), ActorNames.BIGCHAIN)
 
   val route: Route = {
 

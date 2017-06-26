@@ -1,10 +1,9 @@
 package com.ubirch.chain.core.actor.producer
 
 import com.ubirch.chain.config.ChainConfig
-import com.ubirch.chain.core.actor.ActorNames
 import com.ubirch.chain.core.actor.util.ActorTools
 
-import akka.actor.{ActorRef, ActorSystem, Props}
+import akka.actor.Props
 import akka.camel.Producer
 
 /**
@@ -20,9 +19,5 @@ class BigchainProducerActor(sqsQueueName: String) extends Producer with ActorToo
 }
 
 object BigchainProducerActor extends ActorTools {
-
   def props(): Props = roundRobin().props(Props(new BigchainProducerActor(ChainConfig.awsSqsQueueBigchainDbOut)))
-
-  def actor()(implicit _system: ActorSystem): ActorRef = _system.actorOf(props(), ActorNames.BIGCHAIN_PRODUCER)
-
 }

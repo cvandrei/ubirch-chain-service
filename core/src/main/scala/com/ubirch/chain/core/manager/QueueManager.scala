@@ -1,5 +1,6 @@
 package com.ubirch.chain.core.manager
 
+import com.ubirch.chain.core.actor.ActorNames
 import com.ubirch.chain.core.actor.consumer.TransactionConsumer
 
 import akka.actor.ActorSystem
@@ -12,7 +13,7 @@ object QueueManager {
 
   def initConsumers()(implicit _system: ActorSystem): Unit = {
 
-    TransactionConsumer.actor()
+    _system.actorOf(TransactionConsumer.props(), ActorNames.TRANSACTION_CONSUMER)
 
   }
 

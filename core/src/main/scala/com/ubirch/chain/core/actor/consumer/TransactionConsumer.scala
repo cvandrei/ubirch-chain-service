@@ -8,7 +8,7 @@ import com.ubirch.util.json.{Json4sUtil, MyJsonProtocol}
 
 import org.json4s.JValue
 
-import akka.actor.{ActorLogging, ActorRef, ActorSystem, Props}
+import akka.actor.{ActorLogging, Props}
 import akka.camel.{CamelMessage, Consumer}
 
 /**
@@ -21,7 +21,7 @@ class TransactionConsumer extends Consumer
   with MyJsonProtocol {
 
   private implicit val _system = context.system
-  private val bigchainActor = BigchainActor.actor()
+  private val bigchainActor = context.actorOf(BigchainActor.props(), ActorNames.BIGCHAIN)
 
   override def endpointUri: String = sqsEndpointConsumer(ChainConfig.awsSqsQueueTransactionsIn)
 
@@ -65,9 +65,5 @@ class TransactionConsumer extends Consumer
 }
 
 object TransactionConsumer extends ActorTools {
-
-  def props(): Props = roundRobin().props(Props(new TransactionConsumer()))
-
-  def actor()(implicit _system: ActorSystem): ActorRef = _system.actorOf(props(), ActorNames.TRANSACTION_CONSUMER)
-
+  def props(): Props = roundRobin().props(Props[TransactionConsumer])
 }

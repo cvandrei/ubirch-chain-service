@@ -4,7 +4,7 @@ import com.ubirch.chain.core.actor.producer.BigchainProducerActor
 import com.ubirch.chain.core.actor.util.ActorTools
 import com.ubirch.chain.model.rest.Transaction
 
-import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, ActorLogging, Props}
 
 /**
   * author: cvandrei
@@ -14,7 +14,7 @@ class BigchainActor extends Actor
   with ActorLogging {
 
   private implicit val system = context.system
-  private val bigchainDbProducer = BigchainProducerActor.actor()
+  private val bigchainDbProducer = context.actorOf(BigchainProducerActor.props(), ActorNames.BIGCHAIN_PRODUCER)
 
   override def receive: Receive = {
 
@@ -38,9 +38,5 @@ class BigchainActor extends Actor
 }
 
 object BigchainActor extends ActorTools {
-
-  def props(): Props = roundRobin().props(Props(new BigchainActor()))
-
-  def actor()(implicit _system: ActorSystem): ActorRef = _system.actorOf(props(), ActorNames.BIGCHAIN)
-
+  def props(): Props = roundRobin().props(Props[BigchainActor])
 }
