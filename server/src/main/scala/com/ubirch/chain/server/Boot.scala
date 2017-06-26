@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
 import com.ubirch.chain.config.ChainConfig
+import com.ubirch.chain.core.manager.QueueManager
 import com.ubirch.chain.server.route.MainRoute
 
 import akka.actor.ActorSystem
@@ -44,6 +45,8 @@ object Boot extends App with StrictLogging {
     val interface = ChainConfig.interface
     val port = ChainConfig.port
     implicit val timeout = Timeout(5, TimeUnit.SECONDS)
+
+    QueueManager.initConsumers()
 
     logger.info(s"start http server on $interface:$port")
     Http().bindAndHandle((new MainRoute).myRoute, interface, port)

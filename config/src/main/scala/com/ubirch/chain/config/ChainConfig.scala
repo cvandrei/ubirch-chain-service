@@ -23,7 +23,9 @@ object ChainConfig extends ConfigBase {
   def port: Int = config.getInt(ChainConfigKeys.PORT)
 
   def goPipelineName: String = config.getString(ChainConfigKeys.GO_PIPELINE_NAME)
+
   def goPipelineLabel: String = config.getString(ChainConfigKeys.GO_PIPELINE_LABEL)
+
   def goPipelineRevision: String = config.getString(ChainConfigKeys.GO_PIPELINE_REVISION)
 
   /*
@@ -46,5 +48,17 @@ object ChainConfig extends ConfigBase {
   def awsAccessKey: String = config.getString(ChainConfigKeys.AWS_ACCESS_KEY)
 
   def awsSecretAccessKey: String = config.getString(ChainConfigKeys.AWS_SECRET_ACCESS_KEY)
+
+  def awsSqsConcurrentConsumers: Int = config.getInt(ChainConfigKeys.AWS_SQS_CONCURRENT_CONSUMERS)
+
+  def awsSqsMaxMessagesPerPoll: Int = config.getInt(ChainConfigKeys.AWS_SQS_MAX_MESSAGES_PER_POLL)
+
+  def awsSqsQueueTransactionsIn: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_TRANSACTION_IN)
+
+  def awsSqsQueueTransactionsOut: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_TRANSACTION_OUT)
+
+  def awsSqsQueueBigchainDbIn: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_BIGCHAIN_DB_IN)
+
+  def awsSqsQueueBigchainDbOut: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_BIGCHAIN_DB_OUT)
 
 }

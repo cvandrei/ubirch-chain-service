@@ -2,6 +2,7 @@ package com.ubirch.chain.server.route
 
 import com.ubirch.chain.util.server.RouteConstants
 
+import akka.actor.ActorSystem
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 
@@ -9,10 +10,11 @@ import akka.http.scaladsl.server.Route
   * author: cvandrei
   * since: 2017-03-22
   */
-class MainRoute {
+class MainRoute()(implicit _system: ActorSystem) {
 
   val welcome = new WelcomeRoute {}
   val deepCheck = new DeepCheckRoute {}
+  val tx = new TransactionRoute {}
 
   val myRoute: Route = {
 
@@ -24,7 +26,9 @@ class MainRoute {
             welcome.route
           } ~ path(RouteConstants.check) {
             welcome.route
-          } ~ deepCheck.route
+          } ~
+            deepCheck.route ~
+            tx.route
 
         }
       }

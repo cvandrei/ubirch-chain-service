@@ -37,4 +37,17 @@ object ChainConfigKeys {
   final val AWS_ACCESS_KEY = s"$awsPrefix.awsaccesskey"
   final val AWS_SECRET_ACCESS_KEY = s"$awsPrefix.awssecretaccesskey"
 
+  private val awsSqs = s"$awsPrefix.sqs"
+
+  final val AWS_SQS_CONCURRENT_CONSUMERS = s"$awsSqs.concurrentConsumers"
+  final val AWS_SQS_MAX_MESSAGES_PER_POLL = s"$awsSqs.maxMessagesPerPoll"
+
+  private val awsSqsQueues = s"$awsSqs.queues"
+
+  final val AWS_SQS_QUEUE_TRANSACTION_IN = s"$awsSqsQueues.transactionsIn"
+  final val AWS_SQS_QUEUE_TRANSACTION_OUT = s"$awsSqsQueues.transactionsOut"
+
+  final val AWS_SQS_QUEUE_BIGCHAIN_DB_IN = s"$awsSqsQueues.bigchainDbIn"
+  final val AWS_SQS_QUEUE_BIGCHAIN_DB_OUT = s"$awsSqsQueues.bigchainDbOut"
+
 }

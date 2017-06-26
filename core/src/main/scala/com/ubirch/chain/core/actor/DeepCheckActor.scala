@@ -1,9 +1,10 @@
 package com.ubirch.chain.core.actor
 
+import com.ubirch.chain.core.actor.util.ActorTools
 import com.ubirch.chain.core.manager.DeepCheckManager
 import com.ubirch.util.deepCheck.model.{DeepCheckRequest, DeepCheckResponse}
 
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -26,5 +27,13 @@ class DeepCheckActor extends Actor
   }
 
   private def deepCheck(): Future[DeepCheckResponse] = DeepCheckManager.connectivityCheck()
+
+}
+
+object DeepCheckActor extends ActorTools {
+
+  def props(): Props = roundRobin().props(Props(new DeepCheckActor()))
+
+  def actor()(implicit _system: ActorSystem): ActorRef = _system.actorOf(props(), ActorNames.DEEP_CHECK)
 
 }
