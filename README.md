@@ -178,7 +178,7 @@ more details here: https://github.com/scoverage/sbt-scoverage
 
   * Ubuntu 16.04
     ```
-    sudo apt install python3-boto3 python3-pip
+    sudo apt install python3-boto3 python3-pip python3-pyasn1
     sudo -H pip3 install -r bigChainDbStore/requirements.txt
     ```
 

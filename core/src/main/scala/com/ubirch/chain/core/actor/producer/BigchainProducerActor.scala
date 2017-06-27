@@ -19,5 +19,5 @@ class BigchainProducerActor(sqsQueueName: String) extends Producer with ActorToo
 }
 
 object BigchainProducerActor extends ActorTools {
-  def props(): Props = roundRobin().props(Props(new BigchainProducerActor(ChainConfig.awsSqsQueueBigchainDbOut)))
+  def props(): Props = roundRobin().props(Props(new BigchainProducerActor(ChainConfig.awsSqsQueueBigchainDbIn)))
 }
