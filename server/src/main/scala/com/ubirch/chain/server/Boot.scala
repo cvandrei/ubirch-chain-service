@@ -1,15 +1,16 @@
 package com.ubirch.chain.server
 
-import com.typesafe.scalalogging.slf4j.StrictLogging
 import java.util.concurrent.TimeUnit
 
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.Http.ServerBinding
+import com.typesafe.scalalogging.slf4j.StrictLogging
+
 import com.ubirch.chain.config.ChainConfig
 import com.ubirch.chain.core.manager.QueueManager
 import com.ubirch.chain.server.route.MainRoute
 
 import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.Http.ServerBinding
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
 
