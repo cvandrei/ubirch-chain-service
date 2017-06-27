@@ -174,9 +174,32 @@ more details here: https://github.com/scoverage/sbt-scoverage
 
 ## Local Setup
 
+1. Install Dependencies
+
+  * Ubuntu 16.04
+    ```
+    sudo apt install python3-boto3 python3-pip
+    sudo -H pip3 install -r bigChainDbStore/requirements.txt
+    ```
+
+  * MacOS
+    ```
+    tbd
+    ```
+
+2. Start BigchainDb
+
+    ```
+    python3 bigChainDbStore/src/bigChainDbStore.py
+    ```
+
+3. Start Server
+
+    ```
     export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
     export AWS_SECRET_ACCESS_KEY={YOUR AWS SECRET KEY}
     ./sbt server/run
+    ```
 
 
 ## Create Docker Image
