@@ -17,7 +17,7 @@ trait ActorTools {
   }
 
   def sqsEndpointConsumer(queue: String): String = {
-    s"${sqsEndpoint(queue)}&concurrentConsumers=${ChainConfig.awsSqsConcurrentConsumers}&maxMessagesPerPoll=${ChainConfig.awsSqsMaxMessagesPerPoll}"
+    s"${sqsEndpoint(queue)}&maxMessagesPerPoll=${ChainConfig.awsSqsMaxMessagesPerPoll}"
   }
 
 }
