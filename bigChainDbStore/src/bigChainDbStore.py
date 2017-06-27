@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# pip install -r requirements.txt
+
 import os
 import boto3
 import json
