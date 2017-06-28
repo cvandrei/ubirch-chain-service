@@ -46,11 +46,9 @@ def sendPayload(payload):
 for i in range(500):
     t = round((-10 + (random.randint(1, 50000) / 1000)), 3)
     jsonPayload = {
-        "msg": {
-            "id": str(uuid.uuid4()),
-            "payload": {
-                "t": t
-            }
+        "id": str(uuid.uuid4()),
+        "payload": {
+            "t": t
         }
     }
     payload = json.dumps(jsonPayload)
