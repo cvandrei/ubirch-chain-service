@@ -3,7 +3,7 @@ package com.ubirch.chain.core.actor.consumer
 import com.ubirch.chain.config.ChainConfig
 import com.ubirch.chain.core.actor.util.ActorTools
 import com.ubirch.chain.core.actor.{ActorNames, BigchainActor}
-import com.ubirch.chain.model.rest.DeviceDataIn
+import com.ubirch.chain.model.rest.DeviceMsgIn
 import com.ubirch.util.json.{Json4sUtil, MyJsonProtocol}
 
 import org.json4s.JValue
@@ -32,7 +32,7 @@ class DeviceDataInConsumer extends Consumer
       log.debug(s"received ${msg.bodyAs[String]}")
       camelMsgToDeviceDataIn(msg.body) match {
 
-        case Some(deviceDataIn: DeviceDataIn) => bigchainActor ! deviceDataIn
+        case Some(deviceMsg: DeviceMsgIn) => bigchainActor ! deviceMsg
         case None => log.error(s"invalid json message: ${msg.body}")
 
       }
@@ -41,7 +41,7 @@ class DeviceDataInConsumer extends Consumer
 
   }
 
-  private def camelMsgToDeviceDataIn(body: Any): Option[DeviceDataIn] = {
+  private def camelMsgToDeviceDataIn(body: Any): Option[DeviceMsgIn] = {
 
     body match {
 
@@ -49,7 +49,7 @@ class DeviceDataInConsumer extends Consumer
 
         Json4sUtil.string2JValue(txString) match {
 
-          case Some(txJson: JValue) => txJson.extractOpt[DeviceDataIn]
+          case Some(txJson: JValue) => txJson.extractOpt[DeviceMsgIn]
           case _ => None
 
         }

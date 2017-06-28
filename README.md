@@ -142,13 +142,13 @@ If not healthy the status is `false` and the `messages` array not empty:
 
 Writes a device message to the blockchain (where _payload_ is any valid JSON and _id_ is a String):
 
-    curl -i -XPOST localhost:8080/api/v1/chainService/tx/deviceData -H "Content-Type: application/json" -d '{"id": "92b72011-c458-447f-90c5-69ea26e22cf8", "payload": {"t": 29.067}}'
+    curl -i -XPOST localhost:8080/api/v1/chainService/tx/deviceMsg -H "Content-Type: application/json" -d '{"id": "92b72011-c458-447f-90c5-69ea26e22cf8", "payload": {"t": 29.067}}'
 
 #### DeviceDataHash
 
 Writes a hash (any String) to the blockchain:
 
-    curl -i -XPOST localhost:8080/api/v1/chainService/tx/deviceDataHash -H "Content-Type: application/json" -d '{"hash": "e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86"}'
+    curl -i -XPOST localhost:8080/api/v1/chainService/tx/deviceMsgHash -H "Content-Type: application/json" -d '{"hash": "e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86"}'
 
 
 ## Configuration
@@ -234,7 +234,7 @@ more details here: https://github.com/scoverage/sbt-scoverage
     ```
     export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
     export AWS_SECRET_ACCESS_KEY={YOUR AWS SECRET KEY}
-    python3 bigChainDbStore/src/chainServiceDeviceDataTester.py
+    python3 bigChainDbStore/src/chainServiceDeviceMsgTester.py
     ```
 
 

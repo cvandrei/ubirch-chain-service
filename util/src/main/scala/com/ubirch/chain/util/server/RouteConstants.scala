@@ -14,8 +14,8 @@ object RouteConstants {
   final val deepCheck = "deepCheck"
 
   final val tx = "tx"
-  final val deviceData = "deviceData"
-  final val deviceDataHash = "deviceDataHash"
+  final val deviceMsg = "deviceMsg"
+  final val deviceMsgHash = "deviceMsgHash"
 
   val pathPrefix = s"/$apiPrefix/$serviceName/$currentVersion"
 
@@ -23,7 +23,7 @@ object RouteConstants {
   val pathDeepCheck = s"$pathPrefix/$deepCheck"
 
   val pathTxPrefix = s"$pathPrefix/$tx"
-  val pathTxDeviceData = s"$pathTxPrefix/$deviceData"
-  val pathTxDeviceDataHash = s"$pathTxPrefix/$deviceDataHash"
+  val pathTxDeviceData = s"$pathTxPrefix/$deviceMsg"
+  val pathTxDeviceDataHash = s"$pathTxPrefix/$deviceMsgHash"
 
 }

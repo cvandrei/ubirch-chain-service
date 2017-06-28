@@ -2,7 +2,7 @@ package com.ubirch.chain.core.actor
 
 import com.ubirch.chain.core.actor.producer.BigchainProducerActor
 import com.ubirch.chain.core.actor.util.ActorTools
-import com.ubirch.chain.model.rest.{DeviceDataHashIn, DeviceDataIn}
+import com.ubirch.chain.model.rest.{DeviceMsgHashIn, DeviceMsgIn}
 
 import akka.actor.{Actor, ActorLogging, Props}
 
@@ -18,12 +18,12 @@ class BigchainActor extends Actor
 
   override def receive: Receive = {
 
-    case deviceData: DeviceDataIn =>
+    case deviceData: DeviceMsgIn =>
 
       log.debug(s"received deviceData: $deviceData")
       bigchainDbProducer ! deviceData
 
-    case deviceDataHash: DeviceDataHashIn =>
+    case deviceDataHash: DeviceMsgHashIn =>
 
       log.debug(s"received deviceDataHash: $deviceDataHash")
       bigchainDbProducer ! deviceDataHash
