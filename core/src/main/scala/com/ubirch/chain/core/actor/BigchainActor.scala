@@ -2,7 +2,7 @@ package com.ubirch.chain.core.actor
 
 import com.ubirch.chain.core.actor.producer.BigchainProducerActor
 import com.ubirch.chain.core.actor.util.ActorTools
-import com.ubirch.chain.model.rest.Transaction
+import com.ubirch.chain.model.rest.{DeviceDataHashIn, DeviceDataIn}
 
 import akka.actor.{Actor, ActorLogging, Props}
 
@@ -18,17 +18,15 @@ class BigchainActor extends Actor
 
   override def receive: Receive = {
 
-    case tx: Transaction =>
+    case deviceData: DeviceDataIn =>
 
-      log.debug(s"received tx: $tx")
-      if (tx.hash.isDefined) {
-        // TODO notify bigchainDbProducer
-        //bigchainDbProducer ! tx.hash.get
-      } else if (tx.msg.isDefined) {
-        bigchainDbProducer ! tx.msg.get
-      } else {
-        log.error(s"unable to write to BigchainDb if hash and message are empty")
-      }
+      log.debug(s"received deviceData: $deviceData")
+      bigchainDbProducer ! deviceData
+
+    case deviceDataHash: DeviceDataHashIn =>
+
+      log.debug(s"received deviceDataHash: $deviceDataHash")
+      bigchainDbProducer ! deviceDataHash
 
     case _ => log.error("unknown message")
 

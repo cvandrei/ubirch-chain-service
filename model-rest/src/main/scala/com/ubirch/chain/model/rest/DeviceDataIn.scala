@@ -6,6 +6,6 @@ import org.json4s.JValue
   * author: cvandrei
   * since: 2017-06-23
   */
-case class Transaction(msg: Option[JValue],
-                       hash: Option[String]
-                      )
+case class DeviceDataIn(id: String,
+                        payload: JValue
+                       )

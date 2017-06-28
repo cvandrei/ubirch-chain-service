@@ -4,7 +4,7 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.chain.config.ChainConfig
 import com.ubirch.chain.core.actor.{ActorNames, BigchainActor}
-import com.ubirch.chain.model.rest.Transaction
+import com.ubirch.chain.model.rest.{DeviceDataHashIn, DeviceDataIn}
 import com.ubirch.chain.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.rest.akka.directives.CORSDirective
@@ -35,14 +35,27 @@ class TransactionRoute()(implicit _system: ActorSystem)
 
   val route: Route = {
 
-    path(RouteConstants.tx) {
+    pathPrefix(RouteConstants.tx) {
       respondWithCORS {
 
-        post {
-          entity(as[Transaction]) { transaction =>
-            bigchainActor ! transaction
-            complete(StatusCodes.OK)
+        path(RouteConstants.deviceData) {
+
+          post {
+            entity(as[DeviceDataIn]) { deviceData =>
+              bigchainActor ! deviceData
+              complete(StatusCodes.OK)
+            }
           }
+
+        } ~ path(RouteConstants.deviceDataHash) {
+
+          post {
+            entity(as[DeviceDataHashIn]) { deviceDataHash =>
+              bigchainActor ! deviceDataHash
+              complete(StatusCodes.OK)
+            }
+          }
+
         }
 
       }

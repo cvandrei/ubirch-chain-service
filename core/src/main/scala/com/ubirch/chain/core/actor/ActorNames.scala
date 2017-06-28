@@ -12,6 +12,7 @@ object ActorNames {
   final val BIGCHAIN_PRODUCER = "bigchain-producer"
   final val BIGCHAIN_CONSUMER = "bigchain-consumer"
 
-  final val TRANSACTION_CONSUMER = "transaction-consumer"
+  final val DEVICE_DATA_CONSUMER = "device-data-consumer"
+  final val DEVICE_DATA_HASH_CONSUMER = "device-data-hash-consumer"
 
 }
