@@ -44,7 +44,8 @@ object ChainConfigKeys {
 
   private val awsSqsQueues = s"$awsSqs.queues"
 
-  final val AWS_SQS_QUEUE_TRANSACTION_IN = s"$awsSqsQueues.transactionsIn"
+  final val AWS_SQS_QUEUE_DEVICE_DATA_IN = s"$awsSqsQueues.deviceDataIn"
+  final val AWS_SQS_QUEUE_DEVICE_DATA_HASH_IN = s"$awsSqsQueues.deviceDataHashIn"
 
   final val AWS_SQS_QUEUE_BIGCHAIN_DB_IN = s"$awsSqsQueues.bigchainDbIn"
 

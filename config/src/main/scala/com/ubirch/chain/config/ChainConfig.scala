@@ -53,7 +53,9 @@ object ChainConfig extends ConfigBase {
 
   def awsSqsMaxMessagesPerPoll: Int = config.getInt(ChainConfigKeys.AWS_SQS_MAX_MESSAGES_PER_POLL)
 
-  def awsSqsQueueTransactionsIn: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_TRANSACTION_IN)
+  def awsSqsQueueDeviceDataIn: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_DEVICE_DATA_IN)
+
+  def awsSqsQueueDeviceDataHashIn: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_DEVICE_DATA_HASH_IN)
 
   def awsSqsQueueBigchainDbIn: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_BIGCHAIN_DB_IN)
 

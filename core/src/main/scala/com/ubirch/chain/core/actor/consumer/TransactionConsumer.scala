@@ -23,7 +23,7 @@ class TransactionConsumer extends Consumer
   private implicit val _system = context.system
   private val bigchainActor = context.actorOf(BigchainActor.props(), ActorNames.BIGCHAIN)
 
-  override def endpointUri: String = sqsEndpointConsumer(ChainConfig.awsSqsQueueTransactionsIn)
+  override def endpointUri: String = sqsEndpointConsumer(ChainConfig.awsSqsQueueDeviceDataIn)
 
   override def receive: Receive = {
 
