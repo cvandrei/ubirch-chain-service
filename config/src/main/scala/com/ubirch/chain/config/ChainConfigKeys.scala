@@ -36,6 +36,8 @@ object ChainConfigKeys {
 
   final val AWS_ACCESS_KEY = s"$awsPrefix.awsaccesskey"
   final val AWS_SECRET_ACCESS_KEY = s"$awsPrefix.awssecretaccesskey"
+  final val AWS_REGION = s"$awsPrefix.region"
+  final val AWS_QUEUE_OWNER_ID = s"$awsPrefix.queueOwnerId"
 
   private val awsSqs = s"$awsPrefix.sqs"
 

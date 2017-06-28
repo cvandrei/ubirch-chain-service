@@ -49,6 +49,10 @@ object ChainConfig extends ConfigBase {
 
   def awsSecretAccessKey: String = config.getString(ChainConfigKeys.AWS_SECRET_ACCESS_KEY)
 
+  def awsRegion: String = config.getString(ChainConfigKeys.AWS_REGION)
+
+  def awsQueueOwnerId: String = config.getString(ChainConfigKeys.AWS_QUEUE_OWNER_ID)
+
   def awsSqsConcurrentConsumers: Int = config.getInt(ChainConfigKeys.AWS_SQS_CONCURRENT_CONSUMERS)
 
   def awsSqsMaxMessagesPerPoll: Int = config.getInt(ChainConfigKeys.AWS_SQS_MAX_MESSAGES_PER_POLL)

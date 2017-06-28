@@ -13,7 +13,7 @@ trait ActorTools {
   def roundRobin(): RoundRobinPool = new RoundRobinPool(ChainConfig.akkaNumberOfWorkers)
 
   def sqsEndpoint(sqsQueueName: String): String = {
-    s"aws-sqs://$sqsQueueName?accessKey=${ChainConfig.awsAccessKey}&secretKey=${ChainConfig.awsSecretAccessKey}"
+    s"aws-sqs://$sqsQueueName?region=${ChainConfig.awsRegion}&queueOwnerAWSAccountId=${ChainConfig.awsQueueOwnerId}&accessKey=${ChainConfig.awsAccessKey}&secretKey=${ChainConfig.awsSecretAccessKey}"
   }
 
   def sqsEndpointConsumer(queue: String): String = {
