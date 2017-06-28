@@ -21,12 +21,12 @@ class BigchainActor extends Actor
     case deviceData: DeviceMsgIn =>
 
       log.debug(s"received deviceData: $deviceData")
-      bigchainDbProducer ! deviceData
+      bigchainDbProducer ! deviceData // TODO send JSON
 
     case deviceDataHash: DeviceMsgHashIn =>
 
       log.debug(s"received deviceDataHash: $deviceDataHash")
-      bigchainDbProducer ! deviceDataHash
+      bigchainDbProducer ! deviceDataHash // TODO send JSON
 
     case _ => log.error("unknown message")
 
