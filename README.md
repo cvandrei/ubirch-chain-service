@@ -174,31 +174,55 @@ more details here: https://github.com/scoverage/sbt-scoverage
 
 ## Local Setup
 
-1. Install Dependencies
+1. Installation
+ 
+  1.1. Dependencies
 
-  * Ubuntu 16.04
-    ```
-    sudo apt install python3-pip
-    sudo -H pip3 install -r bigChainDbStore/requirements.txt
-    ```
+    * Ubuntu 16.04
 
-  * MacOS
-    ```
-    tbd
-    ```
+      ```
+      sudo apt install python3-pip
+      sudo -H pip3 install -r bigChainDbStore/requirements.txt
+      ```
 
-2. Start BigchainDb
+    * MacOS
 
+      ```
+      tbd
+      ```
+
+  1.2. Bigchain
+  
+    [BigchainDb Quickstart](https://docs.bigchaindb.com/projects/server/en/latest/quickstart.html)
+
+2. Start Environment
+
+  2.1. BigchainDb
+  
+    Follow the instruction in: [BigchainDb Quickstart](https://docs.bigchaindb.com/projects/server/en/latest/quickstart.html).
+
+  2.2. Python Wrapper around BigchainDb
+
+    This Python wrapper listens on a queue for new transactions to store in BigchainDb.
+    
     ```
     python3 bigChainDbStore/src/bigChainDbStore.py
     ```
 
-3. Start Server
+  2.3. Start Server
 
     ```
     export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
     export AWS_SECRET_ACCESS_KEY={YOUR AWS SECRET KEY}
     ./sbt server/run
+    ```
+
+  2.4. Generate Test Data
+  
+    ```
+    export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
+    export AWS_SECRET_ACCESS_KEY={YOUR AWS SECRET KEY}
+    python3 bigChainDbStore/src/bigChainDbTester.py
     ```
 
 
