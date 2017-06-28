@@ -57,6 +57,4 @@ object ChainConfig extends ConfigBase {
 
   def awsSqsQueueBigchainDbIn: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_BIGCHAIN_DB_IN)
 
-  def awsSqsQueueBigchainDbOut: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_BIGCHAIN_DB_OUT)
-
 }
