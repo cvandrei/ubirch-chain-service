@@ -65,5 +65,5 @@ class TransactionConsumer extends Consumer
 }
 
 object TransactionConsumer extends ActorTools {
-  def props(): Props = roundRobin().props(Props[TransactionConsumer])
+  def props(): Props = Props[TransactionConsumer]
 }
