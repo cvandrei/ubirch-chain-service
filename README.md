@@ -140,15 +140,15 @@ If not healthy the status is `false` and the `messages` array not empty:
 
 #### DeviceData
 
-Writes a device message to the blockchain (where _payload_ is any valid JSON and _id_ is a String):
+Writes a device message to the blockchain (where _payload_ is any valid JSON and _id_ is the external id):
 
     curl -i -XPOST localhost:8080/api/v1/chainService/tx/deviceMsg -H "Content-Type: application/json" -d '{"id": "92b72011-c458-447f-90c5-69ea26e22cf8", "payload": {"t": 29.067}}'
 
 #### DeviceDataHash
 
-Writes a hash (any String) to the blockchain:
+Writes a hash to the blockchain (where _hash_ is any String and _id_ is the external id):
 
-    curl -i -XPOST localhost:8080/api/v1/chainService/tx/deviceMsgHash -H "Content-Type: application/json" -d '{"hash": "e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86"}'
+    curl -i -XPOST localhost:8080/api/v1/chainService/tx/deviceMsgHash -H "Content-Type: application/json" -d '{"id": "35b3f02d-c9c4-4139-8fe6-6857daeb8b8b", hash": "e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86"}'
 
 
 ## Configuration
