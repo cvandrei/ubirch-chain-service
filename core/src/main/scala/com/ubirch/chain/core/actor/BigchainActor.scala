@@ -25,8 +25,7 @@ class BigchainActor extends Actor
         // TODO notify bigchainDbProducer
         //bigchainDbProducer ! tx.hash.get
       } else if (tx.msg.isDefined) {
-        // TODO notify bigchainDbProducer
-        //bigchainDbProducer ! tx.msg.get
+        bigchainDbProducer ! tx.msg.get
       } else {
         log.error(s"unable to write to BigchainDb if hash and message are empty")
       }
