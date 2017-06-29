@@ -3,6 +3,7 @@ package com.ubirch.chain.core.actor
 import com.ubirch.chain.core.actor.producer.BigchainProducerActor
 import com.ubirch.chain.core.actor.util.ActorTools
 import com.ubirch.chain.model.rest.{DeviceMsgHashIn, DeviceMsgIn}
+import com.ubirch.util.json.Json4sUtil
 
 import akka.actor.{Actor, ActorLogging, Props}
 
@@ -21,14 +22,24 @@ class BigchainActor extends Actor
     case deviceData: DeviceMsgIn =>
 
       log.debug(s"received deviceData: $deviceData")
-      bigchainDbProducer ! deviceData // TODO send JSON
+      sendToBigchainDb(deviceData)
+      Json4sUtil.any2String(deviceData)
 
     case deviceDataHash: DeviceMsgHashIn =>
 
       log.debug(s"received deviceDataHash: $deviceDataHash")
-      bigchainDbProducer ! deviceDataHash // TODO send JSON
+      sendToBigchainDb(deviceDataHash)
 
     case _ => log.error("unknown message")
+
+  }
+
+  private def sendToBigchainDb(o: AnyRef): Unit = {
+
+    Json4sUtil.any2String(o) match {
+      case None => log.error(s"failed to convert to json: o=$o=")
+      case Some(json: String) => bigchainDbProducer ! json
+    }
 
   }
 
