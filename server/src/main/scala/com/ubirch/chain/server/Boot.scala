@@ -8,6 +8,7 @@ import com.ubirch.chain.config.{ChainConfig, ChainConfigKeys}
 import com.ubirch.chain.core.actor.{ActorNames, AnchorActor, BlockCheck}
 import com.ubirch.chain.core.manager.QueueManager
 import com.ubirch.chain.server.route.MainRoute
+import com.ubirch.util.mongo.connection.MongoUtil
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
@@ -30,6 +31,8 @@ object Boot extends App with StrictLogging {
   implicit val executionContext = system.dispatcher
 
   implicit val timeout = Timeout(ChainConfig.actorTimeout seconds)
+
+  implicit val mongo: MongoUtil = new MongoUtil(ChainConfigKeys.MONGO_BIGCHAIN_PREFIX)
 
   private val anchorActor = system.actorOf(AnchorActor.props(), ActorNames.ANCHOR)
 

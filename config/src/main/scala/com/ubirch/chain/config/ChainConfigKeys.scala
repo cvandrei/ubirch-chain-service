@@ -20,15 +20,6 @@ object ChainConfigKeys {
   final val GO_PIPELINE_REVISION = s"$CONFIG_PREFIX.gopipelinerev"
 
   /*
-   * Blockchain Anchoring Related
-   *********************************************************************************************/
-
-  private val anchor = s"$CONFIG_PREFIX.anchor"
-  final val ANCHOR_SCHEDULER_OFFSET = s"$anchor.schedulerOffset"
-  final val ANCHOR_INTERVAL = s"$anchor.interval"
-  final val ANCHOR_ENABLED = s"$anchor.enabled"
-
-  /*
    * Akka related configs
    *********************************************************************************************/
 
@@ -59,5 +50,23 @@ object ChainConfigKeys {
   final val AWS_SQS_QUEUE_DEVICE_DATA_HASH_IN = s"$awsSqsQueues.deviceDataHashIn"
 
   final val AWS_SQS_QUEUE_BIGCHAIN_DB_IN = s"$awsSqsQueues.bigchainDbIn"
+
+  /*
+   * Blockchain Anchoring Related
+   *********************************************************************************************/
+
+  private val anchor = s"$CONFIG_PREFIX.anchor"
+  final val ANCHOR_SCHEDULER_OFFSET = s"$anchor.schedulerOffset"
+  final val ANCHOR_INTERVAL = s"$anchor.interval"
+  final val ANCHOR_ENABLED = s"$anchor.enabled"
+
+  /*
+   * Mongo (BigchainDb)
+   *********************************************************************************************/
+
+  final val MONGO_BIGCHAIN_PREFIX = s"$CONFIG_PREFIX.mongoBigchain"
+  private final val mongoBigchainCollection = s"$MONGO_BIGCHAIN_PREFIX.collection"
+
+  final val BIGCHAIN_COLLECTION_BIGCHAIN = s"$mongoBigchainCollection.bigchain"
 
 }

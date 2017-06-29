@@ -29,25 +29,6 @@ object ChainConfig extends ConfigBase {
   def goPipelineRevision: String = config.getString(ChainConfigKeys.GO_PIPELINE_REVISION)
 
   /*
-   * Blockchain Anchoring Related
-   ************************************************************************************************/
-
-  /**
-    * @return true if anchoring is enabled (which chains depends on Notary Service)
-    */
-  def anchorEnabled: Boolean = config.getBoolean(ChainConfigKeys.ANCHOR_ENABLED)
-
-  /**
-    * @return interval (in seconds) between two anchors
-    */
-  def anchorInterval: Int = config.getInt(ChainConfigKeys.ANCHOR_INTERVAL)
-
-  /**
-    * @return during boot [AnchorActor] is being started with this many seconds delay
-    */
-  def anchorSchedulerOffset: Int = config.getInt(ChainConfigKeys.ANCHOR_SCHEDULER_OFFSET)
-
-  /*
    * Akka Related
    ************************************************************************************************/
 
@@ -81,5 +62,30 @@ object ChainConfig extends ConfigBase {
   def awsSqsQueueDeviceDataHashIn: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_DEVICE_DATA_HASH_IN)
 
   def awsSqsQueueBigchainDbIn: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_BIGCHAIN_DB_IN)
+
+  /*
+   * Blockchain Anchoring Related
+   ************************************************************************************************/
+
+  /**
+    * @return true if anchoring is enabled (which chains depends on Notary Service)
+    */
+  def anchorEnabled: Boolean = config.getBoolean(ChainConfigKeys.ANCHOR_ENABLED)
+
+  /**
+    * @return interval (in seconds) between two anchors
+    */
+  def anchorInterval: Int = config.getInt(ChainConfigKeys.ANCHOR_INTERVAL)
+
+  /**
+    * @return during boot [AnchorActor] is being started with this many seconds delay
+    */
+  def anchorSchedulerOffset: Int = config.getInt(ChainConfigKeys.ANCHOR_SCHEDULER_OFFSET)
+
+  /*
+   * Mongo Related (BigchainDb)
+   ************************************************************************************************/
+
+  def mongoBigchainCollectionBigchain: String = config.getString(ChainConfigKeys.BIGCHAIN_COLLECTION_BIGCHAIN)
 
 }
