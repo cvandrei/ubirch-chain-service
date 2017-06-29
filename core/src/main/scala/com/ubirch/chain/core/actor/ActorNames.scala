@@ -6,6 +6,8 @@ package com.ubirch.chain.core.actor
   */
 object ActorNames {
 
+  final val ANCHOR = "anchor-actor"
+
   final val DEEP_CHECK = "deep-check-actor"
 
   final val BIGCHAIN = "bigchain-actor"

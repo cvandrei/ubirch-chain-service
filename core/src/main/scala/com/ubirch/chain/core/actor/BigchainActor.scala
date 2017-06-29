@@ -14,7 +14,6 @@ import akka.actor.{Actor, ActorLogging, Props}
 class BigchainActor extends Actor
   with ActorLogging {
 
-  private implicit val system = context.system
   private val bigchainDbProducer = context.actorOf(BigchainProducerActor.props(), ActorNames.BIGCHAIN_PRODUCER)
 
   override def receive: Receive = {

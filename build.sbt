@@ -140,6 +140,7 @@ lazy val depServer = Seq(
 lazy val depCore = Seq(
   akkaActor,
   ubirchDeepCheckModel,
+  ubirchMongo,
   ubirchNotaryClient,
   ubirchJson,
   scalatest % "test"
@@ -158,6 +159,8 @@ lazy val depModelRest = Seq(
 
 lazy val depTestTools = Seq(
   ubirchJson,
+  ubirchMongo,
+  ubirchMongoTest,
   scalatest
 ) ++ scalaLogging
 
@@ -214,6 +217,8 @@ lazy val ubirchConfig = ubirchUtilG %% "config" % "0.1" excludeAll(excludedLogge
 lazy val ubirchDate = ubirchUtilG %% "date" % "0.1" excludeAll(excludedLoggers: _*)
 lazy val ubirchDeepCheckModel = ubirchUtilG %% "deep-check-model" % "0.1.2" excludeAll(excludedLoggers: _*)
 lazy val ubirchJson = ubirchUtilG %% "json" % "0.4.2" excludeAll(excludedLoggers: _*)
+lazy val ubirchMongoTest = ubirchUtilG %% "mongo-test-utils" % "0.3.2" excludeAll(excludedLoggers: _*)
+lazy val ubirchMongo = ubirchUtilG %% "mongo-utils" % "0.3.2" excludeAll(excludedLoggers: _*)
 lazy val ubirchRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.7" excludeAll(excludedLoggers: _*)
 lazy val ubirchRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.7" excludeAll(excludedLoggers: _*)
 lazy val ubirchResponse = ubirchUtilG %% "response-util" % "0.2.2" excludeAll(excludedLoggers: _*)

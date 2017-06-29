@@ -20,6 +20,15 @@ object ChainConfigKeys {
   final val GO_PIPELINE_REVISION = s"$CONFIG_PREFIX.gopipelinerev"
 
   /*
+   * Blockchain Anchoring Related
+   *********************************************************************************************/
+
+  private val anchor = s"$CONFIG_PREFIX.anchor"
+  final val ANCHOR_SCHEDULER_OFFSET = s"$anchor.schedulerOffset"
+  final val ANCHOR_INTERVAL = s"$anchor.interval"
+  final val ANCHOR_ENABLED = s"$anchor.enabled"
+
+  /*
    * Akka related configs
    *********************************************************************************************/
 

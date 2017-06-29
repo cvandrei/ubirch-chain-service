@@ -29,6 +29,25 @@ object ChainConfig extends ConfigBase {
   def goPipelineRevision: String = config.getString(ChainConfigKeys.GO_PIPELINE_REVISION)
 
   /*
+   * Blockchain Anchoring Related
+   ************************************************************************************************/
+
+  /**
+    * @return true if anchoring is enabled (which chains depends on Notary Service)
+    */
+  def anchorEnabled: Boolean = config.getBoolean(ChainConfigKeys.ANCHOR_ENABLED)
+
+  /**
+    * @return interval (in seconds) between two anchors
+    */
+  def anchorInterval: Int = config.getInt(ChainConfigKeys.ANCHOR_INTERVAL)
+
+  /**
+    * @return during boot [AnchorActor] is being started with this many seconds delay
+    */
+  def anchorSchedulerOffset: Int = config.getInt(ChainConfigKeys.ANCHOR_SCHEDULER_OFFSET)
+
+  /*
    * Akka Related
    ************************************************************************************************/
 
