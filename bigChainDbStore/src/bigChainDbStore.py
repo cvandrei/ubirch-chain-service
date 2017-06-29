@@ -104,17 +104,18 @@ def sendTx(tx):
 
 def anchor(payload):
     logger.debug("payload: %s" % payload)
+
+    jsonPayload = json.loads(payload)
+
     prepared_creation_tx = bdb.transactions.prepare(
         operation='CREATE',
         signers=alice.public_key,
-        asset={'data': {'chaindata': payload}},
+        asset={'data': {'chaindata': jsonPayload}},
         metadata=metadata,
     )
     fulfilled_creation_tx = bdb.transactions.fulfill(prepared_creation_tx, private_keys=alice.private_key)
     sent_creation_tx = bdb.transactions.send(fulfilled_creation_tx)
     tx = fulfilled_creation_tx['id']
-
-    jsonPayload = json.loads(payload)
 
     if 'id' in jsonPayload:
         mid = jsonPayload['id']

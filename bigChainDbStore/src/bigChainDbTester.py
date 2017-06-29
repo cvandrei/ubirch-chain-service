@@ -43,7 +43,7 @@ def sendPayload(payload):
     queue.send_message(MessageBody=payload)
 
 
-for i in range(500):
+for i in range(5):
     t = round((-10 + (random.randint(1, 50000) / 1000)), 3)
     jsonPayload = {
         "id": str(uuid.uuid4()),
