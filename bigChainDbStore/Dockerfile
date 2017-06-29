@@ -1,5 +1,10 @@
 FROM python:3
 
+WORKDIR /usr/src/app
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
 ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 
@@ -10,11 +15,6 @@ ENV BIG_CHAIN_DB_HOST=$BIG_CHAIN_DB_HOST
 ENV SQS_CHAIN_IN=$SQS_CHAIN_IN
 ENV SQS_CHAIN_TX=$SQS_CHAIN_TX
 ENV SQS_REGION=$SQS_REGION
-
-WORKDIR /usr/src/app
-
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src/bigChainDbStore.py ./
 
