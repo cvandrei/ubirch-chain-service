@@ -31,6 +31,7 @@ class AnchorActor(implicit mongo: MongoUtil) extends Actor with ActorLogging {
 
           // TODO check if this block has been anchored yet
           // TODO if not: anchor with notary-service (blockInfo.id)
+          // TODO use _BlockAnchor_ and _Anchor_ models
           log.debug(s"found a latest BigchainDb block: $blockInfo")
 
       }
