@@ -1,5 +1,6 @@
 packagedArtifacts in file(".") := Map.empty // disable publishing of root/default project
 
+parallelExecution in Test := false // test related: http://www.scalatest.org/user_guide/using_scalatest_with_sbt
 // see http://www.scala-sbt.org/0.13/docs/Parallel-Execution.html for details
 concurrentRestrictions in Global := Seq(
   Tags.limit(Tags.Test, 1)
@@ -21,6 +22,7 @@ lazy val commonSettings = Seq(
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases")
   )
+  //logBuffered in Test := false, // logging in tests: log continuously instead of waiting until the end of a test
 
 )
 
@@ -41,18 +43,18 @@ lazy val chainService = (project in file("."))
     util
   )
 
-lazy val config = project
-  .settings(commonSettings: _*)
-  .settings(
-    description := "chain-service specific config and config tools",
-    libraryDependencies += ubirchConfig
-  )
-
 lazy val cmdtools = project
   .settings(commonSettings: _*)
   .dependsOn(config, testTools)
   .settings(
     description := "command line tools"
+  )
+
+lazy val config = project
+  .settings(commonSettings: _*)
+  .settings(
+    description := "chain-service specific config and config tools",
+    libraryDependencies += ubirchConfig
   )
 
 lazy val core = project
