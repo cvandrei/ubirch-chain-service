@@ -19,10 +19,7 @@ trait MongoSpec extends AsyncFeatureSpec
 
   protected val mongoTestUtils = new MongoTestUtils()
 
-  override protected def beforeEach(): Unit = {
-    mongoChain.db map (_.drop())
-    Thread.sleep(100)
-  }
+  override protected def beforeEach(): Unit = mongoChain.db map (_.drop())
 
   override protected def afterAll(): Unit = mongoChain.close()
 

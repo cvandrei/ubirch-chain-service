@@ -103,15 +103,11 @@ class BlockInfoManagerSpec extends MongoSpec {
       )
 
       // test
-      BlockInfoManager.create(blockInfo) flatMap {
+      BlockInfoManager.create(blockInfo) flatMap { created =>
 
-        // verify
-        case None => fail("failed to create block")
-
-        case Some(created) =>
-          created should be(blockInfo)
-          mongoTestUtils.countAll(collection) map (_ shouldBe 1)
-          BlockInfoManager.findByBlockHash(blockInfo.blockHash) map (_ should be(Some(blockInfo)))
+        created should be(Some(blockInfo))
+        mongoTestUtils.countAll(collection) map (_ shouldBe 1)
+        BlockInfoManager.findByBlockHash(blockInfo.blockHash) map (_ should be(Some(blockInfo)))
 
       }
 
@@ -126,20 +122,16 @@ class BlockInfoManagerSpec extends MongoSpec {
         anchors = Set(anchor1)
       )
 
-      BlockInfoManager.create(blockInfo) flatMap {
+      BlockInfoManager.create(blockInfo) flatMap { _ =>
 
-        case None => fail("failed to prepare existing BlockInfo")
+        // test
+        BlockInfoManager.create(blockInfo) flatMap {
 
-        case Some(_) =>
+          // verify
+          case None => mongoTestUtils.countAll(collection) map (_ shouldBe 1)
+          case Some(created) => fail(s"should not have created a block: created=$created")
 
-          // test
-          BlockInfoManager.create(blockInfo) flatMap {
-
-            // verify
-            case None => mongoTestUtils.countAll(collection) map (_ shouldBe 1)
-            case Some(created) => fail(s"should not have created a block: created=$created")
-
-          }
+        }
 
       }
 
