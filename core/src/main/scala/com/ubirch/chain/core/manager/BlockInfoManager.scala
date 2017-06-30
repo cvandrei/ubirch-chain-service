@@ -37,7 +37,6 @@ object BlockInfoManager extends MongoFormats
     */
   def findByBlockHash(hash: String)(implicit mongo: MongoUtil): Future[Option[BlockInfo]] = {
 
-    // TODO automated tests
     val selector = document("blockHash" -> hash)
     mongo.collection(collectionName) flatMap {
       _.find(selector).one[BlockInfo]
