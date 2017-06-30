@@ -88,4 +88,10 @@ object ChainConfig extends ConfigBase {
 
   def mongoBigchainCollectionBigchain: String = config.getString(ChainConfigKeys.BIGCHAIN_COLLECTION_BIGCHAIN)
 
+  /*
+   * Mongo Related (Chain Service)
+   ************************************************************************************************/
+
+  def mongoChainServiceCollectionAnchors: String = config.getString(ChainConfigKeys.CHAIN_SERVICE_COLLECTION_ANCHORS)
+
 }

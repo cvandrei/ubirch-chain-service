@@ -1,7 +1,7 @@
 package com.ubirch.chain.core.actor
 
 import com.ubirch.chain.core.actor.util.ActorTools
-import com.ubirch.chain.core.manager.DeepCheckManager
+import com.ubirch.chain.core.manager.server.DeepCheckManager
 import com.ubirch.util.deepCheck.model.{DeepCheckRequest, DeepCheckResponse}
 
 import akka.actor.{Actor, ActorLogging, Props}

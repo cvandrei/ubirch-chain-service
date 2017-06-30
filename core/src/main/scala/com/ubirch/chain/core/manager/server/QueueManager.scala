@@ -1,4 +1,4 @@
-package com.ubirch.chain.core.manager
+package com.ubirch.chain.core.manager.server
 
 import com.ubirch.chain.core.actor.ActorNames
 import com.ubirch.chain.core.actor.consumer.{DeviceDataHashInConsumer, DeviceDataInConsumer}

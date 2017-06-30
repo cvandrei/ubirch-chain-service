@@ -1,4 +1,4 @@
-package com.ubirch.chain.core.manager
+package com.ubirch.chain.core.manager.server
 
 import com.ubirch.util.deepCheck.model.DeepCheckResponse
 
@@ -12,7 +12,8 @@ import scala.concurrent.Future
 object DeepCheckManager {
 
   def connectivityCheck(): Future[DeepCheckResponse] = {
-    // TODO check server health
+    // TODO check mongo connection (bigchain)
+    // TODO check mongo connection (chain service)
     Future(DeepCheckResponse())
   }
 

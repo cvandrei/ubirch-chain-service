@@ -69,4 +69,13 @@ object ChainConfigKeys {
 
   final val BIGCHAIN_COLLECTION_BIGCHAIN = s"$mongoBigchainCollection.bigchain"
 
+  /*
+   * Mongo (Chain Service)
+   *********************************************************************************************/
+
+  final val MONGO_CHAIN_SERVICE_PREFIX = s"$CONFIG_PREFIX.mongoChainService"
+  private final val mongoChainServiceCollection = s"$MONGO_CHAIN_SERVICE_PREFIX.collection"
+
+  final val CHAIN_SERVICE_COLLECTION_ANCHORS = s"$mongoChainServiceCollection.anchors"
+
 }

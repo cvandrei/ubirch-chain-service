@@ -6,7 +6,7 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.chain.config.{ChainConfig, ChainConfigKeys}
 import com.ubirch.chain.core.actor.{ActorNames, AnchorActor, BlockCheck}
-import com.ubirch.chain.core.manager.QueueManager
+import com.ubirch.chain.core.manager.server.QueueManager
 import com.ubirch.chain.server.route.MainRoute
 import com.ubirch.util.mongo.connection.MongoUtil
 
@@ -32,9 +32,13 @@ object Boot extends App with StrictLogging {
 
   implicit val timeout = Timeout(ChainConfig.actorTimeout seconds)
 
-  implicit val mongo: MongoUtil = new MongoUtil(ChainConfigKeys.MONGO_BIGCHAIN_PREFIX)
+  implicit val mongoBigchain: MongoUtil = new MongoUtil(ChainConfigKeys.MONGO_BIGCHAIN_PREFIX)
+  implicit val mongoChain: MongoUtil = new MongoUtil(ChainConfigKeys.MONGO_CHAIN_SERVICE_PREFIX)
 
-  private val anchorActor = system.actorOf(AnchorActor.props(), ActorNames.ANCHOR)
+  private val anchorActor = system.actorOf(
+    props = AnchorActor.props()(mongoBigchain = mongoBigchain, mongoChain = mongoChain),
+    name = ActorNames.ANCHOR
+  )
 
   val bindingFuture = start()
   registerShutdownHooks()
@@ -64,11 +68,18 @@ object Boot extends App with StrictLogging {
   private def registerShutdownHooks() = {
 
     Runtime.getRuntime.addShutdownHook(new Thread() {
+
       override def run(): Unit = {
+
         bindingFuture
           .flatMap(_.unbind())
           .onComplete(_ => system.terminate())
+
+        mongoBigchain.close()
+        mongoChain.close()
+
       }
+
     })
 
   }
