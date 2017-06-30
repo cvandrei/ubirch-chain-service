@@ -7,7 +7,7 @@ TODO
 
 ## Release History
 
-### Version 0.1.0 (tbd)
+### Version 0.1.0 (2017-06-30)
 
 * initial release
 
