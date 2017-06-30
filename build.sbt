@@ -106,6 +106,7 @@ lazy val server = project
 
 lazy val testTools = (project in file("test-tools"))
   .settings(commonSettings: _*)
+  .dependsOn(config)
   .settings(
     name := "test-tools",
     description := "tools useful in automated tests",

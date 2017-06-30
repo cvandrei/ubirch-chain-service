@@ -3,6 +3,7 @@ package com.ubirch.chain.core.actor
 import com.ubirch.chain.core.actor.util.ActorTools
 import com.ubirch.chain.core.manager.server.DeepCheckManager
 import com.ubirch.util.deepCheck.model.{DeepCheckRequest, DeepCheckResponse}
+import com.ubirch.util.mongo.connection.MongoUtil
 
 import akka.actor.{Actor, ActorLogging, Props}
 
@@ -13,7 +14,7 @@ import scala.concurrent.Future
   * author: cvandrei
   * since: 2017-06-07
   */
-class DeepCheckActor extends Actor
+class DeepCheckActor(implicit mongoBigchain: MongoUtil, mongoChain: MongoUtil) extends Actor
   with ActorLogging {
 
   override def receive: Receive = {
@@ -26,10 +27,18 @@ class DeepCheckActor extends Actor
 
   }
 
-  private def deepCheck(): Future[DeepCheckResponse] = DeepCheckManager.connectivityCheck()
+  private def deepCheck(): Future[DeepCheckResponse] = DeepCheckManager.connectivityCheck()(mongoBigchain = mongoBigchain, mongoChain = mongoChain)
 
 }
 
 object DeepCheckActor extends ActorTools {
-  def props(): Props = roundRobin().props(Props(new DeepCheckActor()))
+
+  def props()(implicit mongoBigchain: MongoUtil, mongoChain: MongoUtil): Props = {
+    roundRobin().props(
+      Props(
+        new DeepCheckActor()(mongoBigchain = mongoBigchain, mongoChain = mongoChain)
+      )
+    )
+  }
+
 }

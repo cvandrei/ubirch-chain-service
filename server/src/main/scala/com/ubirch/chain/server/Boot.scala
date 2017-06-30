@@ -61,7 +61,11 @@ object Boot extends App with StrictLogging {
     scheduleAnchoring()
 
     logger.info(s"start http server on $interface:$port")
-    Http().bindAndHandle((new MainRoute).myRoute, interface, port)
+    Http().bindAndHandle(
+      new MainRoute()(_system = system, mongoBigchain = mongoBigchain, mongoChain = mongoChain).myRoute,
+      interface,
+      port
+    )
 
   }
 

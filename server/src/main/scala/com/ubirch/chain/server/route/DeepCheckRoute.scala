@@ -7,6 +7,7 @@ import com.ubirch.chain.core.actor.{ActorNames, DeepCheckActor}
 import com.ubirch.chain.util.server.RouteConstants
 import com.ubirch.util.deepCheck.model.{DeepCheckRequest, DeepCheckResponse}
 import com.ubirch.util.http.response.ResponseUtil
+import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.rest.akka.directives.CORSDirective
 
 import akka.actor.ActorSystem
@@ -25,7 +26,7 @@ import scala.util.{Failure, Success}
   * author: cvandrei
   * since: 2017-06-07
   */
-class DeepCheckRoute()(implicit _system: ActorSystem)
+class DeepCheckRoute()(implicit _system: ActorSystem, mongoBigchain: MongoUtil, mongoChain: MongoUtil)
   extends CORSDirective
     with ResponseUtil
     with StrictLogging {
@@ -33,7 +34,10 @@ class DeepCheckRoute()(implicit _system: ActorSystem)
   implicit val executionContext: ExecutionContextExecutor = _system.dispatcher
   implicit val timeout = Timeout(ChainConfig.actorTimeout seconds)
 
-  private val deepCheckActor = _system.actorOf(DeepCheckActor.props(), ActorNames.DEEP_CHECK)
+  private val deepCheckActor = _system.actorOf(
+    props = DeepCheckActor.props()(mongoBigchain = mongoBigchain, mongoChain = mongoChain),
+    name = ActorNames.DEEP_CHECK
+  )
 
   val route: Route = {
 
