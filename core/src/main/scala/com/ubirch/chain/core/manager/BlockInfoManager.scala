@@ -44,9 +44,8 @@ object BlockInfoManager extends MongoFormats
 
   }
 
-  def createBlockAnchor(blockAnchor: BlockInfo)(implicit mongo: MongoUtil): Future[Option[BlockInfo]] = {
+  def create(blockAnchor: BlockInfo)(implicit mongo: MongoUtil): Future[Option[BlockInfo]] = {
 
-    // TODO automated tests
     for {
 
       collection <- mongo.collection(collectionName)

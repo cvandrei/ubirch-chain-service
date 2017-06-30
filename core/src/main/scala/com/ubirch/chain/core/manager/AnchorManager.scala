@@ -88,7 +88,7 @@ object AnchorManager extends StrictLogging {
           anchors = Set(anchor)
         )
         logger.info(s"anchoring was successful: blockAnchor=$blockAnchor")
-        BlockInfoManager.createBlockAnchor(blockAnchor)
+        BlockInfoManager.create(blockAnchor)
 
     }
 

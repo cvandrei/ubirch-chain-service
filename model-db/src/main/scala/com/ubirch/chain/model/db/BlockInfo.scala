@@ -2,7 +2,7 @@ package com.ubirch.chain.model.db
 
 import com.ubirch.chain.model.db.util.ChainType
 
-import org.joda.time.{DateTime, DateTimeZone}
+import org.joda.time.DateTime
 
 /**
   * author: cvandrei
@@ -11,5 +11,5 @@ import org.joda.time.{DateTime, DateTimeZone}
 case class BlockInfo(blockHash: String,
                      chainType: String = ChainType.BIGCHAIN,
                      anchors: Set[Anchor] = Set.empty,
-                     created: DateTime = DateTime.now(DateTimeZone.UTC)
+                     created: DateTime = DateTime.now
                     )
