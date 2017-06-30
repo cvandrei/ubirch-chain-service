@@ -1,3 +1,4 @@
+# Created by .ignore support plugin (hsz.mobi)
 *.class
 *.log
 
@@ -18,3 +19,6 @@ project/plugins/project/
 
 .idea
 /Dockerfile.input
+/Dockerfile.input
+/bigChainDbStore/bigChainDbStore.iml
+*.iml
