@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# pip install -r requirements.txt
+
 import os
 import boto3
 import json
@@ -30,9 +32,9 @@ if (awsAccessKeyId not in os.environ or awsSecretAccessKey not in os.environ):
     logger.info("AWS_ACCESS_KEY_ID -> AWS access key")
     logger.info("AWS_SECRET_ACCESS_KEY -> AWS secret key")
     logger.info(
-        "SQS_CHAIN_IN -> AWS SQS queue name of inbound data which should be stored into bigChainDb (optional), default is 'local_dev_ubirch_keyservice_in'")
+        "SQS_CHAIN_IN -> AWS SQS queue name of inbound data which should be stored into bigChainDb (optional), default is 'local_dev_ubirch_bigchaindb_in'")
     logger.info(
-        "SQS_CHAIN_TX -> AWS SQS queue name for outbound tx hash publishing (optional), default is 'local_dev_ubirch_keyservice_tx'")
+        "SQS_CHAIN_TX -> AWS SQS queue name for outbound tx hash publishing (optional), default is 'local_dev_ubirch_bigchaindb_tx'")
     logger.info("SQS_REGION -> AWS region (optional), default is 'eu-west-1'")
     logger.info("IPDB_APP_ID -> IPDB application id (optional), not set as default")
     logger.info("IPDB_APP_KEY -> IPDB application key (optional), not set as default")
@@ -44,8 +46,8 @@ REGION = os.environ[sqsRegionKey] if sqsRegionKey in os.environ else 'eu-west-1'
 
 sqs = boto3.resource('sqs', region_name=REGION)
 
-inQueue = os.environ[sqsChainInKey] if sqsChainInKey in os.environ else "local_dev_ubirch_keyservice_in"
-txQueue = os.environ[sqsChainTxKey] if sqsChainTxKey in os.environ else "local_dev_ubirch_keyservice_tx"
+inQueue = os.environ[sqsChainInKey] if sqsChainInKey in os.environ else "local_dev_ubirch_bigchaindb_in"
+txQueue = os.environ[sqsChainTxKey] if sqsChainTxKey in os.environ else "local_dev_ubirch_bigchaindb_tx"
 
 bigChainDbHost = os.environ[bigChainDbHostKey] if bigChainDbHostKey in os.environ else 'http://localhost:9984'
 
@@ -102,17 +104,18 @@ def sendTx(tx):
 
 def anchor(payload):
     logger.debug("payload: %s" % payload)
+
+    jsonPayload = json.loads(payload)
+
     prepared_creation_tx = bdb.transactions.prepare(
         operation='CREATE',
         signers=alice.public_key,
-        asset={'data': {'chaindata': payload}},
+        asset={'data': {'chaindata': jsonPayload}},
         metadata=metadata,
     )
     fulfilled_creation_tx = bdb.transactions.fulfill(prepared_creation_tx, private_keys=alice.private_key)
     sent_creation_tx = bdb.transactions.send(fulfilled_creation_tx)
     tx = fulfilled_creation_tx['id']
-
-    jsonPayload = json.loads(payload)
 
     if 'id' in jsonPayload:
         mid = jsonPayload['id']
