@@ -212,6 +212,8 @@ more details here: https://github.com/scoverage/sbt-scoverage
     This Python wrapper listens on a queue for new transactions to store in BigchainDb.
     
     ```
+    export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
+    export AWS_SECRET_ACCESS_KEY={YOUR AWS SECRET KEY}
     python3 bigChainDbStore/src/bigChainDbStore.py
     ```
 
