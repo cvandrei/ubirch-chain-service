@@ -7,7 +7,7 @@ TODO
 
 ## Release History
 
-### Version 0.1.1 (tbd)
+### Version 0.1.1 (2017-07-12)
 
 * update logging dependencies
 * update logback configs
@@ -26,7 +26,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "cmdtools" % "0.1.1-SNAPSHOT"
+  "com.ubirch.chain" %% "cmdtools" % "0.1.1"
 )
 ```
 
@@ -37,7 +37,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "config" % "0.1.1-SNAPSHOT"
+  "com.ubirch.chain" %% "config" % "0.1.1"
 )
 ```
 
@@ -50,7 +50,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "core" % "0.1.1-SNAPSHOT"
+  "com.ubirch.chain" %% "core" % "0.1.1"
 )
 ```
 
@@ -61,7 +61,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "model-db" % "0.1.1-SNAPSHOT"
+  "com.ubirch.chain" %% "model-db" % "0.1.1"
 )
 ```
 
@@ -73,7 +73,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "model-rest" % "0.1.1-SNAPSHOT"
+  "com.ubirch.chain" %% "model-rest" % "0.1.1"
 )
 ```
 
@@ -85,7 +85,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "server" % "0.1.1-SNAPSHOT"
+  "com.ubirch.chain" %% "server" % "0.1.1"
 )
 ```
 
@@ -97,7 +97,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "test-tools" % "0.1.1-SNAPSHOT"
+  "com.ubirch.chain" %% "test-tools" % "0.1.1"
 )
 ```
 
@@ -108,7 +108,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "util" % "0.1.1-SNAPSHOT"
+  "com.ubirch.chain" %% "util" % "0.1.1"
 )
 ```
 
