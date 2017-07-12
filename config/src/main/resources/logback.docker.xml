@@ -67,9 +67,14 @@
     </appender>
 
     <logger name="com.ubirch" level="DEBUG"/>
+    <logger name="akka.actor" level="WARN"/>
+    <logger name="reactivemongo-akka.actor" level="WARN"/>
+    <logger name="reactivemongo.core" level="INFO"/>
+    <logger name="org.apache.camel" level="INFO"/>
+    <logger name="org.apache.http" level="INFO"/>
+    <logger name="com.amazonaws" level="INFO"/>
 
     <root level="DEBUG">
-        <!--<appender-ref ref="STDOUT"/>-->
         <appender-ref ref="ELASTIC"/>
     </root>
 
