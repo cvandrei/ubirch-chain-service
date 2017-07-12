@@ -53,8 +53,6 @@ object ChainConfig extends ConfigBase {
 
   def awsQueueOwnerId: String = config.getString(ChainConfigKeys.AWS_QUEUE_OWNER_ID)
 
-  def awsSqsConcurrentConsumers: Int = config.getInt(ChainConfigKeys.AWS_SQS_CONCURRENT_CONSUMERS)
-
   def awsSqsMaxMessagesPerPoll: Int = config.getInt(ChainConfigKeys.AWS_SQS_MAX_MESSAGES_PER_POLL)
 
   def awsSqsQueueDeviceDataIn: String = config.getString(ChainConfigKeys.AWS_SQS_QUEUE_DEVICE_DATA_IN)

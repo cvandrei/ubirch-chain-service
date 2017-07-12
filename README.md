@@ -7,6 +7,11 @@ TODO
 
 ## Release History
 
+### Version 0.1.2 (2017-07-12)
+
+* delete unused config key
+* update application.docker.conf
+
 ### Version 0.1.1 (2017-07-12)
 
 * update logging dependencies
@@ -23,10 +28,10 @@ TODO
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "cmdtools" % "0.1.1"
+  "com.ubirch.chain" %% "cmdtools" % "0.1.2"
 )
 ```
 
@@ -34,10 +39,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "config" % "0.1.1"
+  "com.ubirch.chain" %% "config" % "0.1.2"
 )
 ```
 
@@ -45,12 +50,12 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots"),
+  Resolver.sonatypeRepo("releases"),
   Resolver.bintrayRepo("rick-beton", "maven"), // needed for the notary-client
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "core" % "0.1.1"
+  "com.ubirch.chain" %% "core" % "0.1.2"
 )
 ```
 
@@ -58,10 +63,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "model-db" % "0.1.1"
+  "com.ubirch.chain" %% "model-db" % "0.1.2"
 )
 ```
 
@@ -69,11 +74,11 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots"),
+  Resolver.sonatypeRepo("releases"),
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "model-rest" % "0.1.1"
+  "com.ubirch.chain" %% "model-rest" % "0.1.2"
 )
 ```
 
@@ -81,11 +86,11 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots"),
+  Resolver.sonatypeRepo("releases"),
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "server" % "0.1.1"
+  "com.ubirch.chain" %% "server" % "0.1.2"
 )
 ```
 
@@ -97,7 +102,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "test-tools" % "0.1.1"
+  "com.ubirch.chain" %% "test-tools" % "0.1.2"
 )
 ```
 
@@ -105,10 +110,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "util" % "0.1.1"
+  "com.ubirch.chain" %% "util" % "0.1.2"
 )
 ```
 
