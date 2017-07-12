@@ -17,7 +17,7 @@ lazy val commonSettings = Seq(
     url("https://github.com/ubirch/ubirch-chain-service"),
     "scm:git:git@github.com:ubirch/ubirch-chain-service.git"
   )),
-  version := "0.1.0",
+  version := "0.1.1",
   test in assembly := {},
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases")
@@ -181,6 +181,9 @@ val camelV = "2.18.1"
 
 val scalaTestV = "3.0.1"
 
+val logbackV = "1.2.3"
+val slf4jV = "1.7.25"
+
 // GROUP NAMES
 val ubirchUtilG = "com.ubirch.util"
 val json4sG = "org.json4s"
@@ -190,12 +193,13 @@ val camelG = "org.apache.camel"
 lazy val scalatest = "org.scalatest" %% "scalatest" % scalaTestV
 
 lazy val scalaLogging = Seq(
-  "org.slf4j" % "slf4j-api" % "1.7.21",
+  "org.slf4j" % "slf4j-api" % slf4jV,
+  "org.slf4j" % "log4j-over-slf4j" % slf4jV,
   "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2" exclude("org.slf4j", "slf4j-api"),
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0" exclude("org.slf4j", "slf4j-api"),
-  "ch.qos.logback" % "logback-core" % "1.1.7",
-  "ch.qos.logback" % "logback-classic" % "1.1.7",
-  "com.internetitem" % "logback-elasticsearch-appender" % "1.4"
+  "ch.qos.logback" % "logback-core" % logbackV exclude("org.slf4j", "slf4j-api"),
+  "ch.qos.logback" % "logback-classic" % logbackV exclude("org.slf4j", "slf4j-api"),
+  "com.internetitem" % "logback-elasticsearch-appender" % "1.5" exclude("org.slf4j", "slf4j-api")
 )
 
 lazy val akkaActor = akkaG %% "akka-actor" % akkaV
