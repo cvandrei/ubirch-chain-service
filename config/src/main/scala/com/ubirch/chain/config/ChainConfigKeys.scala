@@ -41,7 +41,6 @@ object ChainConfigKeys {
 
   private val awsSqs = s"$awsPrefix.sqs"
 
-  final val AWS_SQS_CONCURRENT_CONSUMERS = s"$awsSqs.concurrentConsumers"
   final val AWS_SQS_MAX_MESSAGES_PER_POLL = s"$awsSqs.maxMessagesPerPoll"
 
   private val awsSqsQueues = s"$awsSqs.queues"
