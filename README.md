@@ -191,7 +191,7 @@ more details here: https://github.com/scoverage/sbt-scoverage
     * Ubuntu 16.04
 
       ```
-      sudo apt install python3-pip
+      sudo apt install python3-pip libssl-dev
       sudo -H pip3 install -r bigChainDbStore/requirements.txt
       ```
 
@@ -201,19 +201,25 @@ more details here: https://github.com/scoverage/sbt-scoverage
       tbd
       ```
 
-  1.2. Bigchain
+  1.2. BigchainDB
+
+    [BigchainDB Quickstart](https://docs.bigchaindb.com/projects/server/en/latest/quickstart.html)
+
+2. Update
+
+  2.1 BigchainDB
+
+    sudo -H pip3 install --upgrade bigchaindb bigchaindb_driver
+
+3. Start Environment
+
+  3.1. BigchainDB
   
-    [BigchainDb Quickstart](https://docs.bigchaindb.com/projects/server/en/latest/quickstart.html)
+    Follow the instruction in: [BigchainDB Quickstart](https://docs.bigchaindb.com/projects/server/en/latest/quickstart.html).
 
-2. Start Environment
+  3.2. Python Wrapper around BigchainDB
 
-  2.1. BigchainDb
-  
-    Follow the instruction in: [BigchainDb Quickstart](https://docs.bigchaindb.com/projects/server/en/latest/quickstart.html).
-
-  2.2. Python Wrapper around BigchainDb
-
-    This Python wrapper listens on a queue for new transactions to store in BigchainDb.
+    This Python wrapper listens on a queue for new transactions to store in BigchainDB.
     
     ```
     export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
@@ -221,7 +227,7 @@ more details here: https://github.com/scoverage/sbt-scoverage
     python3 bigChainDbStore/src/bigChainDbStore.py
     ```
 
-  2.3. Start Server
+  3.3. Start Server
 
     ```
     export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
@@ -229,9 +235,9 @@ more details here: https://github.com/scoverage/sbt-scoverage
     ./sbt server/run
     ```
 
-3. Generate Test Data
+4. Generate Test Data
 
-  3.1. Directly to BigchainDb
+  4.1. Directly to BigchainDB
   
     ```
     export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
@@ -239,7 +245,7 @@ more details here: https://github.com/scoverage/sbt-scoverage
     python3 bigChainDbStore/src/bigChainDbTester.py
     ```
 
-  3.2. Device Data Through chain-service
+  4.2. Device Data Through chain-service
   
     ```
     export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
