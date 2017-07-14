@@ -7,6 +7,10 @@ TODO
 
 ## Release History
 
+### Version 0.1.2 (tbd)
+
+* fixed faulty json in curl example
+
 ### Version 0.1.1 (2017-07-12)
 
 * update logging dependencies
@@ -156,7 +160,7 @@ Writes a device message to the blockchain (where _payload_ is any valid JSON and
 
 Writes a hash to the blockchain (where _hash_ is any String and _id_ is the external id):
 
-    curl -i -XPOST localhost:8080/api/v1/chainService/tx/deviceMsgHash -H "Content-Type: application/json" -d '{"id": "35b3f02d-c9c4-4139-8fe6-6857daeb8b8b", hash": "e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86"}'
+    curl -i -XPOST localhost:8080/api/v1/chainService/tx/deviceMsgHash -H "Content-Type: application/json" -d '{"id": "35b3f02d-c9c4-4139-8fe6-6857daeb8b8b", "hash": "e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86"}'
 
 
 ## Configuration
