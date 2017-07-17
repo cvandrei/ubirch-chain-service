@@ -7,6 +7,13 @@ TODO
 
 ## Release History
 
+### Version 0.1.2 (2017-07-17)
+
+* fixed faulty json in curl example
+* update Akka HTTP to 10.0.9
+* update _com.ubirch.util:rest-akka-http(-test)_ to 0.3.8
+* update _com.ubirch.util:response-util_ to 0.2.3
+
 ### Version 0.1.1 (2017-07-12)
 
 * update logging dependencies
@@ -29,7 +36,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "cmdtools" % "0.1.1"
+  "com.ubirch.chain" %% "cmdtools" % "0.1.2"
 )
 ```
 
@@ -40,7 +47,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "config" % "0.1.1"
+  "com.ubirch.chain" %% "config" % "0.1.2"
 )
 ```
 
@@ -53,7 +60,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "core" % "0.1.1"
+  "com.ubirch.chain" %% "core" % "0.1.2"
 )
 ```
 
@@ -64,7 +71,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "model-db" % "0.1.1"
+  "com.ubirch.chain" %% "model-db" % "0.1.2"
 )
 ```
 
@@ -76,7 +83,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "model-rest" % "0.1.1"
+  "com.ubirch.chain" %% "model-rest" % "0.1.2"
 )
 ```
 
@@ -88,7 +95,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "server" % "0.1.1"
+  "com.ubirch.chain" %% "server" % "0.1.2"
 )
 ```
 
@@ -100,7 +107,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "test-tools" % "0.1.1"
+  "com.ubirch.chain" %% "test-tools" % "0.1.2"
 )
 ```
 
@@ -111,7 +118,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "util" % "0.1.1"
+  "com.ubirch.chain" %% "util" % "0.1.2"
 )
 ```
 
@@ -156,7 +163,7 @@ Writes a device message to the blockchain (where _payload_ is any valid JSON and
 
 Writes a hash to the blockchain (where _hash_ is any String and _id_ is the external id):
 
-    curl -i -XPOST localhost:8080/api/v1/chainService/tx/deviceMsgHash -H "Content-Type: application/json" -d '{"id": "35b3f02d-c9c4-4139-8fe6-6857daeb8b8b", hash": "e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86"}'
+    curl -i -XPOST localhost:8080/api/v1/chainService/tx/deviceMsgHash -H "Content-Type: application/json" -d '{"id": "35b3f02d-c9c4-4139-8fe6-6857daeb8b8b", "hash": "e9758380e3f9d2d0b9e0b13e424fcbf94a576c59dcf136b201832d1a687efc86"}'
 
 
 ## Configuration
@@ -191,7 +198,7 @@ more details here: https://github.com/scoverage/sbt-scoverage
     * Ubuntu 16.04
 
       ```
-      sudo apt install python3-pip
+      sudo apt install python3-pip libssl-dev
       sudo -H pip3 install -r bigChainDbStore/requirements.txt
       ```
 
@@ -201,19 +208,25 @@ more details here: https://github.com/scoverage/sbt-scoverage
       tbd
       ```
 
-  1.2. Bigchain
+  1.2. BigchainDB
+
+    [BigchainDB Quickstart](https://docs.bigchaindb.com/projects/server/en/latest/quickstart.html)
+
+2. Update
+
+  2.1 BigchainDB
+
+    sudo -H pip3 install --upgrade bigchaindb bigchaindb_driver
+
+3. Start Environment
+
+  3.1. BigchainDB
   
-    [BigchainDb Quickstart](https://docs.bigchaindb.com/projects/server/en/latest/quickstart.html)
+    Follow the instruction in: [BigchainDB Quickstart](https://docs.bigchaindb.com/projects/server/en/latest/quickstart.html).
 
-2. Start Environment
+  3.2. Python Wrapper around BigchainDB
 
-  2.1. BigchainDb
-  
-    Follow the instruction in: [BigchainDb Quickstart](https://docs.bigchaindb.com/projects/server/en/latest/quickstart.html).
-
-  2.2. Python Wrapper around BigchainDb
-
-    This Python wrapper listens on a queue for new transactions to store in BigchainDb.
+    This Python wrapper listens on a queue for new transactions to store in BigchainDB.
     
     ```
     export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
@@ -221,7 +234,7 @@ more details here: https://github.com/scoverage/sbt-scoverage
     python3 bigChainDbStore/src/bigChainDbStore.py
     ```
 
-  2.3. Start Server
+  3.3. Start Server
 
     ```
     export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
@@ -229,9 +242,9 @@ more details here: https://github.com/scoverage/sbt-scoverage
     ./sbt server/run
     ```
 
-3. Generate Test Data
+4. Generate Test Data
 
-  3.1. Directly to BigchainDb
+  4.1. Directly to BigchainDB
   
     ```
     export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
@@ -239,7 +252,7 @@ more details here: https://github.com/scoverage/sbt-scoverage
     python3 bigChainDbStore/src/bigChainDbTester.py
     ```
 
-  3.2. Device Data Through chain-service
+  4.2. Device Data Through chain-service
   
     ```
     export AWS_ACCESS_KEY_ID={YOUR AWS ACCESS KEY}
