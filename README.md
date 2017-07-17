@@ -10,6 +10,9 @@ TODO
 ### Version 0.1.2 (tbd)
 
 * fixed faulty json in curl example
+* update Akka HTTP to 10.0.9
+* update _com.ubirch.util:rest-akka-http(-test)_ to 0.3.8
+* update _com.ubirch.util:response-util_ to 0.2.3
 
 ### Version 0.1.1 (2017-07-12)
 
