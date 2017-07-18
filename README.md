@@ -7,6 +7,11 @@ TODO
 
 ## Release History
 
+### Version 0.1.3 (2017-07-18)
+
+* update to Akka 2.4.19
+* update _com.ubirch.util:mongo(-test)-utils_ to 0.3.4
+
 ### Version 0.1.2 (2017-07-17)
 
 * fixed faulty json in curl example
@@ -36,7 +41,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "cmdtools" % "0.1.2"
+  "com.ubirch.chain" %% "cmdtools" % "0.1.3"
 )
 ```
 
@@ -47,7 +52,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "config" % "0.1.2"
+  "com.ubirch.chain" %% "config" % "0.1.3"
 )
 ```
 
@@ -60,7 +65,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "core" % "0.1.2"
+  "com.ubirch.chain" %% "core" % "0.1.3"
 )
 ```
 
@@ -71,7 +76,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "model-db" % "0.1.2"
+  "com.ubirch.chain" %% "model-db" % "0.1.3"
 )
 ```
 
@@ -83,7 +88,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "model-rest" % "0.1.2"
+  "com.ubirch.chain" %% "model-rest" % "0.1.3"
 )
 ```
 
@@ -95,7 +100,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "server" % "0.1.2"
+  "com.ubirch.chain" %% "server" % "0.1.3"
 )
 ```
 
@@ -107,7 +112,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "test-tools" % "0.1.2"
+  "com.ubirch.chain" %% "test-tools" % "0.1.3"
 )
 ```
 
@@ -118,7 +123,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "util" % "0.1.2"
+  "com.ubirch.chain" %% "util" % "0.1.3"
 )
 ```
 
