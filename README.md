@@ -7,9 +7,10 @@ TODO
 
 ## Release History
 
-### Version 0.1.3 (tbd)
+### Version 0.1.3 (2017-07-18)
 
-* tbd
+* update to Akka 2.4.19
+* update _com.ubirch.util:mongo(-test)-utils_ to 0.3.4
 
 ### Version 0.1.2 (2017-07-17)
 
