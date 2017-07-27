@@ -9,7 +9,11 @@ TODO
 
 ### Version 0.1.4 (tbd)
 
-* tbd
+* update to `com.ubirch.util:json:0.4.3`
+* update to `com.ubirch.util:deep-check-model:0.1.3`
+* update to `com.ubirch.util:response-util:0.2.4`
+* update to `com.ubirch.util:mongo-test-utils:0.3.5`
+* update to `com.ubirch.util:mongo-utils:0.3.5`
 
 ### Version 0.1.3 (2017-07-18)
 
