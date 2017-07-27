@@ -7,6 +7,14 @@ TODO
 
 ## Release History
 
+### Version 0.1.4 (2017-07-27)
+
+* update to `com.ubirch.util:json:0.4.3`
+* update to `com.ubirch.util:deep-check-model:0.1.3`
+* update to `com.ubirch.util:response-util:0.2.4`
+* update to `com.ubirch.util:mongo-test-utils:0.3.5`
+* update to `com.ubirch.util:mongo-utils:0.3.5`
+
 ### Version 0.1.3 (2017-07-18)
 
 * update to Akka 2.4.19
@@ -41,7 +49,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "cmdtools" % "0.1.3"
+  "com.ubirch.chain" %% "cmdtools" % "0.1.4"
 )
 ```
 
@@ -52,7 +60,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "config" % "0.1.3"
+  "com.ubirch.chain" %% "config" % "0.1.4"
 )
 ```
 
@@ -65,7 +73,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "core" % "0.1.3"
+  "com.ubirch.chain" %% "core" % "0.1.4"
 )
 ```
 
@@ -76,7 +84,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "model-db" % "0.1.3"
+  "com.ubirch.chain" %% "model-db" % "0.1.4"
 )
 ```
 
@@ -88,7 +96,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "model-rest" % "0.1.3"
+  "com.ubirch.chain" %% "model-rest" % "0.1.4"
 )
 ```
 
@@ -100,7 +108,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "server" % "0.1.3"
+  "com.ubirch.chain" %% "server" % "0.1.4"
 )
 ```
 
@@ -112,7 +120,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "test-tools" % "0.1.3"
+  "com.ubirch.chain" %% "test-tools" % "0.1.4"
 )
 ```
 
@@ -123,7 +131,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "util" % "0.1.3"
+  "com.ubirch.chain" %% "util" % "0.1.4"
 )
 ```
 
