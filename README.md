@@ -7,9 +7,13 @@ TODO
 
 ## Release History
 
-### Version 0.1.5 (tbd)
+### Version 0.1.6 (tbd)
 
 * tbd
+
+### Version 0.1.5 (2017-08-10)
+
+* `AWS_QUEUE_OWNER_ID` is now optional in _application.docker.conf_
 
 ### Version 0.1.4 (2017-07-27)
 
@@ -53,7 +57,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "cmdtools" % "0.1.5-SNAPSHOT"
+  "com.ubirch.chain" %% "cmdtools" % "0.1.6-SNAPSHOT"
 )
 ```
 
@@ -64,7 +68,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "config" % "0.1.5-SNAPSHOT"
+  "com.ubirch.chain" %% "config" % "0.1.6-SNAPSHOT"
 )
 ```
 
@@ -77,7 +81,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "core" % "0.1.5-SNAPSHOT"
+  "com.ubirch.chain" %% "core" % "0.1.6-SNAPSHOT"
 )
 ```
 
@@ -88,7 +92,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "model-db" % "0.1.5-SNAPSHOT"
+  "com.ubirch.chain" %% "model-db" % "0.1.6-SNAPSHOT"
 )
 ```
 
@@ -100,7 +104,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "model-rest" % "0.1.5-SNAPSHOT"
+  "com.ubirch.chain" %% "model-rest" % "0.1.6-SNAPSHOT"
 )
 ```
 
@@ -112,7 +116,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "server" % "0.1.5-SNAPSHOT"
+  "com.ubirch.chain" %% "server" % "0.1.6-SNAPSHOT"
 )
 ```
 
@@ -124,7 +128,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "test-tools" % "0.1.5-SNAPSHOT"
+  "com.ubirch.chain" %% "test-tools" % "0.1.6-SNAPSHOT"
 )
 ```
 
@@ -135,7 +139,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.chain" %% "util" % "0.1.5-SNAPSHOT"
+  "com.ubirch.chain" %% "util" % "0.1.6-SNAPSHOT"
 )
 ```
 
