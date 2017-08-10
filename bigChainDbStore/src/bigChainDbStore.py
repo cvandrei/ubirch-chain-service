@@ -49,8 +49,11 @@ sqs = boto3.resource('sqs', region_name=REGION)
 inQueue = os.environ[sqsChainInKey] if sqsChainInKey in os.environ else "local_dev_ubirch_bigchaindb_in"
 txQueue = os.environ[sqsChainTxKey] if sqsChainTxKey in os.environ else "local_dev_ubirch_bigchaindb_tx"
 
-bigChainDbHost = os.environ[bigChainDbHostKey] if bigChainDbHostKey in os.environ else 'http://localhost:9984'
+logger.info("inQueue: %s" % inQueue)
+logger.info("txQueue: %s" % txQueue)
 
+bigChainDbHost = os.environ[bigChainDbHostKey] if bigChainDbHostKey in os.environ else 'http://localhost:9984'
+logger.info("current bigchaindb hosT: %s" % (bigChainDbHost))
 numThreads = int(os.environ[numThreadsKey]) if numThreadsKey in os.environ else 1
 
 tokens = {}
@@ -89,11 +92,15 @@ def poll(queue):
 
 def process_message(message):
     logger.debug("message body: %s" % message.body)
-    success = anchor(payload=message.body)
-    if success:  # processed ok
-        message.delete()  # remove from queue
-    else:  # an error of some kind
-        message.change_visibility(VisibilityTimeout=1)  # dead letter or try again
+    try:
+        success = anchor(payload=message.body)
+        if success:  # processed ok
+            message.delete()  # remove from queue
+        else:  # an error of some kind
+            message.change_visibility(VisibilityTimeout=1)  # dead letter or try again
+    except:
+        message.delete()
+        logger.error("message processing error %s" % (message))
 
 
 def sendTx(tx):
