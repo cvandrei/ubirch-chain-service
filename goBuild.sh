@@ -63,10 +63,10 @@ function build_container() {
 
   if [ -z $GO_PIPELINE_LABEL ]; then
       # building without GoCD
-      docker build -t ubirch/ubirch-key-service:v$GO_PIPELINE_LABEL .
+      docker build -t ubirch/ubirch-chain-service:v$GO_PIPELINE_LABEL .
   else
       # build with GoCD
-      docker build -t ubirch/ubirch-key-service:v$GO_PIPELINE_LABEL --build-arg GO_PIPELINE_NAME=$GO_PIPELINE_NAME \
+      docker build -t ubirch/ubirch-chain-service:v$GO_PIPELINE_LABEL --build-arg GO_PIPELINE_NAME=$GO_PIPELINE_NAME \
       --build-arg GO_PIPELINE_LABEL=$GO_PIPELINE_LABEL \
       --build-arg GO_PIPELINE_COUNTER=$GO_PIPELINE_COUNTER \
       --build-arg GO_REVISION_UBIRCH_KEY_SERVICE_DEV=$GO_REVISION_UBIRCH_KEY_SERVICE_DEV .
@@ -78,8 +78,8 @@ function build_container() {
   fi
 
   # push Docker image
-  docker push ubirch/ubirch-key-service
-  docker push ubirch/ubirch-key-service:v$GO_PIPELINE_LABEL
+  docker push ubirch/ubirch-chain-service
+  docker push ubirch/ubirch-chain-service:v$GO_PIPELINE_LABEL
   if [ $? -ne 0 ]; then
     echo "Docker push failed"
     exit 1
@@ -89,10 +89,15 @@ function build_container() {
 }
 
 function container_tag () {
-    docker pull ubirch/ubirch-key-service:v$GO_PIPELINE_LABEL
-    docker tag ubirch/ubirch-key-service:v$GO_PIPELINE_LABEL ubirch/ubirch-key-service:latest
-    docker push ubirch/ubirch-key-service:latest
+    docker pull ubirch/ubirch-chain-service:v$GO_PIPELINE_LABEL
+    docker tag ubirch/ubirch-chain-service:v$GO_PIPELINE_LABEL ubirch/ubirch-chain-service:latest
+    docker push ubirch/ubirch-chain-service:latest
+}
 
+function container_tag_stable () {
+    docker pull ubirch/ubirch-chain-service:v$GO_PIPELINE_LABEL
+    docker tag ubirch/ubirch-chain-service:v$GO_PIPELINE_LABEL ubirch/ubirch-chain-service:stable
+    docker push ubirch/ubirch-chain-service:stable
 }
 
 case "$1" in
@@ -111,7 +116,7 @@ case "$1" in
         container_tag
         ;;
     *)
-        echo "Usage: $0 {build|assembly|containerbuild|containertag}"
+        echo "Usage: $0 { build|assembly | containerbuild | containertag | containertagstable }"
         exit 1
 esac
 
