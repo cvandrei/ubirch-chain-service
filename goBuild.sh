@@ -69,7 +69,7 @@ function build_container() {
       docker build -t ubirch/ubirch-chain-service:v$GO_PIPELINE_LABEL --build-arg GO_PIPELINE_NAME=$GO_PIPELINE_NAME \
       --build-arg GO_PIPELINE_LABEL=$GO_PIPELINE_LABEL \
       --build-arg GO_PIPELINE_COUNTER=$GO_PIPELINE_COUNTER \
-      --build-arg GO_REVISION_UBIRCH_KEY_SERVICE_DEV=$GO_REVISION_UBIRCH_KEY_SERVICE_DEV .
+      --build-arg GO_REVISION_UBIRCH_CHAIN_SERVICE_DEV=$GO_REVISION_UBIRCH_CHAIN_SERVICE_DEV .
   fi
 
   if [ $? -ne 0 ]; then
