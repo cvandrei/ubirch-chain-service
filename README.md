@@ -9,7 +9,7 @@ TODO
 
 ### Version 0.1.5 (tbd)
 
-* tbd
+* `AWS_QUEUE_OWNER_ID` is now optional in _application.docker.conf_
 
 ### Version 0.1.4 (2017-07-27)
 
