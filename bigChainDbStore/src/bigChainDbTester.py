@@ -33,9 +33,9 @@ REGION = os.environ[sqsRegionKey] if sqsRegionKey in os.environ else 'eu-west-1'
 sqs = boto3.resource('sqs', region_name=REGION)
 
 inQueue = os.environ[sqsChainInKey] if sqsChainInKey in os.environ else "local_dev_ubirch_bigchaindb_in"
+logger.info("inQueue: %s" % inQueue)
 
 numThreads = os.environ[numThreadsKey] if numThreadsKey in os.environ else 1
-
 
 def sendPayload(payload):
     sqs = boto3.resource('sqs', region_name=REGION)
