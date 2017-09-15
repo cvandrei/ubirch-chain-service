@@ -53,11 +53,11 @@ function build_container() {
 
 if [ -z $GO_PIPELINE_LABEL ]; then
       # building without GoCD
-      docker build -t ubirch-chain-service:vmanual .
+      docker build --pull -t ubirch-chain-service:vmanual .
       docker tag ubirch-chain-service:vmanual tracklecontainerregistry-on.azurecr.io/ubirch-chain-service:vmanual
   else
       # build with GoCD
-      docker build -t ubirch-chain-service:v$GO_PIPELINE_LABEL --build-arg GO_PIPELINE_NAME=$GO_PIPELINE_NAME \
+      docker build --pull -t ubirch-chain-service:v$GO_PIPELINE_LABEL --build-arg GO_PIPELINE_NAME=$GO_PIPELINE_NAME \
       --build-arg GO_PIPELINE_LABEL=$GO_PIPELINE_LABEL \
       --build-arg GO_PIPELINE_COUNTER=$GO_PIPELINE_COUNTER  .
 
