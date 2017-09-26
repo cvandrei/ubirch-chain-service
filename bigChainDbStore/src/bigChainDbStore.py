@@ -19,8 +19,8 @@ logger.setLevel(logging.DEBUG)
 
 awsAccessKeyId = 'AWS_ACCESS_KEY_ID'
 awsSecretAccessKey = 'AWS_SECRET_ACCESS_KEY'
-sqsChainInKey = 'SQS_CHAIN_IN'
-sqsChainTxKey = 'SQS_CHAIN_TX'
+sqsChainInKey = 'SQS_UBIRCH_BIGCHAIN_DB_IN'
+sqsChainTxKey = 'SQS_UBIRCH_BIGCHAIN_DB_TX'
 sqsRegionKey = 'SQS_REGION'
 ipdbAppIdKey = 'IPDB_APP_ID'
 ipdbAppKeyKey = 'IPDB_APP_KEY'
