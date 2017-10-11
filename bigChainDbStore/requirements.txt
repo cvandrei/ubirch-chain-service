@@ -1,5 +1,0 @@
-boto3
-pyasn1
-bigchaindb_driver
-CMRESHandler
-elasticsearch
