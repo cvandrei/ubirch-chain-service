@@ -10,6 +10,8 @@ import logging
 from bigchaindb_driver import BigchainDB
 from bigchaindb_driver.crypto import generate_keypair
 
+from cmreslogging.handlers import CMRESHandler
+
 import threading
 
 FORMAT = '%(asctime)-15s [%(levelname)s] %(message)s'
@@ -21,11 +23,21 @@ awsAccessKeyId = 'AWS_ACCESS_KEY_ID'
 awsSecretAccessKey = 'AWS_SECRET_ACCESS_KEY'
 sqsChainInKey = 'SQS_UBIRCH_BIGCHAIN_DB_IN'
 sqsChainTxKey = 'SQS_UBIRCH_BIGCHAIN_DB_TX'
-sqsRegionKey = 'SQS_REGION'
+sqsRegionKey = 'AWS_REGION'
 ipdbAppIdKey = 'IPDB_APP_ID'
 ipdbAppKeyKey = 'IPDB_APP_KEY'
 bigChainDbHostKey = 'BIG_CHAIN_DB_HOST'
 numThreadsKey = 'NUM_TRHEADS'
+esLoggerHostKey = 'ES_LOG_HOST'
+esLoggerPortKey = 'ES_LOG_PORT'
+
+if (esLoggerHostKey in os.environ.keys()):
+    esLoggerHost = os.environ[esLoggerHostKey]
+    esLoggerPort = int(os.environ[esLoggerPortKey])
+    esLoggerHandler = CMRESHandler(hosts=[{'host': esLoggerHost, 'port': esLoggerPort}],
+                                   auth_type=CMRESHandler.AuthType.NO_AUTH,
+                                   es_index_name="big-chain-store-service-logs")
+    logger.addHandler(esLoggerHandler)
 
 if (awsAccessKeyId not in os.environ or awsSecretAccessKey not in os.environ):
     logger.error("env vars missing")
@@ -42,7 +54,7 @@ if (awsAccessKeyId not in os.environ or awsSecretAccessKey not in os.environ):
     logger.info("NUM_TRHEADS -> # of threads which poll new messages (optional), , default is 1")
     exit(1)
 
-REGION = os.environ[sqsRegionKey] if sqsRegionKey in os.environ else 'eu-west-1'
+REGION = os.environ[sqsRegionKey] if sqsRegionKey in os.environ else 'eu-central-1'
 
 sqs = boto3.resource('sqs', region_name=REGION)
 

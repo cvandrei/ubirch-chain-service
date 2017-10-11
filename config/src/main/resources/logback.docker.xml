@@ -2,9 +2,9 @@
 
     <!--
     # this variables have to be replaced
-    # * ES_HOST
+    # * ES_LOG_HOST
     # ** hostname of ElasticSearch 2.x cluster, without a protocol, e.g. localhost
-    # * ES_PORT_HTTP
+    # * ES_LOG_PORT
     # ** e.g. 9200
     -->
 
@@ -17,7 +17,7 @@
     </appender>
 
     <appender name="ELASTIC" class="com.internetitem.logback.elasticsearch.ElasticsearchAppender">
-        <url>http://${ES_HOST}:${ES_PORT_HTTP}/_bulk</url>
+        <url>http://${ES_LOG_HOST}:${ES_LOG_PORT}/_bulk</url>
         <index>chain-service-logs-%date{yyyy-MM-dd}</index>
         <type>log</type>
         <loggerName>es-logger</loggerName> <!-- optional -->
