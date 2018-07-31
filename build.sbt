@@ -1,12 +1,10 @@
-packagedArtifacts in file(".") := Map.empty // disable publishing of root/default project
-
 parallelExecution in Test := false // test related: http://www.scalatest.org/user_guide/using_scalatest_with_sbt
 // see http://www.scala-sbt.org/0.13/docs/Parallel-Execution.html for details
 concurrentRestrictions in Global := Seq(
   Tags.limit(Tags.Test, 1)
 )
 
-lazy val commonSettings = Seq(
+val commonSettings = Seq(
 
   scalaVersion := "2.11.8",
   scalacOptions ++= Seq("-feature"),
@@ -17,7 +15,7 @@ lazy val commonSettings = Seq(
     url("https://github.com/ubirch/ubirch-chain-service"),
     "scm:git:git@github.com:ubirch/ubirch-chain-service.git"
   )),
-  version := "0.1.6-SNAPSHOT",
+  version := "0.2.0",
   test in assembly := {},
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases")
@@ -30,7 +28,10 @@ lazy val commonSettings = Seq(
  ********************************************************/
 
 lazy val chainService = (project in file("."))
-  .settings(commonSettings: _*)
+  .settings(
+    commonSettings,
+    skip in publish := true
+  )
   .aggregate(
     cmdtools,
     config,
@@ -43,21 +44,21 @@ lazy val chainService = (project in file("."))
   )
 
 lazy val cmdtools = project
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .dependsOn(config, testTools)
   .settings(
     description := "command line tools"
   )
 
 lazy val config = project
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     description := "chain-service specific config and config tools",
     libraryDependencies += ubirchConfig
   )
 
 lazy val core = project
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .dependsOn(config, modelDb, modelRest, util, testTools % "test")
   .settings(
     description := "business logic",
@@ -69,7 +70,7 @@ lazy val core = project
   )
 
 lazy val modelDb = (project in file("model-db"))
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     name := "model-db",
     description := "Database models",
@@ -77,7 +78,7 @@ lazy val modelDb = (project in file("model-db"))
   )
 
 lazy val modelRest = (project in file("model-rest"))
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     name := "model-rest",
     description := "JSON models",
@@ -88,7 +89,7 @@ lazy val modelRest = (project in file("model-rest"))
   )
 
 lazy val server = project
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(mergeStrategy: _*)
   .dependsOn(config, core, modelDb, modelRest, util)
   .enablePlugins(DockerPlugin)
@@ -106,7 +107,7 @@ lazy val server = project
   )
 
 lazy val testTools = (project in file("test-tools"))
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .dependsOn(config)
   .settings(
     name := "test-tools",
@@ -118,7 +119,7 @@ lazy val testTools = (project in file("test-tools"))
   )
 
 lazy val util = project
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     description := "utils",
     libraryDependencies ++= depUtils
