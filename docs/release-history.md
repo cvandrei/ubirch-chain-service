@@ -1,5 +1,9 @@
 ## Release History
 
+### Version 0.2.1 ()
+
+* tbd
+
 ### Version 0.2.0 (2018-07-31)
 
 * moved some of README's documentation to separate files in newly created folder _docs_
