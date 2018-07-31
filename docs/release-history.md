@@ -1,8 +1,12 @@
 ## Release History
 
-### Version 0.1.6 (tbd)
+### Version 0.2.0 (2018-07-31)
 
 * moved some of README's documentation to separate files in newly created folder _docs_
+* update to sbt from `0.13.17` to `1.1.6`
+* update to plugin `com.eed3si9n:sbt-assembly:0.14.7`
+* update to plugin `se.marcuslonnberg:sbt-docker:1.5.0`
+* update to plugin `org.scoverage:sbt-scoverage:1.5.1`
 
 ### Version 0.1.5 (2017-08-10)
 
