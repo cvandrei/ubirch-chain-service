@@ -25,8 +25,10 @@ class AnchorActor(implicit mongoBigchain: MongoUtil, mongoChain: MongoUtil)
       AnchorManager.blockCheckAndAnchor()(mongoBigchain = mongoBigchain, mongoChain = mongoChain)
       reschedule()
 
-    case _ => log.error("unknown message")
+  }
 
+  override def unhandled(message: Any): Unit = {
+    log.error(s"received from ${context.sender().path} unknown message: ${message.toString} (${message.getClass})")
   }
 
   private def reschedule(): Unit = {

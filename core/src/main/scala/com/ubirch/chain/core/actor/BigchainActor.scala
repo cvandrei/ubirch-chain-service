@@ -29,8 +29,10 @@ class BigchainActor extends Actor
       log.debug(s"received deviceDataHash: $deviceDataHash")
       sendToBigchainDb(deviceDataHash)
 
-    case _ => log.error("unknown message")
+  }
 
+  override def unhandled(message: Any): Unit = {
+    log.error(s"received from ${context.sender().path} unknown message: ${message.toString} (${message.getClass})")
   }
 
   private def sendToBigchainDb(o: AnyRef): Unit = {
