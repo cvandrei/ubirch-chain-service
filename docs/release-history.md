@@ -1,5 +1,9 @@
 ## Release History
 
+### Version 0.3.1 (tbd)
+
+* tbd
+
 ### Version 0.3.0 (2018-10-31)
 
 * update Akka to 2.5.11
