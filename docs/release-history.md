@@ -1,6 +1,6 @@
 ## Release History
 
-### Version 0.3.0 ()
+### Version 0.3.0 (2018-10-31)
 
 * update Akka to 2.5.11
 * update Akka HTTP to 10.1.3
