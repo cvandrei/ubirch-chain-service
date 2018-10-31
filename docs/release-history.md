@@ -1,5 +1,23 @@
 ## Release History
 
+### Version 0.3.0 (2018-10-31)
+
+* update Akka to 2.5.11
+* update Akka HTTP to 10.1.3
+* update to `org.scalatest:scalatest:3.0.5`
+* update to `org.apache.camel:*:2.22.0`
+* update to `com.typesafe.scala-logging:scala-logging:3.7.2`
+* update to `com.ubirch.util:json:0.2.3`
+* update to `com.ubirch.util:date:0.5.3`
+* update to `com.ubirch.util:deep-check-model:0.3.1`
+* update to `com.ubirch.util:json:0.5.1`
+* update to `com.ubirch.util:mongo-test-utils:0.8.4`
+* update to `com.ubirch.util:mongo-utils:0.8.4`
+* update to `com.ubirch.util:rest-akka-http:0.4.0`
+* update to `com.ubirch.util:rest-akka-http-test:0.4.0`
+* update to `com.ubirch.util:response-util:0.5.0`
+* update to `com.ubirch.util:uuid:0.1.3`
+
 ### Version 0.2.0 (2018-07-31)
 
 * moved some of README's documentation to separate files in newly created folder _docs_

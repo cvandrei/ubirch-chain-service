@@ -37,8 +37,10 @@ class DeviceDataInConsumer extends Consumer
 
       }
 
-    case _ => log.error("received unknown message")
+  }
 
+  override def unhandled(message: Any): Unit = {
+    log.error(s"received from ${context.sender().path} unknown message: ${message.toString} (${message.getClass})")
   }
 
   private def camelMsgToDeviceDataIn(body: Any): Option[DeviceMsgIn] = {

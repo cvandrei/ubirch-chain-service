@@ -23,8 +23,10 @@ class DeepCheckActor(implicit mongoBigchain: MongoUtil, mongoChain: MongoUtil) e
       val sender = context.sender()
       deepCheck() map (sender ! _)
 
-    case _ => log.error("unknown message")
+  }
 
+  override def unhandled(message: Any): Unit = {
+    log.error(s"received from ${context.sender().path} unknown message: ${message.toString} (${message.getClass})")
   }
 
   private def deepCheck(): Future[DeepCheckResponse] = DeepCheckManager.connectivityCheck()(mongoBigchain = mongoBigchain, mongoChain = mongoChain)
