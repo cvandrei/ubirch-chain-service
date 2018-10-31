@@ -15,7 +15,7 @@ val commonSettings = Seq(
     url("https://github.com/ubirch/ubirch-chain-service"),
     "scm:git:git@github.com:ubirch/ubirch-chain-service.git"
   )),
-  version := "0.2.1-SNAPSHOT",
+  version := "0.3.0-SNAPSHOT",
   test in assembly := {},
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases")
@@ -133,6 +133,7 @@ lazy val depServer = Seq(
 
   akkaSlf4j,
   akkaHttp,
+  akkaStream,
   ubirchRestAkkaHttp,
   ubirchRestAkkaHttpTest % "test",
 
@@ -175,18 +176,17 @@ lazy val depUtils = Seq(
  ********************************************************/
 
 // VERSIONS
-val akkaV = "2.4.19"
-val akkaHttpV = "10.0.9"
-val camelV = "2.18.1"
+val akkaV = "2.5.11"
+val akkaHttpV = "10.1.3"
+val camelV = "2.22.0"
 
-val scalaTestV = "3.0.1"
+val scalaTestV = "3.0.5"
 
 val logbackV = "1.2.3"
 val slf4jV = "1.7.25"
 
 // GROUP NAMES
 val ubirchUtilG = "com.ubirch.util"
-val json4sG = "org.json4s"
 val akkaG = "com.typesafe.akka"
 val camelG = "org.apache.camel"
 
@@ -196,7 +196,7 @@ lazy val scalaLogging = Seq(
   "org.slf4j" % "slf4j-api" % slf4jV,
   "org.slf4j" % "log4j-over-slf4j" % slf4jV,
   "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2" exclude("org.slf4j", "slf4j-api"),
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0" exclude("org.slf4j", "slf4j-api"),
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2" exclude("org.slf4j", "slf4j-api"),
   "ch.qos.logback" % "logback-core" % logbackV exclude("org.slf4j", "slf4j-api"),
   "ch.qos.logback" % "logback-classic" % logbackV exclude("org.slf4j", "slf4j-api"),
   "com.internetitem" % "logback-elasticsearch-appender" % "1.5" exclude("org.slf4j", "slf4j-api")
@@ -205,6 +205,7 @@ lazy val scalaLogging = Seq(
 lazy val akkaActor = akkaG %% "akka-actor" % akkaV
 lazy val akkaHttp = akkaG %% "akka-http" % akkaHttpV
 lazy val akkaSlf4j = akkaG %% "akka-slf4j" % akkaV
+val akkaStream = akkaG %% "akka-stream" % akkaV
 
 lazy val akkaCamel = Seq(
   camelG % "camel-core" % camelV,
@@ -220,16 +221,16 @@ lazy val excludedLoggers = Seq(
   ExclusionRule(organization = "ch.qos.logback")
 )
 
-lazy val ubirchConfig = ubirchUtilG %% "config" % "0.1" excludeAll(excludedLoggers: _*)
-lazy val ubirchDate = ubirchUtilG %% "date" % "0.1" excludeAll(excludedLoggers: _*)
-lazy val ubirchDeepCheckModel = ubirchUtilG %% "deep-check-model" % "0.1.3" excludeAll(excludedLoggers: _*)
-lazy val ubirchJson = ubirchUtilG %% "json" % "0.4.3" excludeAll(excludedLoggers: _*)
-lazy val ubirchMongoTest = ubirchUtilG %% "mongo-test-utils" % "0.3.5" excludeAll(excludedLoggers: _*)
-lazy val ubirchMongo = ubirchUtilG %% "mongo-utils" % "0.3.5" excludeAll(excludedLoggers: _*)
-lazy val ubirchRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.8" excludeAll(excludedLoggers: _*)
-lazy val ubirchRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.8" excludeAll(excludedLoggers: _*)
-lazy val ubirchResponse = ubirchUtilG %% "response-util" % "0.2.4" excludeAll(excludedLoggers: _*)
-lazy val ubirchUuid = ubirchUtilG %% "uuid" % "0.1.1" excludeAll(excludedLoggers: _*)
+val ubirchConfig = ubirchUtilG %% "config" % "0.2.3" excludeAll(excludedLoggers: _*)
+val ubirchDate = ubirchUtilG %% "date" % "0.5.3" excludeAll(excludedLoggers: _*)
+val ubirchDeepCheckModel = ubirchUtilG %% "deep-check-model" % "0.3.1" excludeAll(excludedLoggers: _*)
+val ubirchJson = ubirchUtilG %% "json" % "0.5.1" excludeAll(excludedLoggers: _*)
+val ubirchMongoTest = ubirchUtilG %% "mongo-test-utils" % "0.8.4" excludeAll(excludedLoggers: _*)
+val ubirchMongo = ubirchUtilG %% "mongo-utils" % "0.8.4" excludeAll(excludedLoggers: _*)
+val ubirchResponse = ubirchUtilG %% "response-util" % "0.5.0" excludeAll(excludedLoggers: _*)
+val ubirchRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.4.0" excludeAll(excludedLoggers: _*)
+val ubirchRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.4.0" excludeAll(excludedLoggers: _*)
+val ubirchUuid = ubirchUtilG %% "uuid" % "0.1.3" excludeAll(excludedLoggers: _*)
 
 lazy val ubirchNotaryClient = "com.ubirch.notary" %% "client" % "0.2.7" excludeAll(excludedLoggers: _*)
 
